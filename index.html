@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora ORL — Calculadoras clínicas de otorrinolaringología</title>
+<meta name="description" content="Calculadoras y escalas clínicas de otorrinolaringología en español. Sin publicidad, sin registro y sin cookies. Los datos se calculan en tu propio equipo y no salen de él.">
+<meta name="author" content="Calculadora ORL">
+<link rel="canonical" href="https://calculadoraorl.com/">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Calculadora ORL">
+<meta property="og:title" content="Calculadora ORL — Calculadoras clínicas en español">
+<meta property="og:description" content="Escalas y calculadoras de ORL. Sin publicidad, sin cookies, cálculo en tu propio equipo.">
+<meta property="og:url" content="https://calculadoraorl.com/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Calculadora ORL">
+<meta name="twitter:description" content="Escalas y calculadoras de ORL en español. Sin publicidad ni cookies.">
+
+<style>
+  :root{
+    --bg:#f5f7f8;
+    --surface:#ffffff;
+    --ink:#15222e;
+    --muted:#5c6b78;
+    --line:#e3e8ec;
+    --line-soft:#eef2f4;
+    --primary:#0d5c63;
+    --primary-strong:#083f44;
+
+    /* Acentos por categoría (información, no decoración) */
+    --c-sueno:#4b3f9e;
+    --c-audicion:#0d7d8a;
+    --c-nariz:#a8672a;
+    --c-general:#3f7d5a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px;
+    --maxw:960px;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    font-family:var(--font-sans);
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* ---------- Cabecera ---------- */
+  .site-head{
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .site-head .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:16px;padding-bottom:16px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.05rem}
+  .brand .name b{font-weight:700}
+  .nav a{
+    text-decoration:none;color:var(--muted);font-size:.92rem;
+    padding:6px 4px;border-radius:6px;
+  }
+  .nav a:hover{color:var(--ink)}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;overflow:hidden;background:var(--surface);border-bottom:1px solid var(--line)}
+  .hero .wrap{position:relative;z-index:1;padding-top:44px;padding-bottom:40px}
+  .hero .wave{
+    position:absolute;inset:auto 0 0 0;width:100%;height:130px;
+    color:var(--primary);opacity:.07;z-index:0;pointer-events:none;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);font-size:.72rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--primary);margin:0 0 12px;
+  }
+  h1{
+    margin:0 0 12px;font-size:clamp(1.8rem,4.4vw,2.5rem);
+    line-height:1.12;letter-spacing:-.02em;
+  }
+  .lede{margin:0;max-width:56ch;color:var(--muted);font-size:1.05rem}
+
+  .trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .trust span{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:.82rem;color:var(--ink);
+    background:var(--bg);border:1px solid var(--line);
+    padding:6px 11px;border-radius:999px;
+  }
+  .trust svg{color:var(--primary)}
+
+  /* ---------- Buscador ---------- */
+  .toolbar{margin:26px 0 6px}
+  .search{position:relative;max-width:420px}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}
+  #filter{
+    width:100%;font:inherit;font-size:.98rem;color:var(--ink);
+    padding:11px 14px 11px 40px;border:1px solid var(--line);
+    border-radius:10px;background:var(--surface);
+  }
+  #filter::placeholder{color:#9aa7b1}
+  #filter:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+
+  /* ---------- Categorías y tarjetas ---------- */
+  main{padding:14px 0 56px}
+  .cat{margin-top:34px}
+  .cat-head{display:flex;align-items:baseline;gap:10px;margin:0 0 14px}
+  .cat-head h2{
+    font-family:var(--font-mono);font-size:.78rem;letter-spacing:.14em;
+    text-transform:uppercase;margin:0;color:var(--ink);
+  }
+  .cat-head .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+  .cat-head .count{font-size:.78rem;color:var(--muted);font-family:var(--font-mono)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+
+  .card{
+    display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 16px 14px;
+    text-decoration:none;color:inherit;position:relative;
+    transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+  }
+  a.card:hover{
+    border-color:var(--accent);
+    transform:translateY(-2px);
+    box-shadow:0 8px 22px -14px rgba(21,34,46,.35);
+  }
+  a.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .card .tag{
+    align-self:flex-start;font-family:var(--font-mono);font-size:.66rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+    border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+    background:color-mix(in srgb,var(--accent) 8%,transparent);
+    padding:2px 8px;border-radius:999px;margin-bottom:12px;
+  }
+  .card h3{margin:0 0 5px;font-size:1.06rem;letter-spacing:-.01em}
+  .card p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
+  .card .go{
+    margin-top:14px;font-size:.86rem;font-weight:600;color:var(--accent);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .card .soon{margin-top:14px;font-size:.82rem;color:var(--muted)}
+  .card.disabled{cursor:default}
+  .card.disabled:hover{transform:none;border-color:var(--line);box-shadow:none}
+
+  .empty{display:none;color:var(--muted);font-size:.95rem;padding:8px 2px}
+  .empty.show{display:block}
+
+  /* ---------- Pie ---------- */
+  footer{border-top:1px solid var(--line);background:var(--surface)}
+  footer .wrap{padding:26px 20px 40px}
+  .disclaimer{
+    font-size:.86rem;color:var(--muted);max-width:66ch;margin:0 0 14px;
+    padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);
+    border-radius:10px;border-left:3px solid var(--primary);
+  }
+  .foot-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;color:var(--muted)}
+  .foot-meta a{color:var(--primary);text-decoration:none}
+  .foot-meta a:hover{text-decoration:underline}
+
+  @media (max-width:520px){
+    .hero .wrap{padding-top:34px;padding-bottom:30px}
+    .nav a:first-child{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg>
+      </span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <nav class="nav">
+      <a href="#calculadoras">Calculadoras</a>
+      <a href="/acerca/">Acerca de</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="wave" viewBox="0 0 1200 130" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,80 C60,80 90,30 150,30 C210,30 240,100 300,100 C360,100 380,55 440,55 C500,55 520,20 590,20 C660,20 690,95 760,95 C820,95 850,60 910,60 C970,60 1000,88 1060,88 C1120,88 1150,45 1200,45"
+          fill="none" stroke="currentColor" stroke-width="3"/>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">Herramientas clínicas · ORL</p>
+    <h1>Calculadoras y escalas de otorrinolaringología, en español.</h1>
+    <p class="lede">Pensadas para usarse durante la consulta: introduces los datos, obtienes el resultado y, si quieres, lo imprimes como informe. Simple y sin distracciones.</p>
+
+    <div class="trust">
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Cálculo en tu propio equipo</span>
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg> Sin cookies ni rastreo</span>
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sin registro ni publicidad</span>
+    </div>
+  </div>
+</section>
+
+<main class="wrap" id="calculadoras">
+  <div class="toolbar">
+    <div class="search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="filter" type="search" placeholder="Buscar calculadora o escala…" autocomplete="off" aria-label="Buscar entre las calculadoras">
+    </div>
+  </div>
+
+  <div id="cats"></div>
+  <p class="empty" id="empty">No hay ninguna calculadora que coincida con tu búsqueda.</p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disclaimer">
+      Estas herramientas son un apoyo al razonamiento clínico y no sustituyen el juicio del profesional ni una valoración individualizada. Los datos que introduzcas no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.
+    </p>
+    <div class="foot-meta">
+      <span>© <span id="year"></span> Calculadora ORL</span>
+      <a href="/acerca/">Acerca de</a>
+      <a href="mailto:">Contacto</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Catálogo de calculadoras. Añadir una nueva = añadir un objeto aquí.
+  // status: "activa" (enlace real) | "proxima" (aún no publicada)
+  const CATEGORIES = [
+    { id:"sueno",     label:"Sueño",     accent:"var(--c-sueno)" },
+    { id:"audicion",  label:"Audición",  accent:"var(--c-audicion)" },
+    { id:"nariz",     label:"Nariz",     accent:"var(--c-nariz)" },
+    { id:"general",   label:"General",   accent:"var(--c-general)" },
+  ];
+
+  const CALCULATORS = [
+    { cat:"sueno",    title:"IMC, estadio Friedman y perímetro cervical", tag:"Antropometría",
+      desc:"Índice de masa corporal (OMS), estadio de Friedman y perímetro del cuello.",
+      url:"/imc/", status:"activa" },
+
+    { cat:"audicion", title:"Calculadora audiométrica", tag:"Audiología",
+      desc:"Umbral medio (PTA) y grado de pérdida a partir de los umbrales por frecuencia.",
+      url:"/audiometria/", status:"activa" },
+
+    { cat:"sueno",    title:"STOP-BANG", tag:"Cribado AOS",
+      desc:"Estimación del riesgo de apnea obstructiva del sueño.",
+      url:"/stopbang/", status:"proxima" },
+
+    { cat:"sueno",    title:"Escala NoSAS", tag:"Cribado AOS",
+      desc:"Riesgo de AOS a partir de perímetro cervical, IMC, ronquido, edad y sexo.",
+      url:"/nosas/", status:"proxima" },
+
+    { cat:"sueno",    title:"Cuestionario de Berlin", tag:"Cribado AOS",
+      desc:"Riesgo de AOS según ronquido, somnolencia diurna e hipertensión/IMC.",
+      url:"/berlin/", status:"proxima" },
+
+    { cat:"sueno",    title:"Escala de Epworth", tag:"Somnolencia",
+      desc:"Cuantificación de la somnolencia diurna excesiva.",
+      url:"/epworth/", status:"proxima" },
+
+    { cat:"nariz",    title:"NOSE", tag:"Obstrucción nasal",
+      desc:"Escala de obstrucción nasal y su repercusión.",
+      url:"/nose/", status:"proxima" },
+  ];
+
+  const catsEl = document.getElementById("cats");
+  const emptyEl = document.getElementById("empty");
+
+  function render(query=""){
+    const q = query.trim().toLowerCase();
+    catsEl.innerHTML = "";
+    let anyVisible = false;
+
+    CATEGORIES.forEach(cat => {
+      const items = CALCULATORS.filter(c => c.cat === cat.id).filter(c => {
+        if(!q) return true;
+        return (c.title + " " + c.desc + " " + cat.label + " " + c.tag).toLowerCase().includes(q);
+      });
+      if(items.length === 0) return;
+      anyVisible = true;
+
+      const section = document.createElement("section");
+      section.className = "cat";
+      section.style.setProperty("--accent", cat.accent);
+
+      const head = document.createElement("div");
+      head.className = "cat-head";
+      head.innerHTML = `<span class="dot"></span><h2>${cat.label}</h2><span class="count">${items.length}</span>`;
+      section.appendChild(head);
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      items.forEach(c => {
+        const active = c.status === "activa";
+        const el = document.createElement(active ? "a" : "div");
+        el.className = "card" + (active ? "" : " disabled");
+        el.style.setProperty("--accent", cat.accent);
+        if(active) el.href = c.url;
+        el.innerHTML =
+          `<span class="tag">${c.tag}</span>` +
+          `<h3>${c.title}</h3>` +
+          `<p>${c.desc}</p>` +
+          (active
+            ? `<span class="go">Abrir <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>`
+            : `<span class="soon">Próximamente</span>`);
+        grid.appendChild(el);
+      });
+
+      section.appendChild(grid);
+      catsEl.appendChild(section);
+    });
+
+    emptyEl.classList.toggle("show", !anyVisible);
+  }
+
+  document.getElementById("filter").addEventListener("input", e => render(e.target.value));
+  document.getElementById("year").textContent = new Date().getFullYear();
+  render();
+</script>
+</body>
+</html>
