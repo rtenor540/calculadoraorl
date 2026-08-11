@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuestionario de Berlín — Cribado de AOS — Calculadora ORL</title>
+<meta name="description" content="Cuestionario de Berlín (versión española validada) para el cribado del riesgo de apnea obstructiva del sueño en atención primaria. Cálculo en tu propio equipo, sin envío de datos.">
+<link rel="canonical" href="https://calculadoraorl.com/berlin/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+    --accent:#4b3f9e;               /* acento Sueño */
+    --ok:#3f7d5a; --warn:#a8672a;
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Cabecera */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  /* Encabezado de página */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:62ch}
+
+  main{padding-bottom:50px}
+
+  /* Paciente */
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  /* Bloques */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  /* Entradas numéricas */
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:4px}
+  .inp label{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .inp .unitbox{position:relative}
+  .inp input{width:100%;font:inherit;font-size:1.05rem;padding:11px 44px 11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .inp input:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .inp .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-family:var(--font-mono)}
+
+  /* Resultados */
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res .v small{font-weight:500;font-size:.82rem;color:var(--muted)}
+  .res.hero{grid-column:1/-1}
+  .res.hero.alto{background:color-mix(in srgb,var(--warn) 9%,white);border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+  .res.hero.bajo{background:color-mix(in srgb,var(--ok) 9%,white);border-color:color-mix(in srgb,var(--ok) 30%,transparent)}
+  .res.hero .v{font-size:1.7rem}
+  .res.hero.alto .v{color:var(--warn)}
+  .res.hero.bajo .v{color:var(--ok)}
+  .catv.pos{color:var(--warn)} .catv.neg{color:var(--ok)}
+
+  /* Preguntas */
+  .q{margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft)}
+  .q:first-of-type{border-top:0;padding-top:0;margin-top:6px}
+  .qtext{font-weight:600;font-size:.98rem;margin-bottom:4px}
+  .qnote{font-size:.82rem;color:var(--muted);margin-bottom:10px}
+  .skip-tag{font-size:.8rem;color:var(--warn);margin:0 0 10px;display:none}
+  .qopts{display:flex;flex-direction:column;gap:7px}
+  .qopts button{font:inherit;font-size:.92rem;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s ease}
+  .qopts button:hover{border-color:var(--accent)}
+  .qopts button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .qopts button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .q.skip{opacity:.45}
+  .q.skip .qopts button{pointer-events:none}
+  .q.skip .skip-tag{display:block}
+
+  /* Acciones */
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+  .btn-link{background:var(--surface);color:var(--primary);border-color:var(--line)}
+  .btn-link:hover{border-color:var(--primary)}
+
+  /* Pie */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:70ch;margin:16px 0 0;line-height:1.55}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+
+  /* ───────── Informe para impresión / PDF ───────── */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;gap:16px;padding:3px 0;font-size:10.5pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right;white-space:nowrap}
+  .pr-row .val.free{white-space:normal}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8pt;color:#555;line-height:1.5}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:520px){.res .v{font-size:1.15rem}}
+</style>
+</head>
+<body>
+
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Sueño · Cribado de AOS</p>
+    <h1>Cuestionario de Berlín</h1>
+    <p class="lede">Cribado del riesgo de apnea obstructiva del sueño diseñado para atención primaria. Registra las respuestas durante la entrevista y el resultado se calcula al momento en tu propio equipo. Al terminar puedes generar un informe imprimible o en PDF.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Paciente / Nº de historia <span style="font-weight:400">(opcional, solo aparece en tu informe)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- DATOS ANTROPOMÉTRICOS (para la categoría 3: IMC > 30) -->
+  <section class="block">
+    <h2>Datos antropométricos</h2>
+    <p class="sub">El IMC interviene en la categoría 3 (se considera positiva con tensión alta y/o IMC &gt; 30). La edad y el sexo no forman parte de la puntuación.</p>
+    <div class="inputs">
+      <div class="inp"><label for="peso">Peso</label><div class="unitbox"><input id="peso" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0"><span class="unit">kg</span></div></div>
+      <div class="inp"><label for="talla">Talla</label><div class="unitbox"><input id="talla" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0"><span class="unit">cm</span></div></div>
+      <div class="inp"><label>IMC</label><div class="unitbox"><input id="imc-view" type="text" value="—" readonly tabindex="-1" style="background:var(--bg);font-weight:700"><span class="unit">kg/m²</span></div></div>
+    </div>
+  </section>
+
+  <!-- CUESTIONARIO -->
+  <section class="block">
+    <h2>Cuestionario</h2>
+    <p class="sub">Diez preguntas en tres categorías. Pulsa la respuesta elegida (volver a pulsarla la deselecciona).</p>
+    <div id="questions"></div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="block">
+    <h2>Resultado</h2>
+    <p class="sub">Cada categoría se considera positiva según sus propias reglas; dos o más categorías positivas indican alto riesgo de AOS.</p>
+    <div class="results">
+      <div class="res hero" id="r-hero"><div class="k">Resultado</div><div class="v" id="r-overall">—</div><div class="pr-note" id="r-overall-detail" style="color:var(--muted);font-size:.82rem;margin-top:4px">Completa las preguntas para obtener el resultado.</div></div>
+      <div class="res"><div class="k">Cat. 1 · Ronquido (P2–6)</div><div class="v catv" id="r-c1" style="font-size:1.05rem">—</div></div>
+      <div class="res"><div class="k">Cat. 2 · Somnolencia (P7–9)</div><div class="v catv" id="r-c2" style="font-size:1.05rem">—</div></div>
+      <div class="res"><div class="k">Cat. 3 · HTA / IMC (P10)</div><div class="v catv" id="r-c3" style="font-size:1.05rem">—</div></div>
+    </div>
+  </section>
+
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Imprimir / Guardar PDF</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Limpiar</button>
+    <a class="btn btn-link" href="berlin-en-blanco.pdf" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Descargar escala en blanco (PDF)</a>
+  </div>
+
+  <!-- INFORME (solo impresión) -->
+  <div class="print-report" id="report"></div>
+</main>
+
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">Herramienta de apoyo al razonamiento clínico; no sustituye el juicio profesional ni una valoración individualizada. Los datos introducidos no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+    <p class="source">
+      <strong>Versión española validada:</strong> Navarrete-Martínez E, Muñoz-Gómez R, Serrano-Merino J, et al. Validity and reliability of the Berlin questionnaire for the detection of moderate or severe obstructive sleep apnea in patients aged 40 years or older detected from primary care. <em>Front Med (Lausanne)</em>. 2023;10:1229972. <a href="https://doi.org/10.3389/fmed.2023.1229972" target="_blank" rel="noopener">doi:10.3389/fmed.2023.1229972</a>. Reproducido bajo licencia <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.<br>
+      <strong>Instrumento original:</strong> Netzer NC, Stoohs RA, Netzer CM, Clark K, Strohl KP. Using the Berlin Questionnaire to identify patients at risk for the sleep apnea syndrome. <em>Ann Intern Med</em>. 1999;131(7):485–491.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const dash = "—";
+
+  /* ── Cuestionario de Berlín · versión española validada (Navarrete-Martínez 2023) ──
+     p:true  = respuesta que puntúa (resaltada en gris en el instrumento)
+     cat: 1 ronquido · 2 somnolencia · 3 HTA/IMC · 0 contextual (no puntúa)
+     dep:'snore' = solo procede si en la P2 se responde "Sí"
+     dep:'q9'    = solo procede si en la P9 se responde "Sí"                    */
+  const Q = [
+    { id:"q1",  cat:0, text:"1. ¿Su peso ha cambiado en los últimos 5 años?",
+      opts:["Aumentado","Disminuido","No ha cambiado"] },
+
+    { id:"q2",  cat:1, text:"2. ¿Usted ronca?", note:"Si no ronca, pase a la pregunta 7.",
+      opts:[{t:"Sí",p:true},"No","No sabe"] },
+    { id:"q3",  cat:1, text:"3. ¿Su ronquido es…?", dep:"snore",
+      opts:["Ligeramente más fuerte que respirar","Tan fuerte como hablar",{t:"Más fuerte que hablar",p:true},{t:"Muy fuerte, se puede escuchar en habitaciones adyacentes",p:true}] },
+    { id:"q4",  cat:1, text:"4. ¿Con qué frecuencia ronca?", dep:"snore",
+      opts:[{t:"Todas las noches",p:true},{t:"3-4 veces por semana",p:true},"1-2 veces por semana","1-2 veces por mes","Nunca o casi nunca"] },
+    { id:"q5",  cat:1, text:"5. ¿Alguna vez su ronquido ha molestado a otras personas?", dep:"snore",
+      opts:[{t:"Sí",p:true},"No","No sabe"] },
+    { id:"q6",  cat:1, text:"6. ¿Ha notado alguien que usted deja de respirar cuando duerme?", dep:"snore",
+      opts:[{t:"Casi todas las noches",p:true},{t:"3-4 veces por semana",p:true},"1-2 veces por semana","1-2 veces por mes","Nunca o casi nunca"] },
+
+    { id:"q7",  cat:2, text:"7. ¿Se siente cansado o fatigado al levantarse por la mañana después de dormir?",
+      opts:[{t:"Casi todos los días",p:true},{t:"3-4 veces por semana",p:true},"1-2 veces por semana","1-2 veces por mes","Nunca o casi nunca"] },
+    { id:"q8",  cat:2, text:"8. ¿Se siente cansado o fatigado durante el día?",
+      opts:[{t:"Casi todos los días",p:true},{t:"3-4 veces por semana",p:true},"1-2 veces por semana","1-2 veces por mes","Nunca o casi nunca"] },
+    { id:"q9",  cat:2, text:"9. ¿Alguna vez se ha sentido somnoliento o se ha quedado dormido mientras va de pasajero en un coche o vehículo?",
+      note:"Si la respuesta es afirmativa, conteste la 9b; si no, pase a la pregunta 10.",
+      opts:[{t:"Sí",p:true},"No"] },
+    { id:"q9b", cat:0, text:"9b. ¿Con qué frecuencia ocurre esto?", dep:"q9",
+      opts:["Casi todos los días","3-4 veces por semana","1-2 veces por semana","1-2 veces por mes","Nunca o casi nunca"] },
+
+    { id:"q10", cat:3, text:"10. ¿Usted tiene la tensión alta?",
+      opts:[{t:"Sí",p:true},"No","No sabe"] },
+  ];
+
+  // Normaliza cada opción a {t, p}
+  Q.forEach(q => q.opts = q.opts.map(o => typeof o === "string" ? {t:o,p:false} : {t:o.t,p:!!o.p}));
+  const byId = Object.fromEntries(Q.map(q => [q.id, q]));
+
+  // Estado: id de pregunta -> índice de opción seleccionada (o null)
+  const ans = {};
+  Q.forEach(q => ans[q.id] = null);
+
+  // ── Render de las preguntas ──
+  const qc = $("questions");
+  Q.forEach(q => {
+    const wrap = document.createElement("div");
+    wrap.className = "q" + (q.cat>0 ? " scores" : "");
+    wrap.id = "wrap-" + q.id;
+    let html = '<div class="qtext">' + q.text + '</div>';
+    if(q.note) html += '<div class="qnote">' + q.note + '</div>';
+    html += '<div class="skip-tag">No procede según la respuesta anterior.</div>';
+    html += '<div class="qopts" id="opts-' + q.id + '" role="group" aria-label="' + q.text.replace(/"/g,'') + '">';
+    q.opts.forEach((o,i) => {
+      html += '<button type="button" data-i="'+i+'" aria-pressed="false">'+o.t+'</button>';
+    });
+    html += '</div>';
+    wrap.innerHTML = html;
+    qc.appendChild(wrap);
+
+    wrap.querySelector(".qopts").addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const i = +btn.dataset.i;
+      ans[q.id] = (ans[q.id] === i) ? null : i;   // re-pulsar deselecciona
+      recalc();
+    });
+  });
+
+  ["peso","talla","paciente"].forEach(id => {
+    $(id).addEventListener("input", recalc);
+    $(id).addEventListener("change", recalc);
+  });
+
+  const nf1 = n => n.toLocaleString("es-ES",{minimumFractionDigits:1,maximumFractionDigits:1});
+
+  // Devuelve la opción {t,p} seleccionada de una pregunta, o null
+  function sel(id){ const i = ans[id]; return i===null ? null : byId[id].opts[i]; }
+
+  function computeIMC(){
+    const peso = parseFloat($("peso").value);
+    const talla = parseFloat($("talla").value);
+    if(peso>0 && talla>0){ const h = talla/100; return peso/(h*h); }
+    return null;
+  }
+
+  function recalc(){
+    const imc = computeIMC();
+    $("imc-view").value = imc!==null ? nf1(imc) : "—";
+
+    const snore = sel("q2");
+    const snores = snore && snore.t === "Sí";
+    const noSnore = snore && (snore.t === "No" || snore.t === "No sabe");
+
+    // Actualiza estados "skip"
+    ["q3","q4","q5","q6"].forEach(id => $("wrap-"+id).classList.toggle("skip", noSnore));
+    const q9 = sel("q9");
+    $("wrap-q9b").classList.toggle("skip", !(q9 && q9.t === "Sí"));
+
+    // ── Categoría 1 (P2–P6) ──
+    let c1 = 0;
+    if(snore && snore.p) c1++;                       // P2 = Sí
+    if(!noSnore){ ["q3","q4","q5","q6"].forEach(id => { const o = sel(id); if(o && o.p) c1++; }); }
+    const c1complete = snore!==null && (snores ? ["q3","q4","q5","q6"].every(id => sel(id)!==null) : true);
+    const c1pos = c1 >= 2;
+
+    // ── Categoría 2 (P7–P9) ──
+    let c2 = 0;
+    ["q7","q8","q9"].forEach(id => { const o = sel(id); if(o && o.p) c2++; });
+    const c2complete = ["q7","q8","q9"].every(id => sel(id)!==null);
+    const c2pos = c2 >= 2;
+
+    // ── Categoría 3 (P10 y/o IMC>30) ──
+    const q10 = sel("q10");
+    const c3complete = q10!==null;
+    const c3pos = (q10 && q10.p) || (imc!==null && imc > 30);
+
+    paintCat("r-c1", c1complete, c1pos, c1, "de P2–6 positivas");
+    paintCat("r-c2", c2complete, c2pos, c2, "de P7–9 positivas");
+    paintCat3("r-c3", c3complete, c3pos, q10, imc);
+
+    // ── Resultado global ──
+    const allComplete = c1complete && c2complete && c3complete;
+    const nPos = [c1pos,c2pos,c3pos].filter(Boolean).length;
+    const hero = $("r-hero"), ov = $("r-overall"), od = $("r-overall-detail");
+    hero.classList.remove("alto","bajo");
+    if(!allComplete){
+      ov.textContent = dash;
+      od.textContent = "Completa las preguntas para obtener el resultado.";
+    } else if(nPos >= 2){
+      hero.classList.add("alto");
+      ov.textContent = "Alto riesgo";
+      od.textContent = nPos + " de 3 categorías positivas · alta probabilidad de AOS.";
+    } else {
+      hero.classList.add("bajo");
+      ov.textContent = "Bajo riesgo";
+      od.textContent = nPos + " de 3 categorías positivas.";
+    }
+
+    paintButtons();
+    buildReport({imc, c1pos, c2pos, c3pos, c1, c2, allComplete, nPos, q10, noSnore});
+  }
+
+  function paintButtons(){
+    Q.forEach(q => {
+      const grp = $("opts-"+q.id);
+      grp.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (+b.dataset.i === ans[q.id]) ? "true":"false"));
+    });
+  }
+
+  function paintCat(elId, complete, pos, count, tail){
+    const el = $(elId);
+    el.classList.remove("pos","neg");
+    if(!complete){ el.textContent = "Incompleta"; return; }
+    el.classList.add(pos ? "pos" : "neg");
+    el.innerHTML = (pos ? "Positiva" : "Negativa") + ' <small>(' + count + ' ' + tail + ')</small>';
+  }
+  function paintCat3(elId, complete, pos, q10, imc){
+    const el = $(elId);
+    el.classList.remove("pos","neg");
+    if(!complete){ el.textContent = "Incompleta"; return; }
+    const bits = [];
+    if(q10 && q10.p) bits.push("HTA sí");
+    if(imc!==null && imc>30) bits.push("IMC>30");
+    const why = bits.length ? bits.join(" · ") : (imc===null ? "sin IMC" : "HTA no · IMC≤30");
+    el.classList.add(pos ? "pos" : "neg");
+    el.innerHTML = (pos ? "Positiva" : "Negativa") + ' <small>(' + why + ')</small>';
+  }
+
+  // ── Informe imprimible ──
+  function prRow(lab, val, free){ return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val'+(free?' free':'')+'">'+val+'</span></div>'; }
+
+  function buildReport(d){
+    const paciente = $("paciente").value.trim();
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+    const peso = parseFloat($("peso").value), talla = parseFloat($("talla").value);
+
+    let datos = prRow("Peso", peso>0? nf1(peso)+" kg":dash)
+              + prRow("Talla", talla>0? nf1(talla)+" cm":dash)
+              + prRow("IMC", d.imc!==null? nf1(d.imc)+" kg/m²":dash);
+
+    // Respuestas (omite las que no proceden)
+    let resp = "";
+    Q.forEach(q => {
+      const skipped = $("wrap-"+q.id).classList.contains("skip");
+      if(skipped) return;
+      const o = sel(q.id);
+      resp += prRow(q.text, o ? o.t : dash, true);
+    });
+
+    const catTxt = (pos) => pos ? "Positiva" : "Negativa";
+    let result = prRow("Categoría 1 · Ronquido", d.allComplete? catTxt(d.c1pos):dash)
+               + prRow("Categoría 2 · Somnolencia diurna", d.allComplete? catTxt(d.c2pos):dash)
+               + prRow("Categoría 3 · HTA y/o IMC>30", d.allComplete? catTxt(d.c3pos):dash)
+               + prRow("<strong>Resultado</strong>", d.allComplete? ("<strong>"+(d.nPos>=2?"Alto riesgo de AOS":"Bajo riesgo de AOS")+"</strong>") : dash);
+
+    $("report").innerHTML =
+      '<div class="pr-head"><h2>Informe · Cuestionario de Berlín</h2>'
+      + '<div class="pr-brand">calculadoraorl.com<br>Cribado de AOS</div></div>'
+      + '<div class="pr-meta"><span>Paciente / Nº historia: <strong>'+(paciente||dash)+'</strong></span><span>Fecha: '+fecha+'</span></div>'
+      + '<div class="pr-sec"><h3>Datos antropométricos</h3>'+datos+'</div>'
+      + '<div class="pr-sec"><h3>Respuestas</h3>'+resp+'</div>'
+      + '<div class="pr-sec"><h3>Valoración</h3>'+result
+        + '<div class="pr-note">Alto riesgo = 2 o más categorías positivas. Categorías 1 y 2: positivas con ≥2 respuestas positivas. Categoría 3: positiva con tensión alta y/o IMC&gt;30.</div></div>'
+      + '<div class="pr-foot">Cuestionario de Berlín, versión española validada (Navarrete-Martínez E et al. Front Med. 2023;10:1229972; CC BY 4.0). Instrumento original: Netzer NC et al. Ann Intern Med. 1999;131:485–491. '
+        + 'Herramienta de apoyo; no sustituye el juicio clínico. Cálculo realizado localmente en el navegador; los datos no se almacenan ni se transmiten. Generado con calculadoraorl.com.</div>';
+  }
+
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-reset").addEventListener("click", () => {
+    ["peso","talla","paciente"].forEach(id => $(id).value = "");
+    Q.forEach(q => ans[q.id] = null);
+    document.querySelectorAll(".qopts button").forEach(b => b.setAttribute("aria-pressed","false"));
+    recalc();
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
