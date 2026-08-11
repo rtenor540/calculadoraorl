@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Perímetro cervical: técnica de medida — Calculadora ORL</title>
+<meta name="description" content="Cómo medir correctamente el perímetro cervical: referencia anatómica en la membrana cricotiroidea, posición del paciente, colocación de la cinta y errores frecuentes.">
+<link rel="canonical" href="https://calculadoraorl.com/perimetro-cervical/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+
+    /* Categoría: General (nota técnica transversal) */
+    --accent:#3f7d5a;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Cabecera */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  /* Encabezado de página */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  /* Bloques */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+  .block p{margin:0 0 12px}
+  .block p:last-child{margin-bottom:0}
+
+  /* Figura */
+  figure.illus-fig{margin:18px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 14px 16px}
+  figure.illus-fig img{display:block;width:100%;height:auto;border-radius:9px}
+  figure.illus-fig figcaption{margin-top:10px;font-size:.85rem;color:var(--muted);line-height:1.5}
+
+  /* Pasos numerados */
+  ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 0 44px;margin-top:18px}
+  ol.steps li:first-child{margin-top:4px}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:30px;height:30px;border-radius:50%;
+    background:color-mix(in srgb,var(--accent) 12%,white);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+    font-family:var(--font-mono);font-size:.86rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol.steps h3{margin:0 0 4px;font-size:1rem}
+  ol.steps p{margin:0;font-size:.94rem;color:var(--muted)}
+
+  /* Lista de errores */
+  ul.errs{list-style:none;margin:0;padding:0}
+  ul.errs li{position:relative;padding:0 0 0 22px;margin-top:11px;font-size:.94rem}
+  ul.errs li:first-child{margin-top:0}
+  ul.errs li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--warn)}
+  ul.errs b{font-weight:600}
+  ul.errs .eff{color:var(--muted)}
+
+  /* Tabla de umbrales */
+  table.thr{width:100%;border-collapse:collapse;font-size:.94rem;margin-top:4px}
+  table.thr th,table.thr td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-soft)}
+  table.thr th{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);font-weight:500}
+  table.thr td:first-child{font-weight:600}
+  table.thr tr:last-child td{border-bottom:0}
+
+  /* Aviso destacado */
+  .callout{margin-top:16px;padding:14px 16px;border-radius:10px;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+    background:color-mix(in srgb,var(--accent) 7%,white);font-size:.94rem}
+  .callout strong{color:var(--accent)}
+
+  /* Enlaces a calculadoras */
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;border:1px solid transparent}
+  .btn-link{background:var(--bg);color:var(--primary);border-color:var(--line);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-link:hover{border-color:var(--primary)}
+
+  /* Pie */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+
+  /* Impresión: hoja de consulta. Esta es una página de texto, no una
+     calculadora, así que se imprime el contenido tal cual. */
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff;color:#000;font-size:11pt}
+    .site-head,.no-print{display:none !important}
+    .block,figure.illus-fig{border:1px solid #bbb;break-inside:avoid;box-shadow:none}
+    footer{border-top:1px solid #999}
+    .lede,ol.steps p,ul.errs .eff,figure.illus-fig figcaption{color:#333}
+    a{text-decoration:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ═══ CABECERA ═══ -->
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Nota técnica · Exploración</p>
+    <h1>Perímetro cervical: técnica de medida</h1>
+    <p class="lede">El perímetro cervical interviene en varias escalas de cribado de la apnea del sueño, siempre como un umbral binario. Medirlo de forma consistente importa más que medirlo con exactitud milimétrica.</p>
+  </div>
+
+  <figure class="illus-fig">
+    <img src="perimetro-cervical-tecnica.webp"
+         alt="Ilustración de un cuello visto de frente con una cinta métrica rodeándolo a la altura de la membrana cricotiroidea, por debajo de la prominencia del cartílago tiroideo. Dos manos sostienen la cinta plana contra la piel."
+         width="1600" height="1194" loading="lazy" decoding="async">
+    <figcaption>La cinta se sitúa a la altura de la membrana cricotiroidea, por debajo de la prominencia laríngea, en un plano perpendicular al eje del cuello.</figcaption>
+  </figure>
+
+  <!-- ═══ TÉCNICA ═══ -->
+  <section class="block">
+    <h2>Cómo se mide</h2>
+    <p class="sub">Cuatro pasos. El primero es el que más variabilidad introduce.</p>
+
+    <ol class="steps">
+      <li>
+        <h3>Referencia anatómica</h3>
+        <p>Membrana cricotiroidea, entre el borde inferior del cartílago tiroides y el borde superior del cricoides. Se localiza descendiendo con el dedo desde la prominencia laríngea hasta notar la depresión blanda que precede al anillo cricoideo. Es la referencia que emplea convencionalmente la literatura de sueño.</p>
+      </li>
+      <li>
+        <h3>Posición del paciente</h3>
+        <p>Sentado o de pie, hombros relajados, cabeza en posición neutra y mirada al frente, con respiración normal. Tanto la flexión como la extensión cervical modifican la medida, así que conviene comprobar la posición antes de rodear el cuello con la cinta.</p>
+      </li>
+      <li>
+        <h3>Colocación de la cinta</h3>
+        <p>Cinta inextensible, plana contra la piel y perpendicular al eje longitudinal del cuello. Debe contactar sin comprimir los tejidos blandos. El error más habitual es que la cinta quede oblicua y ascienda por detrás: conviene verificar la horizontalidad en la nuca, no solo por delante.</p>
+      </li>
+      <li>
+        <h3>Lectura</h3>
+        <p>Al final de una espiración normal, con aproximación de 0,1 cm. Si hay dudas sobre la colocación, se repite la medida en lugar de ajustar mentalmente el resultado.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ═══ ERRORES ═══ -->
+  <section class="block">
+    <h2>Fuentes de error frecuentes</h2>
+    <p class="sub">Las cuatro primeras son las que más desplazan el resultado.</p>
+    <ul class="errs">
+      <li><b>Cinta oblicua</b>, más alta por detrás que por delante. <span class="eff">Sobreestima.</span></li>
+      <li><b>Comprimir el tejido blando</b> al tensar la cinta. <span class="eff">Infraestima.</span></li>
+      <li><b>Cuello en flexión o extensión</b> en lugar de posición neutra. <span class="eff">Variable en ambos sentidos.</span></li>
+      <li><b>Medir por debajo del cricoides</b>, ya sobre la base del cuello. <span class="eff">Sobreestima.</span></li>
+      <li><b>Cuello de camisa, corbata, collar o cadena</b> sin retirar, o pelo largo sin recoger.</li>
+      <li><b>Barba muy densa</b>: separar el pelo hasta contactar con la piel.</li>
+      <li><b>Deglución durante la medida</b>: el ascenso laríngeo desplaza la cinta.</li>
+      <li><b>Bocio o masa cervical</b>: la medida deja de reflejar adiposidad cervical. Conviene anotarlo junto al valor e interpretar la escala con esa reserva.</li>
+    </ul>
+  </section>
+
+  <!-- ═══ UMBRALES ═══ -->
+  <section class="block">
+    <h2>El umbral pertenece a la escala, no al paciente</h2>
+    <p class="sub">Cada instrumento fija su propio punto de corte, derivado de su propia población.</p>
+
+    <table class="thr">
+      <thead>
+        <tr><th>Instrumento</th><th>Umbral</th><th>Diferenciación por sexo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Puntuación NoSAS</td><td>&gt; 40 cm (4 puntos)</td><td>No, umbral único</td></tr>
+        <tr><td>Antropometría en AOS</td><td>&gt; 40 cm (señal de alerta)</td><td>No</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>No traslades un umbral de una escala a otra.</strong> Otros instrumentos de cribado emplean cortes distintos, en ocasiones diferenciados por sexo, y los estudios poblacionales han propuesto puntos de corte propios según la población estudiada. Un valor de perímetro cervical solo significa algo dentro del instrumento que lo define.
+    </div>
+  </section>
+
+  <!-- ═══ CONSISTENCIA ═══ -->
+  <section class="block">
+    <h2>Consistencia antes que exactitud</h2>
+    <p>Ninguna medida antropométrica es exacta, y las escalas que usan el perímetro cervical se derivaron a partir de medidas tomadas en condiciones reales, con toda su variabilidad ya incorporada en el rendimiento que publican. Perseguir el milímetro no mejora el cribado.</p>
+    <p>Lo que sí conviene es medir siempre igual. En el seguimiento de un mismo paciente, una diferencia de uno o dos centímetros entre visitas puede deberse por completo a la técnica y no a un cambio real. Fijar un procedimiento y repetirlo es lo que hace comparables las medidas propias.</p>
+  </section>
+
+  <!-- ═══ DÓNDE SE USA ═══ -->
+  <section class="block">
+    <h2>Calculadoras que usan esta medida</h2>
+    <p class="sub">Ambas aplican el umbral de 40 cm.</p>
+    <div class="links">
+      <a class="btn btn-link" href="/nosas/">Puntuación NoSAS →</a>
+      <a class="btn btn-link" href="/antropometria/">Antropometría en AOS →</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ PIE ═══ -->
+<footer>
+  <div class="wrap">
+    <p class="disclaimer">Nota técnica de apoyo a la exploración clínica; no sustituye el juicio profesional ni una valoración individualizada. Esta página no recoge ni procesa ningún dato.</p>
+
+    <p class="source">
+      <strong>Referencia anatómica.</strong> El uso del borde superior del cartílago cricotiroideo como punto de medida del perímetro cervical externo en la apnea del sueño procede de Katz I, Stradling J, Slutsky AS, Zamel N, Hoffstein V. <em>Do patients with obstructive sleep apnea have thick necks?</em> Am Rev Respir Dis. 1990;141(5 Pt 1):1228–1231. <a href="https://doi.org/10.1164/ajrccm/141.5_Pt_1.1228" target="_blank" rel="noopener">doi:10.1164/ajrccm/141.5_Pt_1.1228</a>. La literatura posterior de cribado ha mantenido esa referencia.
+      <br><br>
+      <strong>Umbral del NoSAS.</strong> Marti-Soler H, Hirotsu C, Marques-Vidal P, Vollenweider P, Waeber G, Preisig M, et al. <em>The NoSAS score for screening of sleep-disordered breathing: a derivation and validation study.</em> Lancet Respir Med. 2016;4(9):742–748. <a href="https://doi.org/10.1016/S2213-2600(16)30075-3" target="_blank" rel="noopener">doi:10.1016/S2213-2600(16)30075-3</a>
+      <br><br>
+      La técnica descrita en esta página no procede de un protocolo normalizado único: la publicación original de cada escala no siempre detalla el procedimiento de medida. Se recoge aquí la práctica convencional en medicina del sueño.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
