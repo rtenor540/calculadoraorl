@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Acerca de — Calculadora ORL</title>
+<meta name="description" content="Qué es Calculadora ORL, con qué criterios se publica cada escala, cómo se protegen los datos del paciente y quién está detrás del proyecto.">
+<link rel="canonical" href="https://calculadoraorl.com/acerca/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+
+    /* Páginas institucionales: acento = color del sitio, no de categoría */
+    --accent:#0d5c63;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+  .block p{margin:0 0 12px}
+  .block p:last-child{margin-bottom:0}
+  .block h3{margin:18px 0 4px;font-size:1rem}
+
+  /* Criterios numerados */
+  ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 0 44px;margin-top:18px}
+  ol.steps li:first-child{margin-top:4px}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:30px;height:30px;border-radius:50%;
+    background:color-mix(in srgb,var(--accent) 12%,white);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+    font-family:var(--font-mono);font-size:.86rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol.steps h3{margin:0 0 4px;font-size:1rem}
+  ol.steps p{margin:0;font-size:.94rem;color:var(--muted)}
+
+  /* Lista de puntos */
+  ul.pts{list-style:none;margin:0;padding:0}
+  ul.pts li{position:relative;padding:0 0 0 22px;margin-top:11px;font-size:.94rem}
+  ul.pts li:first-child{margin-top:0}
+  ul.pts li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+
+  .callout{margin-top:16px;padding:14px 16px;border-radius:10px;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+    background:color-mix(in srgb,var(--accent) 7%,white);font-size:.94rem}
+  .callout strong{color:var(--accent)}
+
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;border:1px solid transparent}
+  .btn-link{background:var(--bg);color:var(--primary);border-color:var(--line);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-link:hover{border-color:var(--primary)}
+
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .foot-nav{margin:16px 0 0;font-size:.85rem;color:var(--muted)}
+  .foot-nav a{color:var(--primary);text-decoration:none}
+  .foot-nav a:hover{text-decoration:underline}
+
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff;color:#000;font-size:11pt}
+    .site-head,.no-print{display:none !important}
+    .block{border:1px solid #bbb;break-inside:avoid}
+    a{text-decoration:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">El proyecto</p>
+    <h1>Acerca de Calculadora ORL</h1>
+    <p class="lede">Una colección de calculadoras y escalas clínicas de otorrinolaringología en español, de uso libre, sin publicidad y sin registro. Pensada para usarse durante la consulta.</p>
+  </div>
+
+  <section class="block">
+    <h2>Qué es</h2>
+    <p>Muchas de las escalas que empleamos a diario están en inglés, dispersas entre artículos de pago, o encerradas en aplicaciones que piden registro y recogen datos. Este sitio reúne las que tienen utilidad real en consulta de otorrinolaringología, en español y en un formato que funciona en el móvil mientras el paciente está delante.</p>
+    <p>Cada escala vive en su propia dirección, se calcula sola mientras introduces los datos y permite generar un informe imprimible o en PDF al terminar. Cuando la escala es autocumplimentable, hay además una versión en blanco descargable para que el paciente la rellene a mano.</p>
+  </section>
+
+  <section class="block">
+    <h2>Criterios de publicación</h2>
+    <p class="sub">Una escala solo se publica si cumple las tres condiciones. Si falla alguna, no se publica.</p>
+
+    <ol class="steps">
+      <li>
+        <h3>Derecho de uso verificado</h3>
+        <p>Antes de escribir una sola línea de código se comprueba la situación de copyright del instrumento. Algunas escalas de uso cotidiano están licenciadas y requieren autorización expresa para implementarlas en una herramienta interactiva, aunque su consulta sea gratuita. Si no hay derecho de uso, la escala no aparece aquí.</p>
+      </li>
+      <li>
+        <h3>Traducción validada al español</h3>
+        <p>Para los cuestionarios, no basta con traducir los ítems: una versión no validada puede no medir lo mismo que el original. Se emplea la adaptación validada cuando existe, y se cita. Cuando no existe, la escala queda pendiente.</p>
+      </li>
+      <li>
+        <h3>Lógica comprobada</h3>
+        <p>La puntuación se verifica contra varios escenarios clínicos y contra los valores límite antes de dar la página por terminada. Los umbrales se aplican tal como los define la publicación original, incluso cuando implementaciones de terceros los usan de otro modo.</p>
+      </li>
+    </ol>
+
+    <div class="callout">
+      <strong>Por eso algunas escalas conocidas no están.</strong> Si echas en falta alguna, es probable que su licencia esté pendiente de resolver o que no exista una versión validada en español. No se publica una escala a medias.
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Los datos no salen de tu equipo</h2>
+    <p>Todo el cálculo ocurre en tu navegador. No hay servidor que reciba los datos que introduces, ni base de datos donde se guarden, porque no hay nada más que archivos estáticos. Si desconectas la red después de cargar la página, las calculadoras siguen funcionando.</p>
+    <ul class="pts">
+      <li>No se transmite ni se almacena ningún dato de paciente.</li>
+      <li>No hay cookies, ni por tanto aviso de cookies que aceptar.</li>
+      <li>No hay publicidad, ni rastreadores de terceros, ni píxeles de seguimiento.</li>
+      <li>No hay registro, ni cuentas de usuario, ni newsletter.</li>
+      <li>El único seguimiento es Google Search Console, verificado por DNS, que informa de qué búsquedas llevan al sitio sin usar cookies ni identificar a nadie.</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Quién está detrás</h2>
+    <p>Calculadora ORL la desarrolla y mantiene <strong>Rafael Tenor</strong>, médico especialista en Otorrinolaringología, con dedicación específica a los trastornos respiratorios del sueño: apnea obstructiva, ronquido y endoscopia del sueño inducido por fármacos. Ejerce en el sistema público de salud y en el ámbito privado.</p>
+    <p>El proyecto nace de su propia práctica clínica, y las escalas que se van incorporando responden a lo que resulta útil en consulta antes que a lo que sea fácil de programar.</p>
+    <div class="links">
+      <a class="btn btn-link" href="https://doctortenor.com/" target="_blank" rel="noopener">doctortenor.com ↗</a>
+      <a class="btn btn-link" href="https://www.linkedin.com/in/tenorserrano/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Transparencia</h2>
+    <p>Este sitio no lleva publicidad ni patrocinio, no vende nada y no mantiene relación comercial con fabricantes de dispositivos, laboratorios ni proveedores de servicios diagnósticos. Nadie paga por aparecer aquí y ninguna escala se incluye por interés de un tercero.</p>
+    <p>Su autor ejerce la otorrinolaringología en el ámbito privado, incluida la actividad relacionada con el diagnóstico de los trastornos respiratorios del sueño. Se hace constar por transparencia, aunque el contenido de este sitio no deriva de esa actividad ni la promociona.</p>
+        <p>Calculadora ORL es una iniciativa personal. No está vinculada a ninguna institución sanitaria, pública o privada, ni cuenta con su respaldo, y las opiniones y decisiones editoriales del sitio son responsabilidad exclusiva de su autor.</p>
+    <p>Cada escala cita su fuente original y, cuando procede, la versión validada empleada. Si detectas un error de cálculo, de traducción o de atribución, escribe y se corrige.</p>
+  </section>
+
+  <section class="block">
+    <h2>Qué no es</h2>
+    <p>Las herramientas de este sitio son de apoyo al razonamiento clínico. No diagnostican, no sustituyen el juicio profesional ni una valoración individualizada, y no están dirigidas a que un paciente se autoevalúe y tome decisiones a partir del resultado.</p>
+    <p>Las escalas de cribado, en particular, están diseñadas para orientar la sospecha y priorizar estudios, no para confirmar ni descartar un diagnóstico.</p>
+    <div class="links">
+      <a class="btn btn-link" href="/contacto/">Contacto →</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disclaimer">Herramientas de apoyo al razonamiento clínico; no sustituyen el juicio profesional ni una valoración individualizada. Los datos introducidos no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+    <p class="foot-nav"><a href="/">Inicio</a> · <a href="/contacto/">Contacto</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
