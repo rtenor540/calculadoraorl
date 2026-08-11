@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Contacto — Calculadora ORL</title>
+<meta name="description" content="Dirección de contacto de Calculadora ORL para avisos de errores, sugerencias de nuevas escalas y consultas sobre derechos de uso.">
+<link rel="canonical" href="https://calculadoraorl.com/contacto/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+
+    --accent:#0d5c63;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+  .block p{margin:0 0 12px}
+  .block p:last-child{margin-bottom:0}
+
+  /* Bloque de correo */
+  .mailbox{background:color-mix(in srgb,var(--accent) 7%,white);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+    border-radius:11px;padding:18px 18px;text-align:center}
+  .mailbox .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px}
+  #mail{margin:0;font-size:clamp(1rem,3.2vw,1.25rem);font-weight:700;letter-spacing:-.01em;word-break:break-word}
+  #mail a{color:var(--primary-strong);text-decoration:none}
+  #mail a:hover{text-decoration:underline}
+
+  ul.pts{list-style:none;margin:0;padding:0}
+  ul.pts li{position:relative;padding:0 0 0 22px;margin-top:11px;font-size:.94rem}
+  ul.pts li:first-child{margin-top:0}
+  ul.pts li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  ul.pts.warn li::before{background:var(--warn)}
+
+  .callout{margin-top:16px;padding:14px 16px;border-radius:10px;border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);
+    background:color-mix(in srgb,var(--warn) 8%,white);font-size:.94rem}
+  .callout strong{color:var(--warn)}
+
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;border:1px solid transparent}
+  .btn-link{background:var(--bg);color:var(--primary);border-color:var(--line);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-link:hover{border-color:var(--primary)}
+
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .foot-nav{margin:16px 0 0;font-size:.85rem;color:var(--muted)}
+  .foot-nav a{color:var(--primary);text-decoration:none}
+  .foot-nav a:hover{text-decoration:underline}
+
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff;color:#000;font-size:11pt}
+    .site-head,.no-print{display:none !important}
+    .block{border:1px solid #bbb;break-inside:avoid}
+    a{text-decoration:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Contacto</p>
+    <h1>Contacto</h1>
+    <p class="lede">Correo electrónico para avisos de errores, sugerencias de nuevas escalas y cuestiones sobre derechos de uso. No hay formularios: escribir directamente evita que este sitio tenga que procesar dato alguno.</p>
+  </div>
+
+  <section class="block">
+    <div class="mailbox">
+      <div class="k">Dirección de correo</div>
+      <!-- La dirección se muestra legible y el enlace mailto lo compone el
+           script de abajo, para no dejarla en el HTML en formato rastreable. -->
+      <p id="mail">contacto <span aria-hidden="true">(arroba)</span> calculadoraorl.com</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Sobre qué escribir</h2>
+    <p class="sub">Cualquiera de estas cosas se agradece y se atiende.</p>
+    <ul class="pts">
+      <li><strong>Errores.</strong> De cálculo, de umbral, de traducción o de atribución. Si algo no cuadra con la publicación original, interesa saberlo: se comprueba y se corrige.</li>
+      <li><strong>Escalas que faltan.</strong> Sugerencias de instrumentos útiles en consulta de otorrinolaringología, sobre todo si conoces una versión validada al español.</li>
+      <li><strong>Derechos de uso.</strong> Si eres autor o titular de los derechos de una escala publicada aquí y quieres comentar algo sobre su reproducción, escribe y se resuelve.</li>
+      <li><strong>Funcionamiento.</strong> Problemas de visualización, de impresión o en algún dispositivo concreto.</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Lo que no se puede atender por aquí</h2>
+    <ul class="pts warn">
+      <li>Consultas médicas sobre un caso concreto, propio o de un familiar.</li>
+      <li>Interpretación de estudios del sueño, audiometrías, pruebas de imagen o informes.</li>
+      <li>Segundas opiniones, indicaciones de tratamiento o ajustes de medicación.</li>
+      <li>Resultados obtenidos en estas calculadoras aplicados a una persona concreta.</li>
+    </ul>
+    <div class="callout">
+      <strong>Si tienes un problema de salud, consulta con tu médico.</strong> Valorar un caso exige una historia clínica y una exploración que no pueden hacerse por correo electrónico, y hacerlo así sería tan poco fiable como imprudente. Ante síntomas graves o urgentes, acude a un servicio de urgencias.
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Qué ocurre con tu correo</h2>
+    <p>La dirección desde la que escribas y el contenido del mensaje se usan únicamente para responderte. No se incorporan a ninguna lista de distribución, no se ceden a terceros y no existe boletín al que puedas quedar suscrito por escribir.</p>
+    <p>Este sitio no dispone de formularios ni de base de datos: el correo se gestiona en el servidor del proveedor de correo, no aquí. Por prudencia, evita incluir datos identificativos de pacientes en tus mensajes.</p>
+    <div class="links">
+      <a class="btn btn-link" href="/acerca/">Acerca del proyecto →</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disclaimer">Herramientas de apoyo al razonamiento clínico; no sustituyen el juicio profesional ni una valoración individualizada. Los datos introducidos en las calculadoras no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+    <p class="foot-nav"><a href="/">Inicio</a> · <a href="/acerca/">Acerca de</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var el = document.getElementById("mail");
+  if(!el) return;
+  var u = "contacto", d = "calculadoraorl" + "." + "com";
+  var a = document.createElement("a");
+  a.href = "mailto:" + u + "@" + d;
+  a.textContent = u + "@" + d;
+  el.textContent = "";
+  el.appendChild(a);
+})();
+</script>
+</body>
+</html>
