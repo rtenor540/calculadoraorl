@@ -170,7 +170,10 @@
   .foot-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;color:var(--muted)}
   .foot-meta a{color:var(--primary);text-decoration:none}
   .foot-meta a:hover{text-decoration:underline}
-
+.all-calcs{margin:0 0 16px;font-size:.8rem;color:var(--muted)}
+  .all-calcs a{color:var(--muted);text-decoration:none}
+  .all-calcs a:hover{color:var(--ink);text-decoration:underline}
+  
   @media (max-width:520px){
     .hero .wrap{padding-top:34px;padding-bottom:30px}
     .nav a:first-child{display:none}
@@ -232,6 +235,14 @@
     <p class="disclaimer">
       Estas herramientas son un apoyo al razonamiento clínico y no sustituyen el juicio del profesional ni una valoración individualizada. Los datos que introduzcas no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.
     </p>
+    <nav class="all-calcs" aria-label="Todas las calculadoras">
+      <a href="/antropometria/">Antropometría y estadio de Friedman</a> ·
+      <a href="/audiometria/">Audiometría tonal</a> ·
+      <a href="/berlin/">Cuestionario de Berlin</a> ·
+      <a href="/nosas/">Escala NoSAS</a> ·
+      <a href="/lund-mackay/">Escala de Lund-Mackay</a> ·
+      <a href="/perimetro-cervical/">Perímetro cervical</a>
+    </nav>
     <div class="foot-meta">
       <span>© <span id="year"></span> Calculadora ORL</span>
       <a href="/acerca/">Acerca de</a>
@@ -275,7 +286,11 @@
       desc:"Cuantificación de la somnolencia diurna excesiva.",
       url:"/epworth/", status:"proxima" },
 
-    { cat:"nariz",    title:"Escala de Lund-Mackay", tag:"Rinosinusitis crónica",       desc:"Estadificación radiológica en TC por grupo sinusal y complejo ostiomeatal (0-24).",       url:"/lund-mackay/", status:"activa" },      { cat:"nariz",    title:"NOSE", tag:"Obstrucción nasal",
+    { cat:"nariz",    title:"Escala de Lund-Mackay", tag:"Rinosinusitis crónica",       
+     desc:"Estadificación radiológica en TC por grupo sinusal y complejo ostiomeatal (0-24).",       
+     url:"/lund-mackay/", status:"activa" },     
+    
+    { cat:"nariz",    title:"NOSE", tag:"Obstrucción nasal",
       desc:"Escala de obstrucción nasal y su repercusión.",
       url:"/nose/", status:"proxima" },
   ];
