@@ -40,7 +40,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
+<url>
+    <loc>https://calculadoraorl.com/lund-mackay/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
+  </url>
   <!-- Páginas informativas -->
   <url>
     <loc>https://calculadoraorl.com/acerca/</loc>
