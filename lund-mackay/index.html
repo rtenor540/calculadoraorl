@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Escala de Lund-Mackay — Calculadora ORL</title>
+<meta name="description" content="Estadificación radiológica de la rinosinusitis crónica según Lund-Mackay. Puntuación por seno y complejo ostiomeatal, subtotales por lado, registro de variantes anatómicas e informe imprimible. Cálculo en tu propio equipo, sin envío de datos.">
+<link rel="canonical" href="https://calculadoraorl.com/lund-mackay/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+
+    --accent:#a8672a;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Cabecera */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  /* Encabezado de página */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  /* Paciente */
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  /* Bloques */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  /* Entradas numéricas */
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:4px}
+  .inp label{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .inp .unitbox{position:relative}
+  .inp input{width:100%;font:inherit;font-size:1.05rem;padding:11px 44px 11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .inp input:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .inp .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-family:var(--font-mono)}
+
+  /* Resultados */
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res .v small{font-weight:500;font-size:.82rem;color:var(--muted)}
+  .res.hero{grid-column:1/-1;background:color-mix(in srgb,var(--primary) 7%,white);border-color:color-mix(in srgb,var(--primary) 22%,transparent)}
+  .res.hero .v{font-size:1.7rem;color:var(--primary-strong)}
+  .res.stage{grid-column:1/-1;background:color-mix(in srgb,var(--accent) 8%,white);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .res.stage .v{font-size:1.7rem;color:var(--accent)}
+  .badge{display:inline-block;font-size:.9rem;font-weight:600;padding:2px 10px;border-radius:999px;margin-left:2px}
+  .badge.ok{background:color-mix(in srgb,var(--ok) 15%,white);color:var(--ok)}
+  .badge.warn{background:color-mix(in srgb,var(--warn) 16%,white);color:var(--warn)}
+
+  /* Campos de graduación / preguntas */
+  .field{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft)}
+  .field:first-of-type{border-top:0;padding-top:0;margin-top:16px}
+  .field h3{margin:0 0 4px;font-size:1rem}
+  .field .fhint{margin:0 0 12px;font-size:.85rem;color:var(--muted)}
+
+  /* Ilustración de referencia (plegable) */
+  details.illus{margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+  details.illus>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  details.illus>summary::-webkit-details-marker{display:none}
+  details.illus>summary .chev{transition:transform .15s ease}
+  details.illus[open]>summary .chev{transform:rotate(90deg)}
+  details.illus .imgwrap{padding:0 14px 14px;text-align:center}
+  details.illus img{max-width:100%;width:auto;max-height:440px;border-radius:8px}
+
+  /* Botonera segmentada (respuestas / graduaciones) */
+  .segmented{display:flex;flex-wrap:wrap;gap:8px}
+  .segmented button{font:inherit;font-size:.95rem;font-weight:600;padding:10px 12px;min-width:58px;flex:1 1 58px;
+    border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s ease;text-align:center}
+  .segmented button:hover{border-color:var(--accent)}
+  .segmented button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .segmented button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* Casilla de verificación */
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:.92rem;cursor:pointer}
+  .check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:0 0 auto}
+
+  /* Acciones */
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+  .btn-link{background:var(--surface);color:var(--primary);border-color:var(--line);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-link:hover{border-color:var(--primary)}
+
+  /* Pie */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+
+  /* ───────── Específico de Lund-Mackay ───────── */
+  .lmwrap{overflow-x:auto;margin:0 -2px;padding:2px}
+  .lmgrid{display:grid;grid-template-columns:minmax(150px,.95fr) minmax(210px,1fr) minmax(210px,1fr);gap:14px 16px;align-items:center;min-width:620px}
+  .lmhead{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);padding-bottom:2px}
+  .lmlabel{font-size:.93rem;font-weight:600;line-height:1.3}
+  .lmlabel small{display:block;font-weight:400;font-size:.78rem;color:var(--muted);margin-top:1px}
+  .segmented.compact{gap:6px}
+  .segmented.compact button{min-width:0;flex:1 1 0;padding:9px 4px;font-size:.95rem}
+  .segmented.compact button.alt{font-size:.78rem;font-weight:600;flex:1.3 1 0}
+  .legend{margin:0 0 16px;font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 18px}
+  .legend b{color:var(--ink);font-family:var(--font-mono);font-weight:700}
+  .caveat{margin:16px 0 0;font-size:.84rem;color:var(--muted);padding:11px 13px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--warn)}
+  .caveat strong{color:var(--ink)}
+
+  /* Bloque plegable de sección */
+  details.fold{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+  details.fold>summary{cursor:pointer;list-style:none;padding:18px 20px;display:flex;align-items:flex-start;gap:11px}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  details.fold>summary .chev{flex:0 0 auto;margin-top:3px;color:var(--muted);transition:transform .15s ease}
+  details.fold[open]>summary .chev{transform:rotate(90deg)}
+  details.fold>summary .ftitle{font-size:1.18rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+  details.fold>summary .fsub{display:block;font-size:.87rem;font-weight:400;color:var(--muted);margin-top:3px}
+  details.fold .foldbody{padding:2px 20px 22px}
+
+  /* ───────── Informe para impresión / PDF ───────── */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,details.fold,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8.5pt;color:#555}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:520px){.res .v{font-size:1.15rem}}
+</style>
+</head>
+<body>
+
+<!-- ═══ CABECERA (común) ═══ -->
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Nariz · Lund-Mackay</p>
+    <h1>Escala de Lund-Mackay</h1>
+    <p class="lede">Estadificación radiológica de la rinosinusitis crónica sobre TC de senos paranasales. Puntúa cada seno y el complejo ostiomeatal de ambos lados; el total se calcula al momento en tu propio equipo. Al terminar puedes generar un informe imprimible o en PDF.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Paciente / Nº de historia <span style="font-weight:400">(opcional, solo aparece en tu informe)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- ═══ SENOS PARANASALES ═══ -->
+  <section class="block">
+    <h2>Senos paranasales</h2>
+    <p class="sub">Puntúa el grado de opacificación de cada grupo sinusal por separado en ambos lados.</p>
+
+    <p class="legend">
+      <span><b>0</b> sin alteraciones</span>
+      <span><b>1</b> opacificación parcial</span>
+      <span><b>2</b> opacificación total</span>
+    </p>
+
+    <div class="lmwrap">
+      <div class="lmgrid">
+        <div class="lmhead"></div>
+        <div class="lmhead">Lado derecho</div>
+        <div class="lmhead">Lado izquierdo</div>
+
+        <div class="lmlabel">Seno maxilar</div>
+        <div class="segmented compact" id="seg-max-D" role="group" aria-label="Seno maxilar derecho">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+        <div class="segmented compact" id="seg-max-I" role="group" aria-label="Seno maxilar izquierdo">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+
+        <div class="lmlabel">Etmoides anterior</div>
+        <div class="segmented compact" id="seg-ea-D" role="group" aria-label="Etmoides anterior derecho">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+        <div class="segmented compact" id="seg-ea-I" role="group" aria-label="Etmoides anterior izquierdo">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+
+        <div class="lmlabel">Etmoides posterior</div>
+        <div class="segmented compact" id="seg-ep-D" role="group" aria-label="Etmoides posterior derecho">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+        <div class="segmented compact" id="seg-ep-I" role="group" aria-label="Etmoides posterior izquierdo">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+
+        <div class="lmlabel">Seno esfenoidal</div>
+        <div class="segmented compact" id="seg-esf-D" role="group" aria-label="Seno esfenoidal derecho">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+        <div class="segmented compact" id="seg-esf-I" role="group" aria-label="Seno esfenoidal izquierdo">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+
+        <div class="lmlabel">Seno frontal <small>incluye la opción «ausente»</small></div>
+        <div class="segmented compact" id="seg-fro-D" role="group" aria-label="Seno frontal derecho">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="A" aria-pressed="false" class="alt">Aus.</button>
+        </div>
+        <div class="segmented compact" id="seg-fro-I" role="group" aria-label="Seno frontal izquierdo">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="A" aria-pressed="false" class="alt">Aus.</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="caveat"><strong>Seno frontal ausente.</strong> Los autores recomiendan puntuarlo simplemente como 0. Valoraron expresar la puntuación como porcentaje sobre 11 o sobre 22-23 en ese supuesto, pero lo descartaron porque restaba sencillez al método. El botón «Aus.» aplica esa recomendación, lo hace constar en el informe para que el 0 no se confunda con un seno sano, y marca la variante correspondiente en el registro anatómico.</p>
+  </section>
+
+  <!-- ═══ COMPLEJO OSTIOMEATAL ═══ -->
+  <section class="block">
+    <h2>Complejo ostiomeatal</h2>
+    <p class="sub">Se puntúa de forma binaria: los autores no aplican aquí la gradación de los senos por la dificultad de graduar esta estructura.</p>
+
+    <p class="legend">
+      <span><b>0</b> no obstruido</span>
+      <span><b>2</b> obstruido</span>
+    </p>
+
+    <div class="lmwrap">
+      <div class="lmgrid">
+        <div class="lmhead"></div>
+        <div class="lmhead">Lado derecho</div>
+        <div class="lmhead">Lado izquierdo</div>
+
+        <div class="lmlabel">Complejo ostiomeatal</div>
+        <div class="segmented compact" id="seg-com-D" role="group" aria-label="Complejo ostiomeatal derecho">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+        <div class="segmented compact" id="seg-com-I" role="group" aria-label="Complejo ostiomeatal izquierdo">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ VARIANTES ANATÓMICAS (plegable, no puntúan) ═══ -->
+  <details class="fold" id="fold-var">
+    <summary>
+      <span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      <span class="ftitle">Variantes anatómicas
+        <span class="fsub">Registro opcional. Se anotan como presentes o ausentes y <strong>no suman</strong> a la puntuación de Lund-Mackay. Aparecen en un apartado separado del informe.</span>
+      </span>
+    </summary>
+    <div class="foldbody">
+      <div class="lmwrap">
+        <div class="lmgrid">
+          <div class="lmhead"></div>
+          <div class="lmhead">Lado derecho</div>
+          <div class="lmhead">Lado izquierdo</div>
+
+          <div class="lmlabel">Seno frontal ausente</div>
+          <div class="segmented compact" id="seg-vfau-D" role="group" aria-label="Seno frontal ausente, lado derecho">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+          <div class="segmented compact" id="seg-vfau-I" role="group" aria-label="Seno frontal ausente, lado izquierdo">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+
+          <div class="lmlabel">Concha bullosa</div>
+          <div class="segmented compact" id="seg-vcb-D" role="group" aria-label="Concha bullosa derecha">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+          <div class="segmented compact" id="seg-vcb-I" role="group" aria-label="Concha bullosa izquierda">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+
+          <div class="lmlabel">Cornete medio paradójico</div>
+          <div class="segmented compact" id="seg-vcmp-D" role="group" aria-label="Cornete medio paradójico derecho">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+          <div class="segmented compact" id="seg-vcmp-I" role="group" aria-label="Cornete medio paradójico izquierdo">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+
+          <div class="lmlabel">Apófisis unciforme evertida</div>
+          <div class="segmented compact" id="seg-vaue-D" role="group" aria-label="Apófisis unciforme evertida derecha">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+          <div class="segmented compact" id="seg-vaue-I" role="group" aria-label="Apófisis unciforme evertida izquierda">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+
+          <div class="lmlabel">Celdas de Haller</div>
+          <div class="segmented compact" id="seg-vhal-D" role="group" aria-label="Celdas de Haller derechas">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+          <div class="segmented compact" id="seg-vhal-I" role="group" aria-label="Celdas de Haller izquierdas">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+
+          <div class="lmlabel">Celdas de agger nasi</div>
+          <div class="segmented compact" id="seg-vagn-D" role="group" aria-label="Celdas de agger nasi derechas">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+          <div class="segmented compact" id="seg-vagn-I" role="group" aria-label="Celdas de agger nasi izquierdas">
+            <button type="button" data-v="0" aria-pressed="false">No</button>
+            <button type="button" data-v="1" aria-pressed="false">Sí</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="res"><div class="k">Variantes · derecho</div><div class="v" id="r-vD">— <small>/ 6</small></div></div>
+        <div class="res"><div class="k">Variantes · izquierdo</div><div class="v" id="r-vI">— <small>/ 6</small></div></div>
+      </div>
+
+      <p class="caveat"><strong>No modifican la puntuación.</strong> Los autores incluyen estas variantes en el sistema como registro paralelo, anotadas como presentes (1) o ausentes (0), pero expresamente no contribuyen a la puntuación sinusal. Se recogen por su interés en la planificación quirúrgica, no como medida de gravedad.</p>
+    </div>
+  </details>
+
+  <!-- ═══ RESULTADO ═══ -->
+  <section class="block">
+    <h2>Resultado</h2>
+    <p class="sub">El total se actualiza a medida que completas las localizaciones.</p>
+
+    <label class="check"><input type="checkbox" id="cx-previa"> Cirugía endoscópica nasosinusal previa</label>
+    <p class="caveat"><strong>Cómo puntuar tras cirugía.</strong> En un paciente ya intervenido, los autores indican considerar cualquier engrosamiento mucoso como enfermedad relevante y puntuarlo igual que en un no operado. Lo señalan sobre todo por el efecto de la intervención de Caldwell-Luc sobre el seno maxilar.</p>
+
+    <div class="results">
+      <div class="res stage"><div class="k">Puntuación total</div><div class="v" id="r-total">—</div><div id="r-detail" style="color:var(--muted);font-size:.82rem;margin-top:4px">Completa las 12 localizaciones.</div></div>
+      <div class="res"><div class="k">Lado derecho</div><div class="v" id="r-dcho">— <small>/ 12</small></div></div>
+      <div class="res"><div class="k">Lado izquierdo</div><div class="v" id="r-izdo">— <small>/ 12</small></div></div>
+    </div>
+
+    <p class="caveat"><strong>Cómo interpretarla.</strong> La puntuación cuantifica la extensión de la enfermedad en la imagen. Los propios autores advierten de que la correlación entre los síntomas y la extensión de la enfermedad es en general pobre, de modo que una puntuación baja no descarta síntomas relevantes ni una alta los implica; no debe emplearse de forma aislada como indicación quirúrgica. Reconocen además dos limitaciones del método: la dificultad para distinguir en TC la opacificación por moco espesado de la inflamación mucosa, y los problemas de interpretación que plantea la cirugía previa.</p>
+  </section>
+
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Imprimir / Guardar PDF</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Limpiar</button>
+  </div>
+
+  <div class="print-report" id="report"></div>
+</main>
+
+<!-- ═══ PIE (común) ═══ -->
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">Herramienta de apoyo al razonamiento clínico; no sustituye el juicio profesional ni una valoración individualizada. Los datos introducidos no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+
+    <p class="source">
+      <strong>Fuentes.</strong> Lund VJ, Mackay IS. Staging in rhinosinusitus. <em>Rhinology.</em> 1993;31(4):183-184. · Lund VJ, Kennedy DW. Staging for rhinosinusitis. <em>Otolaryngol Head Neck Surg.</em> 1997;117(3 Pt 2):S35-S40.
+      Los criterios de puntuación, el tratamiento del seno frontal ausente, la conducta ante cirugía previa y el registro de variantes anatómicas siguen la descripción del sistema publicada en 1997 por encargo de la Task Force on Rhinosinusitis de la American Academy of Otolaryngology–Head and Neck Surgery.
+      Se trata de un sistema de estadificación radiológica aplicado por el clínico, no de un cuestionario autoinformado: no contiene ítems dirigidos al paciente y, por tanto, no requiere validación lingüística ni adaptación transcultural al español. Los criterios se reproducen aquí con redacción propia.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+
+  /* Grupos sinusales. El frontal admite además "A" (ausente). */
+  const SENOS = [
+    {id:"max", label:"Seno maxilar"},
+    {id:"ea",  label:"Etmoides anterior"},
+    {id:"ep",  label:"Etmoides posterior"},
+    {id:"esf", label:"Seno esfenoidal"},
+    {id:"fro", label:"Seno frontal"}
+  ];
+  const LADOS = [{id:"D", label:"Dcho."}, {id:"I", label:"Izdo."}];
+
+  /* Variantes anatómicas: se registran (0/1) pero NO puntúan. */
+  const VARIANTES = [
+    {id:"vfau", label:"Seno frontal ausente"},
+    {id:"vcb",  label:"Concha bullosa"},
+    {id:"vcmp", label:"Cornete medio paradójico"},
+    {id:"vaue", label:"Apófisis unciforme evertida"},
+    {id:"vhal", label:"Celdas de Haller"},
+    {id:"vagn", label:"Celdas de agger nasi"}
+  ];
+
+  /* Estado: una clave por grupo, p. ej. "max-D", "com-I", "vcb-D" */
+  const sel = {};
+  SENOS.forEach(s => LADOS.forEach(l => sel[s.id+"-"+l.id] = null));
+  LADOS.forEach(l => sel["com-"+l.id] = null);
+  VARIANTES.forEach(v => LADOS.forEach(l => sel[v.id+"-"+l.id] = null));
+
+  /* Fija un valor y refleja el cambio en su botonera */
+  function setSel(key, value){
+    sel[key] = value;
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.querySelectorAll("button").forEach(b => {
+      b.setAttribute("aria-pressed", (value !== null && b.dataset.v === value) ? "true" : "false");
+    });
+  }
+
+  /* El seno frontal "Aus." y la variante "seno frontal ausente" son el mismo
+     dato: se mantienen sincronizados en ambos sentidos. */
+  function syncFrontal(key){
+    LADOS.forEach(l => {
+      if(key === "fro-"+l.id){
+        const v = sel["fro-"+l.id];
+        if(v === "A") setSel("vfau-"+l.id, "1");
+        else if(sel["vfau-"+l.id] === "1") setSel("vfau-"+l.id, v === null ? null : "0");
+      }
+      if(key === "vfau-"+l.id){
+        const v = sel["vfau-"+l.id];
+        if(v === "1") setSel("fro-"+l.id, "A");
+        else if(sel["fro-"+l.id] === "A") setSel("fro-"+l.id, null);
+      }
+    });
+  }
+
+  function wireSegmented(key){
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const v = btn.dataset.v;
+      setSel(key, sel[key] === v ? null : v);   // volver a pulsar deselecciona
+      syncFrontal(key);
+      recalc();
+    });
+  }
+  Object.keys(sel).forEach(wireSegmented);
+
+  ["cx-previa","paciente"].forEach(id => {
+    const el = $(id); if(!el) return;
+    el.addEventListener("input", recalc);
+    el.addEventListener("change", recalc);
+  });
+
+  const dash = "—";
+
+  /* Puntos de una localización: "A" (ausente) puntúa 0; null no cuenta */
+  function pts(v){ return (v === null || v === "A") ? 0 : parseInt(v,10); }
+
+  function ladoTotal(ladoId){
+    let sum = 0, hechos = 0;
+    SENOS.forEach(s => {
+      const v = sel[s.id+"-"+ladoId];
+      if(v !== null){ hechos++; sum += pts(v); }
+    });
+    const c = sel["com-"+ladoId];
+    if(c !== null){ hechos++; sum += pts(c); }
+    return {sum, hechos};
+  }
+
+  /* Variantes presentes en un lado (no puntúan) */
+  function ladoVariantes(ladoId){
+    let n = 0, registradas = 0;
+    VARIANTES.forEach(v => {
+      const x = sel[v.id+"-"+ladoId];
+      if(x !== null){ registradas++; if(x === "1") n++; }
+    });
+    return {n, registradas};
+  }
+
+  function recalc(){
+    const D = ladoTotal("D"), I = ladoTotal("I");
+    const total = D.sum + I.sum;
+    const hechos = D.hechos + I.hechos;
+    const completo = hechos === 12;
+
+    $("r-total").innerHTML = hechos === 0 ? dash : (total + ' <small>/ 24</small>');
+    $("r-dcho").innerHTML  = D.hechos === 0 ? (dash + ' <small>/ 12</small>') : (D.sum + ' <small>/ 12</small>');
+    $("r-izdo").innerHTML  = I.hechos === 0 ? (dash + ' <small>/ 12</small>') : (I.sum + ' <small>/ 12</small>');
+
+    $("r-detail").textContent = completo
+      ? "12 de 12 localizaciones puntuadas."
+      : "Puntuación parcial: " + hechos + " de 12 localizaciones. El total no es interpretable hasta completarlas todas.";
+    $("r-detail").style.color = completo ? "var(--muted)" : "var(--warn)";
+
+    const vD = ladoVariantes("D"), vI = ladoVariantes("I");
+    $("r-vD").innerHTML = vD.registradas === 0 ? (dash + ' <small>/ 6</small>') : (vD.n + ' <small>/ 6</small>');
+    $("r-vI").innerHTML = vI.registradas === 0 ? (dash + ' <small>/ 6</small>') : (vI.n + ' <small>/ 6</small>');
+
+    buildReport({D, I, total, hechos, completo, vD, vI});
+  }
+
+  function prRow(lab, val){ return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val">'+val+'</span></div>'; }
+
+  function cellTxt(v){
+    if(v === null) return "sin puntuar";
+    if(v === "A")  return "ausente (0)";
+    return v;
+  }
+  function varTxt(v){
+    if(v === null) return "—";
+    return v === "1" ? "presente" : "ausente";
+  }
+
+  function buildReport(d){
+    const paciente = $("paciente").value.trim();
+    const cx = $("cx-previa").checked;
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+
+    let filas = "";
+    SENOS.forEach(s => {
+      filas += prRow(s.label, "Dcho. " + cellTxt(sel[s.id+"-D"]) + " · Izdo. " + cellTxt(sel[s.id+"-I"]));
+    });
+    filas += prRow("Complejo ostiomeatal", "Dcho. " + cellTxt(sel["com-D"]) + " · Izdo. " + cellTxt(sel["com-I"]));
+
+    const totales = prRow("Subtotal lado derecho", d.D.sum + " / 12")
+                  + prRow("Subtotal lado izquierdo", d.I.sum + " / 12")
+                  + prRow("<strong>Puntuación total de Lund-Mackay</strong>", "<strong>" + (d.hechos === 0 ? dash : d.total + " / 24") + "</strong>");
+
+    let notas = "";
+    if(!d.completo) notas += '<div class="pr-note"><strong>Puntuación incompleta:</strong> ' + d.hechos + ' de 12 localizaciones valoradas. El total mostrado es parcial.</div>';
+    const froAus = [];
+    LADOS.forEach(l => { if(sel["fro-"+l.id] === "A") froAus.push(l.id === "D" ? "derecho" : "izquierdo"); });
+    if(froAus.length) notas += '<div class="pr-note"><strong>Seno frontal ausente</strong> (' + froAus.join(" y ") + '): puntuado 0 conforme a la recomendación de los autores, no por hallazgo normal.</div>';
+    if(cx) notas += '<div class="pr-note"><strong>Cirugía endoscópica nasosinusal previa.</strong> El engrosamiento mucoso se ha puntuado como enfermedad relevante, según indican los autores para pacientes intervenidos.</div>';
+
+    /* Variantes anatómicas: solo se imprimen si se ha registrado alguna */
+    let secVar = "";
+    if(d.vD.registradas + d.vI.registradas > 0){
+      let fv = "";
+      VARIANTES.forEach(v => {
+        const a = sel[v.id+"-D"], b = sel[v.id+"-I"];
+        if(a !== null || b !== null) fv += prRow(v.label, "Dcho. " + varTxt(a) + " · Izdo. " + varTxt(b));
+      });
+      secVar = '<div class="pr-sec"><h3>Variantes anatómicas</h3>' + fv
+             + prRow("Total por lado", "Dcho. " + d.vD.n + " · Izdo. " + d.vI.n)
+             + '<div class="pr-note">Registro paralelo: las variantes anatómicas no contribuyen a la puntuación de Lund-Mackay.</div></div>';
+    }
+
+    $("report").innerHTML =
+      '<div class="pr-head"><h2>Informe · Escala de Lund-Mackay</h2>'
+      + '<div class="pr-brand">calculadoraorl.com</div></div>'
+      + '<div class="pr-meta"><span>Paciente / Nº historia: <strong>'+(paciente||dash)+'</strong></span><span>Fecha: '+fecha+'</span></div>'
+      + '<div class="pr-sec"><h3>Puntuación por localización</h3>'+filas
+      + '<div class="pr-note">Senos: 0 sin alteraciones · 1 opacificación parcial · 2 opacificación total. Complejo ostiomeatal: 0 no obstruido · 2 obstruido.</div></div>'
+      + '<div class="pr-sec"><h3>Puntuación total</h3>'+totales+notas+'</div>'
+      + secVar
+      + '<div class="pr-sec"><h3>Interpretación</h3><div class="pr-note">La puntuación cuantifica la extensión radiológica de la enfermedad. Los autores advierten de que la correlación entre los síntomas y la extensión de la enfermedad es en general pobre, por lo que no debe emplearse de forma aislada como indicación quirúrgica. El método no permite distinguir en TC la opacificación por moco espesado de la inflamación mucosa.</div></div>'
+      + '<div class="pr-foot">Lund VJ, Mackay IS. Staging in rhinosinusitus. Rhinology. 1993;31(4):183-184. · Lund VJ, Kennedy DW. Staging for rhinosinusitis. Otolaryngol Head Neck Surg. 1997;117(3 Pt 2):S35-S40. · Herramienta de apoyo; no sustituye el juicio clínico. Cálculo realizado localmente en el navegador; los datos no se almacenan ni se transmiten. Generado con calculadoraorl.com.</div>';
+  }
+
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-reset").addEventListener("click", () => {
+    $("paciente").value = "";
+    $("cx-previa").checked = false;
+    for(const k in sel) sel[k] = null;
+    document.querySelectorAll(".segmented button").forEach(b => b.setAttribute("aria-pressed","false"));
+    recalc();
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
