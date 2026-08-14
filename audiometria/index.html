@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Audiometría tonal — Calculadora ORL</title>
+<meta name="description" content="Promedios tonales, grado de hipoacusia (OMS y BIAP), porcentaje de discapacidad AAO-HNS, asimetría interaural y morfología de la curva. Cálculo en tu propio equipo, sin envío de datos.">
+<link rel="canonical" href="https://calculadoraorl.com/audiometria/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+
+    --accent:#0d7d8a;               /* Audición */
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res .v small{font-weight:500;font-size:.82rem;color:var(--muted)}
+  .res .d{color:var(--muted);font-size:.82rem;margin-top:4px}
+  .res.hero{grid-column:1/-1;background:color-mix(in srgb,var(--primary) 7%,white);border-color:color-mix(in srgb,var(--primary) 22%,transparent)}
+  .res.hero .v{font-size:1.7rem;color:var(--primary-strong)}
+  .res.stage{grid-column:1/-1;background:color-mix(in srgb,var(--accent) 8%,white);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .res.stage .v{font-size:1.45rem;color:var(--accent)}
+  .badge{display:inline-block;font-size:.9rem;font-weight:600;padding:2px 10px;border-radius:999px;margin-left:2px}
+  .badge.ok{background:color-mix(in srgb,var(--ok) 15%,white);color:var(--ok)}
+  .badge.warn{background:color-mix(in srgb,var(--warn) 16%,white);color:var(--warn)}
+
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:.92rem;cursor:pointer}
+  .check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:0 0 auto}
+
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+
+  /* Copiar resultados */
+  .btn-copy{background:var(--surface);color:var(--primary);border-color:var(--primary)}
+  .btn-copy:hover{background:color-mix(in srgb,var(--primary) 7%,white)}
+  .copy-msg{font-size:.85rem;color:var(--ok);align-self:center;opacity:0;transition:opacity .2s ease}
+  .copy-msg.show{opacity:1}
+  .copy-msg.err{color:var(--warn)}
+  .copybox{margin-top:14px}
+  .copybox summary{cursor:pointer;list-style:none;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  .copybox summary::-webkit-details-marker{display:none}
+  .copybox summary .chev{transition:transform .15s ease}
+  .copybox[open] summary .chev{transform:rotate(90deg)}
+  .copybox pre{margin:10px 0 0;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    font-family:var(--font-mono);font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink);overflow-x:auto}
+
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+
+  /* ───────── Específico de audiometría ───────── */
+  .aud-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .aud-rows{display:grid;grid-template-columns:54px repeat(7,minmax(52px,1fr));gap:7px;align-items:center;min-width:470px}
+  .aud-rows>.hdr{font-size:.78rem;letter-spacing:.03em;color:var(--muted);font-family:var(--font-mono);text-align:center;padding-bottom:2px}
+  .aud-rows>.hdr.corner{text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+  .aud-rows>.hdr.optcol{color:var(--muted);opacity:.75}
+  .aud-rows .ear{font-size:1rem;font-weight:700;letter-spacing:.02em}
+  .aud-rows input{width:100%;font:inherit;font-size:1rem;padding:9px 4px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);text-align:center}
+  .aud-rows input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .aud-rows input.opt{background:var(--bg)}
+  .aud-rows input.interp{color:var(--accent);font-style:italic}
+  .aud-legend{font-size:.8rem;color:var(--muted);margin:12px 0 0}
+
+  .tbl3{display:grid;grid-template-columns:1fr 96px 96px;align-items:center;margin-top:4px}
+  .tbl3>div{padding:9px 6px;border-top:1px solid var(--line-soft)}
+  .tbl3>.hdr{border-top:0;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);text-align:center;padding-bottom:6px}
+  .tbl3>.hdr.left{text-align:left}
+  .tbl3 .lab{font-size:.92rem}
+  .tbl3 .lab small{display:block;color:var(--muted);font-size:.78rem}
+  .tbl3 .val{text-align:center;font-weight:700;font-size:1.05rem}
+  /* Fila destacada: criterio de referencia en España */
+  .tbl3 .hl{background:color-mix(in srgb,var(--accent) 8%,white);border-top-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .tbl3 .hl.lab{border-left:3px solid var(--accent);border-radius:8px 0 0 8px;padding-left:11px}
+  .tbl3 .hl.val{color:var(--accent)}
+  .tbl3 .hl.last{border-radius:0 8px 8px 0}
+  .tag{display:inline-block;font-family:var(--font-mono);font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;color:#fff;background:var(--accent);padding:2px 7px;border-radius:999px;margin-left:7px;vertical-align:2px}
+
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+
+  .rule{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line-soft);font-size:.93rem}
+  .rule:first-of-type{border-top:0}
+  .rule .rn{font-weight:600}
+  .rule .rn small{display:block;font-weight:400;color:var(--muted);font-size:.79rem}
+  .rule .rv{flex:0 0 auto;text-align:right}
+
+  .note{font-size:.83rem;color:var(--muted);margin:12px 0 0;padding:10px 12px;background:var(--bg);border:1px solid var(--line-soft);border-radius:9px;border-left:3px solid var(--warn)}
+
+  /* ───────── Informe para impresión / PDF ───────── */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8.5pt;color:#555}
+  .pr-tbl{width:100%;border-collapse:collapse;font-size:10pt;margin-top:2px}
+  .pr-tbl th,.pr-tbl td{border:1px solid #999;padding:3px 5px;text-align:center}
+  .pr-tbl th{background:#eee;font-size:9pt;font-weight:600}
+  .pr-tbl td.lab{text-align:left;font-weight:600}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:560px){
+    .res .v{font-size:1.15rem}
+    .duo{grid-template-columns:1fr}
+    .aud-rows{grid-template-columns:44px repeat(7,48px);gap:5px;min-width:0}
+    .aud-rows input{font-size:.95rem;padding:9px 2px}
+    .tbl3{grid-template-columns:1fr 74px 74px}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Audición · Audiometría</p>
+    <h1>Audiometría tonal</h1>
+    <p class="lede">Introduce los umbrales de vía aérea de cada oído y obtén los promedios tonales, el grado de hipoacusia, el porcentaje de discapacidad, los criterios de asimetría interaural y la descripción de la curva. Todo se calcula en tu propio equipo y puedes generar un informe imprimible o en PDF.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Paciente / Nº de historia <span style="font-weight:400">(opcional, solo aparece en tu informe)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- ═══ UMBRALES ═══ -->
+  <section class="block">
+    <h2>Umbrales de vía aérea</h2>
+    <p class="sub">En dB HL. Las frecuencias de 500, 1000, 2000 y 4000 Hz son necesarias para el cálculo. Las de 3000, 6000 y 8000 Hz son opcionales y amplían los resultados disponibles.</p>
+
+    <div class="aud-scroll">
+      <div class="aud-rows">
+        <div class="hdr corner">kHz</div>
+        <div class="hdr">0,5</div><div class="hdr">1</div><div class="hdr">2</div>
+        <div class="hdr optcol">3</div><div class="hdr">4</div>
+        <div class="hdr optcol">6</div><div class="hdr optcol">8</div>
+
+        <div class="ear">OD</div>
+        <input id="od-500"  type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="500 Hz oído derecho">
+        <input id="od-1000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="1000 Hz oído derecho">
+        <input id="od-2000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="2000 Hz oído derecho">
+        <input id="od-3000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="opc." aria-label="3000 Hz oído derecho" class="opt">
+        <input id="od-4000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="4000 Hz oído derecho">
+        <input id="od-6000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="opc." aria-label="6000 Hz oído derecho" class="opt">
+        <input id="od-8000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="opc." aria-label="8000 Hz oído derecho" class="opt">
+
+        <div class="ear">OI</div>
+        <input id="oi-500"  type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="500 Hz oído izquierdo">
+        <input id="oi-1000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="1000 Hz oído izquierdo">
+        <input id="oi-2000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="2000 Hz oído izquierdo">
+        <input id="oi-3000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="opc." aria-label="3000 Hz oído izquierdo" class="opt">
+        <input id="oi-4000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="dB"   aria-label="4000 Hz oído izquierdo">
+        <input id="oi-6000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="opc." aria-label="6000 Hz oído izquierdo" class="opt">
+        <input id="oi-8000" type="number" step="5" min="-10" max="120" inputmode="numeric" placeholder="opc." aria-label="8000 Hz oído izquierdo" class="opt">
+      </div>
+    </div>
+
+    <p class="aud-legend">Columnas en gris: opcionales. Si no se explora 3 kHz, se interpola como media de 2 y 4 kHz y queda señalado. Una frecuencia no percibida se anota como 120 dB.</p>
+
+    <p class="note" id="n-interp" style="display:none"></p>
+  </section>
+
+  <!-- ═══ PROMEDIOS TONALES ═══ -->
+  <section class="block">
+    <h2>Promedios tonales (PTA)</h2>
+    <p class="sub">Cada criterio clínico exige su propio promedio: aplicar un punto de corte a un promedio distinto del que lo define es una fuente frecuente de error.</p>
+
+    <div class="tbl3">
+      <div class="hdr left">Promedio</div><div class="hdr">OD</div><div class="hdr">OI</div>
+      <div class="lab">PTA tritonal <small>0,5 · 1 · 2 kHz</small></div>
+      <div class="val" id="p3-od">—</div><div class="val" id="p3-oi">—</div>
+      <div class="lab">PTA AAO-HNS / AMA <small>0,5 · 1 · 2 · 3 kHz</small></div>
+      <div class="val" id="paao-od">—</div><div class="val" id="paao-oi">—</div>
+      <div class="lab hl">PTA BIAP / OMS <span class="tag">Referencia en España</span><small>0,5 · 1 · 2 · 4 kHz</small></div>
+      <div class="val hl" id="pwho-od">—</div><div class="val hl last" id="pwho-oi">—</div>
+      <div class="lab">PTA agudos <small>3 · 4 · 6 kHz · requiere 6 kHz</small></div>
+      <div class="val" id="phf-od">—</div><div class="val" id="phf-oi">—</div>
+    </div>
+
+    <p class="aud-legend">El promedio de 0,5 · 1 · 2 · 4 kHz es el que sustenta la clasificación del BIAP, de uso habitual en la práctica clínica española, y también la de la OMS. El de 0,5 · 1 · 2 · 3 kHz solo se emplea para el porcentaje de discapacidad y para la estadificación de Ménière.</p>
+  </section>
+
+  <!-- ═══ GRADO DE HIPOACUSIA ═══ -->
+  <section class="block">
+    <h2>Grado de hipoacusia</h2>
+    <p class="sub">La clasificación de la OMS (2021) se establece sobre el oído mejor; la del BIAP se aplica a cada oído por separado. Ambas usan el promedio de 0,5 · 1 · 2 · 4 kHz.</p>
+
+    <div class="results">
+      <div class="res stage"><div class="k">OMS 2021 · oído mejor</div><div class="v" id="who-v">—</div><div class="d" id="who-d">Introduce los umbrales de ambos oídos.</div></div>
+    </div>
+    <div class="duo">
+      <div class="res"><div class="k">BIAP · OD</div><div class="v" id="biap-od">—</div><div class="d" id="biap-od-d"></div></div>
+      <div class="res"><div class="k">BIAP · OI</div><div class="v" id="biap-oi">—</div><div class="d" id="biap-oi-d"></div></div>
+    </div>
+    <div class="results">
+      <div class="res"><div class="k">Pérdida tonal media binaural · BIAP</div><div class="v" id="biap-bin">—</div><div class="d" id="biap-bin-d"></div></div>
+    </div>
+    <p class="note" id="n-ic" style="display:none"></p>
+  </section>
+
+  <!-- ═══ DISCAPACIDAD AUDITIVA ═══ -->
+  <section class="block">
+    <h2>Porcentaje de discapacidad auditiva</h2>
+    <p class="sub">Método AAO-HNS (1979), recogido en las <em>AMA Guides</em>: sobre el PTA de 0,5 · 1 · 2 · 3 kHz se descuentan 25 dB y el exceso se multiplica por 1,5 %. El valor binaural pondera el oído mejor cinco veces más que el peor.</p>
+
+    <div class="duo">
+      <div class="res"><div class="k">Monoaural · OD</div><div class="v" id="ha-od">—</div></div>
+      <div class="res"><div class="k">Monoaural · OI</div><div class="v" id="ha-oi">—</div></div>
+    </div>
+    <div class="results">
+      <div class="res hero"><div class="k">Discapacidad binaural</div><div class="v" id="ha-bin">—</div><div class="d" id="ha-d">Introduce los umbrales de ambos oídos.</div></div>
+    </div>
+
+    <p class="note"><strong>Aviso.</strong> Este porcentaje es el estándar internacional en la literatura y en el peritaje anglosajón, pero <strong>no equivale al grado de discapacidad reconocido en España</strong>, que se determina conforme al Real Decreto 888/2022 y, en contingencias laborales o de tráfico, con baremos específicos distintos.</p>
+  </section>
+
+  <!-- ═══ ASIMETRÍA INTERAURAL ═══ -->
+  <section class="block">
+    <h2>Asimetría interaural</h2>
+    <p class="sub">Existen numerosas reglas publicadas para el cribado de hipoacusia asimétrica, con sensibilidad y especificidad distintas. Se muestran en paralelo las de uso más extendido.</p>
+
+    <div id="asym-rules">
+      <div class="rule"><div class="rn">Frecuencias contiguas <small>≥ 15 dB en dos frecuencias contiguas</small></div><div class="rv" id="ru-adj">—</div></div>
+      <div class="rule"><div class="rn">Regla del 3000 <small>≥ 15 dB a 3 kHz</small></div><div class="rv" id="ru-3k">—</div></div>
+      <div class="rule"><div class="rn">Regla del 4000 <small>≥ 15 dB a 4 kHz</small></div><div class="rv" id="ru-4k">—</div></div>
+      <div class="rule"><div class="rn">Diferencia de PTA <small>≥ 15 dB en el promedio 0,5 · 1 · 2 · 4 kHz</small></div><div class="rv" id="ru-pta">—</div></div>
+    </div>
+
+    <div class="results">
+      <div class="res stage"><div class="k">Valoración conjunta</div><div class="v" id="asym-v">—</div><div class="d" id="asym-d">Introduce los umbrales de ambos oídos.</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ MORFOLOGÍA Y ESCOTOMA ═══ -->
+  <section class="block">
+    <h2>Morfología de la curva y escotoma en agudos</h2>
+    <p class="sub">La detección del escotoma sigue los criterios de Coles, Lutman y Buffin (2000): caída de al menos 10 dB en 3, 4 o 6 kHz respecto a 1 o 2 kHz, con recuperación de al menos 10 dB en la frecuencia siguiente. Requiere 6 u 8 kHz.</p>
+
+    <div class="duo">
+      <div class="res"><div class="k">OD · morfología</div><div class="v" id="mor-od">—</div><div class="d" id="not-od"></div></div>
+      <div class="res"><div class="k">OI · morfología</div><div class="v" id="mor-oi">—</div><div class="d" id="not-oi"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ MÉNIÈRE ═══ -->
+  <section class="block">
+    <h2>Estadificación de la enfermedad de Ménière</h2>
+    <p class="sub">Criterios de la AAO-HNS (1995), sobre el PTA de 0,5 · 1 · 2 · 3 kHz del oído afecto: estadio 1 ≤ 25 dB · estadio 2 de 26 a 40 dB · estadio 3 de 41 a 70 dB · estadio 4 &gt; 70 dB. Solo aplicable ante un diagnóstico de enfermedad de Ménière definida, utilizando la peor audiometría de los seis meses previos.</p>
+
+    <div class="duo">
+      <div class="res"><div class="k">Estadio · OD</div><div class="v" id="men-od">—</div></div>
+      <div class="res"><div class="k">Estadio · OI</div><div class="v" id="men-oi">—</div></div>
+    </div>
+
+    <label class="check"><input type="checkbox" id="chk-meniere"> Incluir la estadificación en el informe impreso <span style="color:var(--muted)">(marcar solo si existe diagnóstico de enfermedad de Ménière definida)</span></label>
+  </section>
+
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Imprimir / Guardar PDF</button>
+    <button class="btn btn-copy" id="btn-copy" type="button">Copiar resultados</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Limpiar</button>
+    <span class="copy-msg" id="copy-msg" role="status" aria-live="polite"></span>
+  </div>
+
+  <details class="copybox no-print" id="copybox">
+    <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Ver el texto que se va a copiar</summary>
+    <pre id="copy-preview">—</pre>
+  </details>
+
+  <div class="print-report" id="report"></div>
+</main>
+
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">Herramienta de apoyo al razonamiento clínico; no sustituye el juicio profesional ni una valoración individualizada. Los datos introducidos no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+
+    <p class="source">
+      <strong>Fuentes.</strong>
+      Grados de hipoacusia: Organización Mundial de la Salud. <em>World report on hearing</em>. Ginebra: OMS; 2021.
+      Clasificación audiométrica y pérdida tonal media: Bureau International d'Audiophonologie. Recomendación BIAP 02/1, <em>Clasificación audiométrica de las deficiencias auditivas</em>.
+      Porcentaje de discapacidad y promedio de cuatro tonos: American Academy of Otolaryngology, Committee on Hearing and Equilibrium; American Council of Otolaryngology, Committee on the Medical Aspects of Noise. Guide for the evaluation of hearing handicap. <em>JAMA</em>. 1979;241(19):2055-9 (publicado también en <em>Otolaryngol Head Neck Surg</em>. 1979;87(4):539-51), recogido posteriormente en las <em>AMA Guides to the Evaluation of Permanent Impairment</em>.
+      Estadificación de la enfermedad de Ménière: Committee on Hearing and Equilibrium. Guidelines for the diagnosis and evaluation of therapy in Menière's disease. <em>Otolaryngol Head Neck Surg</em>. 1995;113(3):181-5.
+      Regla del 3000: Saliba I, Martineau G, Chagnon M. Asymmetric hearing loss: rule 3,000 for screening vestibular schwannoma. <em>Otol Neurotol</em>. 2009;30(4):515-21. Validación frente a otras definiciones de asimetría: Saliba I, Bergeron M, Martineau G, Chagnon M. <em>Eur Arch Otorhinolaryngol</em>. 2011;268(2):207-12.
+      Escotoma en agudos: Coles RRA, Lutman ME, Buffin JT. Guidelines on the diagnosis of noise-induced hearing loss for medicolegal purposes. <em>Clin Otolaryngol Allied Sci</em>. 2000;25(4):264-73.
+      Referencia normativa española del grado de discapacidad: Real Decreto 888/2022, de 18 de octubre. <em>BOE</em> núm. 252, de 20 de octubre de 2022 (BOE-A-2022-17105).
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const FREQS = [500,1000,2000,3000,4000,6000,8000];
+  const EARS  = ["od","oi"];
+  const dash  = "—";
+
+  const fmt = n => (n===null||n===undefined||!isFinite(n)) ? dash
+    : n.toLocaleString("es-ES",{minimumFractionDigits:1,maximumFractionDigits:1});
+  const fmt0 = n => (n===null||!isFinite(n)) ? dash : Math.round(n).toLocaleString("es-ES");
+
+  /* ── Lectura de umbrales ── */
+  function raw(ear,f){
+    const el = $(ear+"-"+f);
+    if(!el) return null;
+    const v = el.value.trim();
+    if(v==="") return null;
+    const n = parseFloat(v.replace(",","."));
+    return isFinite(n) ? n : null;
+  }
+
+  function readEar(ear){
+    const m = {}, t = {};
+    FREQS.forEach(f => { m[f] = raw(ear,f); t[f] = m[f]; });
+    let interp3 = false;
+    if(t[3000]===null && t[2000]!==null && t[4000]!==null){
+      t[3000] = (t[2000] + t[4000]) / 2;
+      interp3 = true;
+    }
+    const core = [500,1000,2000,4000].every(f => t[f]!==null);
+    return {ear, m, t, interp3, core};
+  }
+
+  const mean = arr => arr.some(v => v===null||v===undefined) ? null
+    : arr.reduce((a,b)=>a+b,0) / arr.length;
+
+  function ptas(e){
+    const t = e.t;
+    return {
+      p3  : mean([t[500],t[1000],t[2000]]),
+      aao : mean([t[500],t[1000],t[2000],t[3000]]),
+      who : mean([t[500],t[1000],t[2000],t[4000]]),
+      hf  : mean([t[3000],t[4000],t[6000]])
+    };
+  }
+
+  /* ── Clasificaciones ── */
+  function whoGrade(better, worse){
+    if(better===null) return null;
+    if(worse!==null && better<20 && worse>=35)
+      return {g:"Pérdida auditiva unilateral", n:"Oído mejor dentro de límites normales y oído peor con pérdida ≥ 35 dB."};
+    if(better<20)  return {g:"Audición normal", n:"Promedio del oído mejor por debajo de 20 dB."};
+    if(better<35)  return {g:"Pérdida auditiva leve", n:""};
+    if(better<50)  return {g:"Pérdida auditiva moderada", n:""};
+    if(better<65)  return {g:"Pérdida auditiva moderadamente severa", n:""};
+    if(better<80)  return {g:"Pérdida auditiva severa", n:""};
+    if(better<95)  return {g:"Pérdida auditiva profunda", n:""};
+    return {g:"Pérdida auditiva completa o total", n:""};
+  }
+
+  function biapGrade(pta){
+    if(pta===null) return null;
+    const v = Math.ceil(pta);                 /* BIAP redondea a la unidad superior */
+    if(v<=20)  return {g:"Audición normal o infranormal", n:v+" dB"};
+    if(v<=40)  return {g:"Deficiencia auditiva ligera", n:v+" dB"};
+    if(v<=55)  return {g:"Deficiencia media · 1.er grado", n:v+" dB"};
+    if(v<=70)  return {g:"Deficiencia media · 2.º grado", n:v+" dB"};
+    if(v<=80)  return {g:"Deficiencia severa · 1.er grado", n:v+" dB"};
+    if(v<=90)  return {g:"Deficiencia severa · 2.º grado", n:v+" dB"};
+    if(v<=100) return {g:"Deficiencia profunda · 1.er grado", n:v+" dB"};
+    if(v<=110) return {g:"Deficiencia profunda · 2.º grado", n:v+" dB"};
+    if(v<=119) return {g:"Deficiencia profunda · 3.er grado", n:v+" dB"};
+    return {g:"Cofosis", n:v+" dB"};
+  }
+
+  function monoImpair(ptaAao){
+    if(ptaAao===null) return null;
+    const v = (ptaAao - 25) * 1.5;
+    return Math.max(0, Math.min(100, v));
+  }
+
+  function meniereStage(ptaAao){
+    if(ptaAao===null) return null;
+    const v = Math.round(ptaAao);
+    if(v<=25) return "Estadio 1";
+    if(v<=40) return "Estadio 2";
+    if(v<=70) return "Estadio 3";
+    return "Estadio 4";
+  }
+
+  /* ── Escotoma (Coles 2000) ── */
+  function findNotch(e){
+    const t = e.m;                                  /* solo frecuencias medidas */
+    const refs = [t[1000],t[2000]].filter(v=>v!==null);
+    if(!refs.length) return {ok:false, msg:"Requiere 1 o 2 kHz."};
+    const ref = Math.min.apply(null,refs);
+    if(t[6000]===null && t[8000]===null) return {ok:false, msg:"Requiere 6 u 8 kHz para valorar el escotoma."};
+
+    let best = null;
+    [3000,4000,6000].forEach(f => {
+      const v = t[f];
+      if(v===null) return;
+      const higher = FREQS.filter(g=>g>f).map(g=>t[g]).filter(x=>x!==null);
+      if(!higher.length) return;
+      const rec = Math.min.apply(null,higher);
+      if(v - ref >= 10 && v - rec >= 10){
+        if(!best || v > best.depth) best = {f, depth:v, drop:v-ref, rec:v-rec};
+      }
+    });
+    if(!best) return {ok:true, notch:null, msg:"Sin escotoma según criterios de Coles."};
+    return {ok:true, notch:best, msg:"Escotoma en "+(best.f/1000).toString().replace(".",",")+" kHz ("+best.depth+" dB HL; caída de "+best.drop+" dB y recuperación de "+best.rec+" dB)."};
+  }
+
+  /* ── Morfología ── */
+  function morphology(e){
+    const t = e.t;
+    if(!e.core) return null;
+    const G = mean([t[500],t[1000]]);
+    const M = t[2000];
+    const hi = [t[4000], t[6000], t[8000]].filter(v=>v!==null);
+    const A = hi.reduce((a,b)=>a+b,0)/hi.length;
+    const vals = [G,M,A];
+    const range = Math.max.apply(null,vals) - Math.min.apply(null,vals);
+    if(range < 15) return "Plana";
+    if(A - G >= 15) return (A - G >= 35) ? "Descendente en agudos (caída marcada)" : "Descendente en agudos";
+    if(G - A >= 15) return "Ascendente";
+    if(M >= G + 10 && M >= A + 10) return "En U (peor en frecuencias medias)";
+    if(G >= M + 10 && A >= M + 10) return "En campana (mejor en frecuencias medias)";
+    return "Irregular";
+  }
+
+  /* ── Recálculo global ── */
+  let LAST = null;
+
+  function recalc(){
+    const od = readEar("od"), oi = readEar("oi");
+    const pod = ptas(od), poi = ptas(oi);
+
+    /* Aviso de interpolación + marcado visual */
+    EARS.forEach(ear => {
+      const e = (ear==="od") ? od : oi;
+      const el = $(ear+"-3000");
+      if(el) el.classList.toggle("interp", e.interp3);
+    });
+    const interpEars = [];
+    if(od.interp3) interpEars.push("OD");
+    if(oi.interp3) interpEars.push("OI");
+    const nInterp = $("n-interp");
+    if(interpEars.length){
+      nInterp.style.display = "";
+      nInterp.innerHTML = "<strong>3 kHz interpolada</strong> en "+interpEars.join(" y ")+
+        " como media de 2 y 4 kHz. Los cálculos que dependen de esta frecuencia (PTA AAO-HNS, porcentaje de discapacidad, estadio de Ménière y regla del 3000) son estimaciones y así constan en el informe.";
+    } else {
+      nInterp.style.display = "none";
+      nInterp.innerHTML = "";
+    }
+
+    /* Promedios */
+    $("p3-od").textContent   = fmt(pod.p3);
+    $("p3-oi").textContent   = fmt(poi.p3);
+    $("paao-od").textContent = fmt(pod.aao) + (od.interp3 && pod.aao!==null ? "*" : "");
+    $("paao-oi").textContent = fmt(poi.aao) + (oi.interp3 && poi.aao!==null ? "*" : "");
+    $("pwho-od").textContent = fmt(pod.who);
+    $("pwho-oi").textContent = fmt(poi.who);
+    $("phf-od").textContent  = fmt(pod.hf);
+    $("phf-oi").textContent  = fmt(poi.hf);
+
+    /* Grado OMS */
+    let who = null, better = null, worse = null;
+    if(pod.who!==null && poi.who!==null){
+      better = Math.min(pod.who, poi.who);
+      worse  = Math.max(pod.who, poi.who);
+      who = whoGrade(better, worse);
+    } else if(pod.who!==null || poi.who!==null){
+      $("who-v").textContent = dash;
+      $("who-d").textContent = "La clasificación de la OMS requiere los umbrales de ambos oídos.";
+    }
+    if(who){
+      $("who-v").textContent = who.g;
+      $("who-d").textContent = "Oído mejor: "+fmt(better)+" dB · oído peor: "+fmt(worse)+" dB." + (who.n ? " "+who.n : "");
+    } else if(pod.who===null && poi.who===null){
+      $("who-v").textContent = dash;
+      $("who-d").textContent = "Introduce los umbrales de ambos oídos.";
+    }
+
+    /* BIAP */
+    const bod = biapGrade(pod.who), boi = biapGrade(poi.who);
+    $("biap-od").textContent   = bod ? bod.g : dash;
+    $("biap-od-d").textContent = bod ? bod.n : "";
+    $("biap-oi").textContent   = boi ? boi.g : dash;
+    $("biap-oi-d").textContent = boi ? boi.n : "";
+
+    /* Pérdida tonal media binaural BIAP: ponderación 7:3 si la asimetría supera 15 dB */
+    let biapBin = null, biapBinPond = false;
+    if(pod.who!==null && poi.who!==null){
+      const mej = Math.min(pod.who, poi.who), peo = Math.max(pod.who, poi.who);
+      biapBinPond = (peo - mej) > 15;
+      biapBin = biapBinPond ? (7*mej + 3*peo) / 10 : (mej + peo) / 2;
+      const gb = biapGrade(biapBin);
+      $("biap-bin").textContent   = fmt(biapBin) + " dB";
+      $("biap-bin-d").textContent = gb.g + " · " + (biapBinPond
+        ? "asimetría superior a 15 dB: ponderación 7 (oído mejor) : 3 (oído peor)"
+        : "media aritmética de ambos oídos");
+    } else {
+      $("biap-bin").textContent   = dash;
+      $("biap-bin-d").textContent = "";
+    }
+
+    /* Cribado orientativo de implante coclear */
+    const nIc = $("n-ic");
+    if(pod.who!==null && poi.who!==null && pod.who>=70 && poi.who>=70){
+      nIc.style.display = "";
+      nIc.innerHTML = "<strong>Orientativo.</strong> Hipoacusia bilateral con promedio ≥ 70 dB en ambos oídos: podría corresponder a un perfil de derivación a una unidad de implantes cocleares. La indicación real exige logoaudiometría, estudio de imagen y valoración multidisciplinar.";
+    } else {
+      nIc.style.display = "none";
+      nIc.innerHTML = "";
+    }
+
+    /* Discapacidad AAO-HNS */
+    const iod = monoImpair(pod.aao), ioi = monoImpair(poi.aao);
+    $("ha-od").textContent = iod===null ? dash : fmt(iod)+" %" + (od.interp3 ? "*" : "");
+    $("ha-oi").textContent = ioi===null ? dash : fmt(ioi)+" %" + (oi.interp3 ? "*" : "");
+    let bin = null;
+    if(iod!==null && ioi!==null){
+      const mejor = Math.min(iod,ioi), peor = Math.max(iod,ioi);
+      bin = (5*mejor + peor) / 6;
+      $("ha-bin").textContent = fmt(bin)+" %";
+      $("ha-d").textContent = "Oído mejor "+fmt(mejor)+" % · oído peor "+fmt(peor)+" %. Ponderación 5:1 a favor del oído mejor.";
+    } else {
+      $("ha-bin").textContent = dash;
+      $("ha-d").textContent = "Introduce los umbrales de ambos oídos.";
+    }
+
+    /* Asimetría */
+    const asym = {adj:null, k3:null, k4:null, pta:null, count:0, total:0, detail:[]};
+    const bothCore = od.core && oi.core;
+
+    function setRule(id, state, text){
+      const el = $(id);
+      if(state===null){ el.innerHTML = '<span style="color:var(--muted)">'+text+'</span>'; return; }
+      el.innerHTML = '<span class="badge '+(state?"warn":"ok")+'">'+(state?"Cumple":"No cumple")+'</span>'
+        + (text ? '<div style="font-size:.79rem;color:var(--muted);margin-top:3px">'+text+'</div>' : '');
+    }
+
+    /* Regla de frecuencias contiguas: solo con frecuencias medidas en ambos oídos */
+    const common = FREQS.filter(f => od.m[f]!==null && oi.m[f]!==null);
+    if(common.length >= 2){
+      let hit = null;
+      for(let i=0;i<common.length-1;i++){
+        const d1 = Math.abs(od.m[common[i]]   - oi.m[common[i]]);
+        const d2 = Math.abs(od.m[common[i+1]] - oi.m[common[i+1]]);
+        if(d1>=15 && d2>=15){ hit = [common[i], common[i+1]]; break; }
+      }
+      asym.adj = !!hit; asym.total++;
+      if(hit) asym.count++;
+      setRule("ru-adj", asym.adj, hit ? (hit[0]/1000+" y "+hit[1]/1000+" kHz").replace(/\./g,",") : "Ninguna pareja contigua alcanza 15 dB");
+    } else {
+      setRule("ru-adj", null, "Requiere al menos dos frecuencias medidas en ambos oídos");
+    }
+
+    /* Regla del 3000 */
+    if(od.t[3000]!==null && oi.t[3000]!==null){
+      const d = Math.abs(od.t[3000] - oi.t[3000]);
+      asym.k3 = d>=15; asym.total++;
+      if(asym.k3) asym.count++;
+      const est = (od.interp3 || oi.interp3);
+      setRule("ru-3k", asym.k3, "Diferencia de "+fmt0(d)+" dB"+(est ? " · valor interpolado, interpretar con cautela" : ""));
+      asym.k3est = est;
+    } else {
+      setRule("ru-3k", null, "Requiere 3 kHz (medida o interpolable)");
+    }
+
+    /* Regla del 4000 */
+    if(od.m[4000]!==null && oi.m[4000]!==null){
+      const d = Math.abs(od.m[4000] - oi.m[4000]);
+      asym.k4 = d>=15; asym.total++;
+      if(asym.k4) asym.count++;
+      setRule("ru-4k", asym.k4, "Diferencia de "+fmt0(d)+" dB");
+    } else {
+      setRule("ru-4k", null, "Requiere 4 kHz en ambos oídos");
+    }
+
+    /* Diferencia de PTA */
+    if(pod.who!==null && poi.who!==null){
+      const d = Math.abs(pod.who - poi.who);
+      asym.pta = d>=15; asym.total++;
+      if(asym.pta) asym.count++;
+      setRule("ru-pta", asym.pta, "Diferencia de "+fmt(d)+" dB");
+    } else {
+      setRule("ru-pta", null, "Requiere el promedio de ambos oídos");
+    }
+
+    if(asym.total===0){
+      $("asym-v").textContent = dash;
+      $("asym-d").textContent = "Introduce los umbrales de ambos oídos.";
+    } else if(asym.count===0){
+      $("asym-v").textContent = "Sin criterio de asimetría";
+      $("asym-d").textContent = "Ninguna de las "+asym.total+" reglas evaluables resulta positiva.";
+    } else {
+      $("asym-v").textContent = "Criterio de asimetría cumplido";
+      $("asym-d").textContent = asym.count+" de "+asym.total+" reglas evaluables resultan positivas. Ante una hipoacusia neurosensorial asimétrica sin causa que la explique, procede valorar el estudio de la vía retrococlear.";
+    }
+
+    /* Morfología y escotoma */
+    const mOd = morphology(od), mOi = morphology(oi);
+    $("mor-od").textContent = mOd || dash;
+    $("mor-oi").textContent = mOi || dash;
+    const nOd = od.core ? findNotch(od) : null;
+    const nOi = oi.core ? findNotch(oi) : null;
+    $("not-od").textContent = nOd ? nOd.msg : "";
+    $("not-oi").textContent = nOi ? nOi.msg : "";
+
+    /* Ménière */
+    const sOd = meniereStage(pod.aao), sOi = meniereStage(poi.aao);
+    $("men-od").textContent = sOd ? sOd + (od.interp3 ? "*" : "") : dash;
+    $("men-oi").textContent = sOi ? sOi + (oi.interp3 ? "*" : "") : dash;
+
+    LAST = {od,oi,pod,poi,who,better,worse,bod,boi,biapBin,biapBinPond,iod,ioi,bin,asym,mOd,mOi,nOd,nOi,sOd,sOi};
+    buildReport();
+  }
+
+  /* ── Informe ── */
+  function prRow(lab,val){
+    return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val">'+val+'</span></div>';
+  }
+
+  function buildReport(){
+    if(!LAST) return;
+    const d = LAST;
+    const paciente = $("paciente").value.trim();
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+    const cell = v => v===null ? dash : fmt0(v);
+
+    /* Tabla de umbrales */
+    let head = '<tr><th>Oído</th>';
+    FREQS.forEach(f => head += '<th>'+(f/1000).toString().replace(".",",")+' kHz</th>');
+    head += '</tr>';
+    let rows = '';
+    [["OD",d.od],["OI",d.oi]].forEach(pair => {
+      rows += '<tr><td class="lab">'+pair[0]+'</td>';
+      FREQS.forEach(f => {
+        const measured = pair[1].m[f];
+        const val = pair[1].t[f];
+        rows += '<td>'+(measured===null && val!==null ? cell(val)+"*" : cell(measured))+'</td>';
+      });
+      rows += '</tr>';
+    });
+    const tabla = '<table class="pr-tbl">'+head+rows+'</table>';
+    const anyInterp = d.od.interp3 || d.oi.interp3;
+
+    /* Promedios */
+    const proms = prRow("PTA tritonal (0,5·1·2 kHz)", "OD "+fmt(d.pod.p3)+" · OI "+fmt(d.poi.p3))
+      + prRow("PTA AAO-HNS (0,5·1·2·3 kHz)", "OD "+fmt(d.pod.aao)+" · OI "+fmt(d.poi.aao))
+      + prRow("<strong>PTA BIAP / OMS (0,5·1·2·4 kHz)</strong>", "<strong>OD "+fmt(d.pod.who)+" · OI "+fmt(d.poi.who)+"</strong>")
+      + (d.pod.hf!==null || d.poi.hf!==null ? prRow("PTA agudos (3·4·6 kHz)", "OD "+fmt(d.pod.hf)+" · OI "+fmt(d.poi.hf)) : "");
+
+    /* Grados */
+    const grados = prRow("Grado OMS 2021 (oído mejor)", d.who ? d.who.g : dash)
+      + prRow("BIAP · OD", d.bod ? d.bod.g : dash)
+      + prRow("BIAP · OI", d.boi ? d.boi.g : dash)
+      + prRow("Pérdida tonal media binaural (BIAP)", d.biapBin===null ? dash
+          : fmt(d.biapBin)+" dB"+(d.biapBinPond ? " (ponderación 7:3)" : ""));
+
+    /* Discapacidad */
+    const disc = prRow("Monoaural OD", d.iod===null ? dash : fmt(d.iod)+" %")
+      + prRow("Monoaural OI", d.ioi===null ? dash : fmt(d.ioi)+" %")
+      + prRow("<strong>Binaural</strong>", "<strong>"+(d.bin===null ? dash : fmt(d.bin)+" %")+"</strong>");
+
+    /* Asimetría */
+    const st = v => v===null ? dash : (v ? "Cumple" : "No cumple");
+    const asim = prRow("Frecuencias contiguas (≥ 15 dB en dos contiguas)", st(d.asym.adj))
+      + prRow("Regla del 3000", st(d.asym.k3))
+      + prRow("Regla del 4000", st(d.asym.k4))
+      + prRow("Diferencia de PTA ≥ 15 dB", st(d.asym.pta))
+      + prRow("<strong>Valoración conjunta</strong>", "<strong>"+(d.asym.total===0 ? dash : (d.asym.count>0 ? "Asimetría ("+d.asym.count+"/"+d.asym.total+" reglas)" : "Sin asimetría"))+"</strong>");
+
+    /* Morfología */
+    const morf = prRow("Morfología OD", d.mOd || dash)
+      + prRow("Morfología OI", d.mOi || dash)
+      + (d.nOd ? '<div class="pr-note">OD: '+d.nOd.msg+'</div>' : "")
+      + (d.nOi ? '<div class="pr-note">OI: '+d.nOi.msg+'</div>' : "");
+
+    /* Ménière (opcional) */
+    const incMen = $("chk-meniere").checked;
+    const men = incMen
+      ? '<div class="pr-sec"><h3>Enfermedad de Ménière · estadificación AAO-HNS 1995</h3>'
+        + prRow("Estadio OD", d.sOd || dash)
+        + prRow("Estadio OI", d.sOi || dash)
+        + '<div class="pr-note">Aplicable solo ante diagnóstico de enfermedad de Ménière definida, sobre la peor audiometría de los seis meses previos.</div></div>'
+      : "";
+
+    $("report").innerHTML =
+      '<div class="pr-head"><h2>Informe · Audiometría tonal</h2><div class="pr-brand">calculadoraorl.com</div></div>'
+      + '<div class="pr-meta"><span>Paciente / Nº historia: <strong>'+(paciente||dash)+'</strong></span><span>Fecha: '+fecha+'</span></div>'
+      + '<div class="pr-sec"><h3>Umbrales de vía aérea (dB HL)</h3>'+tabla
+        + (anyInterp ? '<div class="pr-note">* Umbral de 3 kHz no explorado; valor interpolado como media de 2 y 4 kHz. Los cálculos que dependen de esta frecuencia son estimaciones.</div>' : "")
+        + '</div>'
+      + '<div class="pr-sec"><h3>Promedios tonales</h3>'+proms+'</div>'
+      + '<div class="pr-sec"><h3>Grado de hipoacusia</h3>'+grados+'</div>'
+      + '<div class="pr-sec"><h3>Porcentaje de discapacidad auditiva (AAO-HNS 1979 / AMA)</h3>'+disc
+        + '<div class="pr-note">No equivale al grado de discapacidad reconocido en España (Real Decreto 888/2022).</div></div>'
+      + '<div class="pr-sec"><h3>Asimetría interaural</h3>'+asim+'</div>'
+      + '<div class="pr-sec"><h3>Morfología de la curva</h3>'+morf+'</div>'
+      + men
+      + '<div class="pr-foot">Herramienta de apoyo; no sustituye el juicio clínico. Cálculo realizado localmente en el navegador; los datos no se almacenan ni se transmiten. Criterios: OMS 2021 · BIAP 02/1 · AAO-HNS 1979 y 1995 · Coles, Lutman y Buffin 2000 · Saliba et al. 2009. Generado con calculadoraorl.com.</div>';
+  }
+
+  /* ── Eventos ── */
+  EARS.forEach(ear => FREQS.forEach(f => {
+    const el = $(ear+"-"+f);
+    if(el){ el.addEventListener("input", recalc); el.addEventListener("change", recalc); }
+  }));
+  ["paciente","chk-meniere"].forEach(id => {
+    const el = $(id);
+    if(el){ el.addEventListener("input", recalc); el.addEventListener("change", recalc); }
+  });
+
+  /* ═══════════ TEXTO PLANO PARA COPIAR ═══════════ */
+
+  // Sustituye guiones largos y puntos medios, que algunos programas no aceptan
+  const plano = t => String(t).replace(/[–—]/g,"-").replace(/·/g,",");
+  const kHz = f => (f/1000).toString().replace(".",",");
+
+  function buildText(){
+    const d = LAST;
+    if(!d) return "";
+    const L = [];
+    const g = "-";                                  // guion simple para el texto
+    const nd = v => (v===null||v===undefined||!isFinite(v)) ? g : fmt(v);
+
+    const pac = $("paciente").value.trim();
+    const hayUmbrales = EARS.some(e => FREQS.some(f => raw(e,f)!==null));
+    if(!hayUmbrales && !pac) return "";
+
+    L.push("AUDIOMETRÍA TONAL");
+    L.push("Fecha: " + new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"}));
+    if(pac) L.push("Paciente / Nº historia: " + pac);
+
+    if(!hayUmbrales){
+      L.push("");
+      L.push("Sin umbrales registrados.");
+      return L.join("\n");
+    }
+
+    /* Umbrales */
+    L.push("");
+    L.push("UMBRALES DE VÍA AÉREA (dB HL)");
+    [["OD",d.od],["OI",d.oi]].forEach(par => {
+      if(FREQS.every(f => par[1].m[f]===null)) return;      // oído sin explorar
+      const celdas = FREQS.map(f => {
+        const med = par[1].m[f], tot = par[1].t[f];
+        if(med!==null) return kHz(f) + "=" + fmt0(med);
+        if(tot!==null) return kHz(f) + "=" + fmt0(tot) + "*";
+        return kHz(f) + "=" + g;
+      });
+      L.push("- " + par[0] + " (kHz): " + celdas.join("  "));
+    });
+    if(d.od.interp3 || d.oi.interp3){
+      L.push("  * 3 kHz no explorada; valor interpolado como media de 2 y 4 kHz. Los cálculos que dependen de ella son estimaciones.");
+    }
+
+    /* Promedios */
+    L.push("");
+    L.push("PROMEDIOS TONALES (dB)");
+    const prom = (lab, a, b) => {
+      if(a===null && b===null) return;                      // no calculable en ninguno
+      L.push("- " + lab + ": OD " + nd(a) + " / OI " + nd(b));
+    };
+    prom("PTA tritonal (0,5-1-2 kHz)", d.pod.p3, d.poi.p3);
+    prom("PTA AAO-HNS (0,5-1-2-3 kHz)", d.pod.aao, d.poi.aao);
+    prom("PTA BIAP-OMS (0,5-1-2-4 kHz)", d.pod.who, d.poi.who);
+    prom("PTA agudos (3-4-6 kHz)", d.pod.hf, d.poi.hf);
+
+    /* Grado */
+    if(d.who || d.bod || d.boi){
+      L.push("");
+      L.push("GRADO DE HIPOACUSIA");
+      if(d.who) L.push("- OMS 2021 (oído mejor " + nd(d.better) + " dB, oído peor " + nd(d.worse) + " dB): " + plano(d.who.g));
+      if(d.bod) L.push("- BIAP OD: " + plano(d.bod.g) + " (" + d.bod.n + ")");
+      if(d.boi) L.push("- BIAP OI: " + plano(d.boi.g) + " (" + d.boi.n + ")");
+      if(d.biapBin!==null){
+        L.push("- Pérdida tonal media binaural (BIAP): " + fmt(d.biapBin) + " dB"
+               + (d.biapBinPond ? " (ponderación 7:3 por asimetría > 15 dB)" : " (media aritmética)"));
+      }
+    }
+
+    /* Discapacidad */
+    if(d.iod!==null || d.ioi!==null){
+      L.push("");
+      L.push("DISCAPACIDAD AUDITIVA (AAO-HNS 1979 / AMA)");
+      if(d.iod!==null) L.push("- Monoaural OD: " + fmt(d.iod) + " %");
+      if(d.ioi!==null) L.push("- Monoaural OI: " + fmt(d.ioi) + " %");
+      if(d.bin!==null) L.push("- Binaural: " + fmt(d.bin) + " % (ponderación 5:1 a favor del oído mejor)");
+      L.push("  No equivale al grado de discapacidad reconocido en España (RD 888/2022).");
+    }
+
+    /* Asimetría */
+    if(d.asym.total > 0){
+      const st = v => v===null ? "no evaluable" : (v ? "Cumple" : "No cumple");
+      L.push("");
+      L.push("ASIMETRÍA INTERAURAL");
+      L.push("- Frecuencias contiguas (>= 15 dB en dos contiguas): " + st(d.asym.adj));
+      L.push("- Regla del 3000: " + st(d.asym.k3) + (d.asym.k3!==null && d.asym.k3est ? " (valor interpolado)" : ""));
+      L.push("- Regla del 4000: " + st(d.asym.k4));
+      L.push("- Diferencia de PTA >= 15 dB: " + st(d.asym.pta));
+      L.push("- VALORACIÓN: " + (d.asym.count>0
+        ? "criterio de asimetría cumplido (" + d.asym.count + " de " + d.asym.total + " reglas evaluables)"
+        : "sin criterio de asimetría (0 de " + d.asym.total + " reglas evaluables)"));
+    }
+
+    /* Morfología */
+    if(d.mOd || d.mOi || d.nOd || d.nOi){
+      L.push("");
+      L.push("MORFOLOGÍA DE LA CURVA");
+      const morf = (lab, m, n) => {
+        if(!m && !(n && n.msg)) return;
+        let t = "- " + lab + ": " + (m ? plano(m) : "morfología no valorable");
+        if(n && n.msg) t += ". " + plano(n.msg).replace(/\.$/,"");
+        L.push(t + ".");
+      };
+      morf("OD", d.mOd, d.nOd);
+      morf("OI", d.mOi, d.nOi);
+    }
+
+    /* Ménière, solo si está marcado */
+    if($("chk-meniere").checked && (d.sOd || d.sOi)){
+      L.push("");
+      L.push("ENFERMEDAD DE MÉNIÈRE (AAO-HNS 1995)");
+      L.push("- Estadio OD: " + (d.sOd || g) + (d.od.interp3 && d.sOd ? " (3 kHz interpolada)" : ""));
+      L.push("- Estadio OI: " + (d.sOi || g) + (d.oi.interp3 && d.sOi ? " (3 kHz interpolada)" : ""));
+      L.push("  Aplicable solo ante enfermedad de Ménière definida, sobre la peor audiometría de los seis meses previos.");
+    }
+
+    L.push("");
+    L.push("Criterios: OMS 2021, BIAP 02/1, AAO-HNS 1979 y 1995, Coles, Lutman y Buffin 2000.");
+
+    return L.join("\n");
+  }
+
+  function flash(msg, err){
+    const el = $("copy-msg");
+    if(!el) return;
+    el.textContent = msg;
+    el.classList.toggle("err", !!err);
+    el.classList.add("show");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(() => el.classList.remove("show"), 2600);
+  }
+
+  function refreshPreview(){
+    const pre = $("copy-preview");
+    if(pre) pre.textContent = buildText() || dash;
+  }
+
+  function copiar(){
+    const texto = buildText();
+    if(!texto.trim()){ flash("No hay nada que copiar todavía.", true); return; }
+    refreshPreview();
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(texto)
+        .then(() => flash("Resultados copiados."))
+        .catch(() => copiarAlternativa(texto));
+    } else {
+      copiarAlternativa(texto);
+    }
+  }
+
+  function copiarAlternativa(texto){
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    if(ok) flash("Resultados copiados.");
+    else { $("copybox").open = true; flash("No se pudo copiar. Selecciona el texto de abajo.", true); }
+  }
+
+  $("btn-copy").addEventListener("click", copiar);
+  $("copybox").addEventListener("toggle", function(){ if(this.open) refreshPreview(); });
+
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-reset").addEventListener("click", () => {
+    EARS.forEach(ear => FREQS.forEach(f => { const el=$(ear+"-"+f); if(el) el.value=""; }));
+    $("paciente").value = "";
+    $("chk-meniere").checked = false;
+    recalc();
+    $("copy-preview").textContent = dash;
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
