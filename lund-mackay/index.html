@@ -125,11 +125,11 @@
   .source a:hover{text-decoration:underline}
 
   /* ───────── Específico de Lund-Mackay ───────── */
-  .lmwrap{overflow-x:auto;margin:0 -2px;padding:2px}
-  .lmgrid{display:grid;grid-template-columns:minmax(150px,.95fr) minmax(210px,1fr) minmax(210px,1fr);gap:14px 16px;align-items:center;min-width:620px}
-  .lmhead{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);padding-bottom:2px}
-  .lmlabel{font-size:.93rem;font-weight:600;line-height:1.3}
-  .lmlabel small{display:block;font-weight:400;font-size:.78rem;color:var(--muted);margin-top:1px}
+  .sidegrid-wrap{overflow-x:auto;margin:0 -2px;padding:2px}
+  .sidegrid{display:grid;grid-template-columns:minmax(150px,.95fr) minmax(210px,1fr) minmax(210px,1fr);gap:14px 16px;align-items:center;min-width:620px}
+  .sg-head{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);padding-bottom:2px}
+  .sg-label{font-size:.93rem;font-weight:600;line-height:1.3}
+  .sg-label small{display:block;font-weight:400;font-size:.78rem;color:var(--muted);margin-top:1px}
   .segmented.compact{gap:6px}
   .segmented.compact button{min-width:0;flex:1 1 0;padding:9px 4px;font-size:.95rem}
   .segmented.compact button.alt{font-size:.78rem;font-weight:600;flex:1.3 1 0}
@@ -211,13 +211,13 @@
       <span><b>2</b> opacificación total</span>
     </p>
 
-    <div class="lmwrap">
-      <div class="lmgrid">
-        <div class="lmhead"></div>
-        <div class="lmhead">Lado derecho</div>
-        <div class="lmhead">Lado izquierdo</div>
+    <div class="sidegrid-wrap">
+      <div class="sidegrid">
+        <div class="sg-head"></div>
+        <div class="sg-head">Lado derecho</div>
+        <div class="sg-head">Lado izquierdo</div>
 
-        <div class="lmlabel">Seno maxilar</div>
+        <div class="sg-label">Seno maxilar</div>
         <div class="segmented compact" id="seg-max-D" role="group" aria-label="Seno maxilar derecho">
           <button type="button" data-v="0" aria-pressed="false">0</button>
           <button type="button" data-v="1" aria-pressed="false">1</button>
@@ -229,7 +229,7 @@
           <button type="button" data-v="2" aria-pressed="false">2</button>
         </div>
 
-        <div class="lmlabel">Etmoides anterior</div>
+        <div class="sg-label">Etmoides anterior</div>
         <div class="segmented compact" id="seg-ea-D" role="group" aria-label="Etmoides anterior derecho">
           <button type="button" data-v="0" aria-pressed="false">0</button>
           <button type="button" data-v="1" aria-pressed="false">1</button>
@@ -241,7 +241,7 @@
           <button type="button" data-v="2" aria-pressed="false">2</button>
         </div>
 
-        <div class="lmlabel">Etmoides posterior</div>
+        <div class="sg-label">Etmoides posterior</div>
         <div class="segmented compact" id="seg-ep-D" role="group" aria-label="Etmoides posterior derecho">
           <button type="button" data-v="0" aria-pressed="false">0</button>
           <button type="button" data-v="1" aria-pressed="false">1</button>
@@ -253,7 +253,7 @@
           <button type="button" data-v="2" aria-pressed="false">2</button>
         </div>
 
-        <div class="lmlabel">Seno esfenoidal</div>
+        <div class="sg-label">Seno esfenoidal</div>
         <div class="segmented compact" id="seg-esf-D" role="group" aria-label="Seno esfenoidal derecho">
           <button type="button" data-v="0" aria-pressed="false">0</button>
           <button type="button" data-v="1" aria-pressed="false">1</button>
@@ -265,7 +265,7 @@
           <button type="button" data-v="2" aria-pressed="false">2</button>
         </div>
 
-        <div class="lmlabel">Seno frontal <small>incluye la opción «ausente»</small></div>
+        <div class="sg-label">Seno frontal <small>incluye la opción «ausente»</small></div>
         <div class="segmented compact" id="seg-fro-D" role="group" aria-label="Seno frontal derecho">
           <button type="button" data-v="0" aria-pressed="false">0</button>
           <button type="button" data-v="1" aria-pressed="false">1</button>
@@ -294,13 +294,13 @@
       <span><b>2</b> obstruido</span>
     </p>
 
-    <div class="lmwrap">
-      <div class="lmgrid">
-        <div class="lmhead"></div>
-        <div class="lmhead">Lado derecho</div>
-        <div class="lmhead">Lado izquierdo</div>
+    <div class="sidegrid-wrap">
+      <div class="sidegrid">
+        <div class="sg-head"></div>
+        <div class="sg-head">Lado derecho</div>
+        <div class="sg-head">Lado izquierdo</div>
 
-        <div class="lmlabel">Complejo ostiomeatal</div>
+        <div class="sg-label">Complejo ostiomeatal</div>
         <div class="segmented compact" id="seg-com-D" role="group" aria-label="Complejo ostiomeatal derecho">
           <button type="button" data-v="0" aria-pressed="false">0</button>
           <button type="button" data-v="2" aria-pressed="false">2</button>
@@ -322,13 +322,13 @@
       </span>
     </summary>
     <div class="foldbody">
-      <div class="lmwrap">
-        <div class="lmgrid">
-          <div class="lmhead"></div>
-          <div class="lmhead">Lado derecho</div>
-          <div class="lmhead">Lado izquierdo</div>
+      <div class="sidegrid-wrap">
+        <div class="sidegrid">
+          <div class="sg-head"></div>
+          <div class="sg-head">Lado derecho</div>
+          <div class="sg-head">Lado izquierdo</div>
 
-          <div class="lmlabel">Seno frontal ausente</div>
+          <div class="sg-label">Seno frontal ausente</div>
           <div class="segmented compact" id="seg-vfau-D" role="group" aria-label="Seno frontal ausente, lado derecho">
             <button type="button" data-v="0" aria-pressed="false">No</button>
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
@@ -338,7 +338,7 @@
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
           </div>
 
-          <div class="lmlabel">Concha bullosa</div>
+          <div class="sg-label">Concha bullosa</div>
           <div class="segmented compact" id="seg-vcb-D" role="group" aria-label="Concha bullosa derecha">
             <button type="button" data-v="0" aria-pressed="false">No</button>
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
@@ -348,7 +348,7 @@
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
           </div>
 
-          <div class="lmlabel">Cornete medio paradójico</div>
+          <div class="sg-label">Cornete medio paradójico</div>
           <div class="segmented compact" id="seg-vcmp-D" role="group" aria-label="Cornete medio paradójico derecho">
             <button type="button" data-v="0" aria-pressed="false">No</button>
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
@@ -358,7 +358,7 @@
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
           </div>
 
-          <div class="lmlabel">Apófisis unciforme evertida</div>
+          <div class="sg-label">Apófisis unciforme evertida</div>
           <div class="segmented compact" id="seg-vaue-D" role="group" aria-label="Apófisis unciforme evertida derecha">
             <button type="button" data-v="0" aria-pressed="false">No</button>
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
@@ -368,7 +368,7 @@
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
           </div>
 
-          <div class="lmlabel">Celdas de Haller</div>
+          <div class="sg-label">Celdas de Haller</div>
           <div class="segmented compact" id="seg-vhal-D" role="group" aria-label="Celdas de Haller derechas">
             <button type="button" data-v="0" aria-pressed="false">No</button>
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
@@ -378,7 +378,7 @@
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
           </div>
 
-          <div class="lmlabel">Celdas de agger nasi</div>
+          <div class="sg-label">Celdas de agger nasi</div>
           <div class="segmented compact" id="seg-vagn-D" role="group" aria-label="Celdas de agger nasi derechas">
             <button type="button" data-v="0" aria-pressed="false">No</button>
             <button type="button" data-v="1" aria-pressed="false">Sí</button>
