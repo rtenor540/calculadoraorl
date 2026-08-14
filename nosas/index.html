@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Puntuación NoSAS — Calculadora ORL</title>
+<meta name="description" content="Calculadora de la puntuación NoSAS para el cribado de la apnea obstructiva del sueño: perímetro cervical, IMC, ronquido, edad y sexo. Cálculo en tu propio equipo, sin envío de datos.">
+<link rel="canonical" href="https://calculadoraorl.com/nosas/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+
+    /* Categoría: Sueño */
+    --accent:#4b3f9e;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Cabecera */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  /* Encabezado de página */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  /* Paciente */
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  /* Bloques */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  /* Entradas numéricas */
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:4px}
+  .inp label{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .inp .unitbox{position:relative}
+  .inp input{width:100%;font:inherit;font-size:1.05rem;padding:11px 44px 11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .inp input:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .inp .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-family:var(--font-mono)}
+
+  /* Resultados */
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res .v small{font-weight:500;font-size:.82rem;color:var(--muted)}
+  .res.hero{grid-column:1/-1;background:color-mix(in srgb,var(--primary) 7%,white);border-color:color-mix(in srgb,var(--primary) 22%,transparent)}
+  .res.hero .v{font-size:1.7rem;color:var(--primary-strong)}
+  .res.stage{grid-column:1/-1;background:color-mix(in srgb,var(--accent) 8%,white);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .res.stage .v{font-size:1.7rem;color:var(--accent)}
+  .badge{display:inline-block;font-size:.9rem;font-weight:600;padding:2px 10px;border-radius:999px;margin-left:2px}
+  .badge.ok{background:color-mix(in srgb,var(--ok) 15%,white);color:var(--ok)}
+  .badge.warn{background:color-mix(in srgb,var(--warn) 16%,white);color:var(--warn)}
+
+  /* Campos de graduación / preguntas */
+  .field{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft)}
+  .field:first-of-type{border-top:0;padding-top:0;margin-top:16px}
+  .field h3{margin:0 0 4px;font-size:1rem}
+  .field .fhint{margin:0 0 12px;font-size:.85rem;color:var(--muted)}
+
+  /* Ilustración de referencia (plegable) */
+  details.illus{margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+  details.illus>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  details.illus>summary::-webkit-details-marker{display:none}
+  details.illus>summary .chev{transition:transform .15s ease}
+  details.illus[open]>summary .chev{transform:rotate(90deg)}
+  details.illus .imgwrap{padding:0 14px 14px;text-align:center}
+  details.illus img{max-width:100%;width:auto;max-height:440px;border-radius:8px}
+  details.illus .txt{padding:0 14px 14px;font-size:.87rem;color:var(--muted);margin:0}
+
+  /* Botonera segmentada (respuestas / graduaciones) */
+  .segmented{display:flex;flex-wrap:wrap;gap:8px}
+  .segmented button{font:inherit;font-size:.95rem;font-weight:600;padding:10px 12px;min-width:58px;flex:1 1 58px;
+    border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s ease;text-align:center}
+  .segmented button:hover{border-color:var(--accent)}
+  .segmented button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .segmented button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* Casilla de verificación */
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:.92rem;cursor:pointer}
+  .check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:0 0 auto}
+
+  /* Acciones */
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+
+  /* Copiar resultados */
+  .btn-copy{background:var(--surface);color:var(--primary);border-color:var(--primary)}
+  .btn-copy:hover{background:color-mix(in srgb,var(--primary) 7%,white)}
+  .copy-msg{font-size:.85rem;color:var(--ok);align-self:center;opacity:0;transition:opacity .2s ease}
+  .copy-msg.show{opacity:1}
+  .copy-msg.err{color:var(--warn)}
+  .copybox{margin-top:14px}
+  .copybox summary{cursor:pointer;list-style:none;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  .copybox summary::-webkit-details-marker{display:none}
+  .copybox summary .chev{transition:transform .15s ease}
+  .copybox[open] summary .chev{transform:rotate(90deg)}
+  .copybox pre{margin:10px 0 0;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    font-family:var(--font-mono);font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink);overflow-x:auto}
+  .btn-link{background:var(--surface);color:var(--primary);border-color:var(--line);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-link:hover{border-color:var(--primary)}
+
+  /* Pie */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+
+  /* ───────── Informe para impresión / PDF ───────── */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8.5pt;color:#555}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:520px){.res .v{font-size:1.15rem}}
+</style>
+</head>
+<body>
+
+<!-- ═══ CABECERA ═══ -->
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Sueño · NoSAS</p>
+    <h1>Puntuación NoSAS</h1>
+    <p class="lede">Cribado de la apnea obstructiva del sueño a partir de cinco variables: perímetro cervical, obesidad, ronquido, edad y sexo. Introduce los datos y el resultado se calcula al momento en tu propio equipo. Al terminar puedes generar un informe imprimible o en PDF.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Paciente / Nº de historia <span style="font-weight:400">(opcional, solo aparece en tu informe)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- ═══ DATOS ═══ -->
+  <section class="block">
+    <h2>Datos del paciente</h2>
+    <p class="sub">Las cinco variables de la puntuación. El IMC se calcula automáticamente a partir del peso y la talla.</p>
+
+    <div class="inputs">
+      <div class="inp"><label for="edad">Edad</label><div class="unitbox"><input id="edad" type="number" inputmode="numeric" min="0" max="120" step="1" placeholder="0"><span class="unit">años</span></div></div>
+      <div class="inp"><label for="peso">Peso</label><div class="unitbox"><input id="peso" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0"><span class="unit">kg</span></div></div>
+      <div class="inp"><label for="talla">Talla</label><div class="unitbox"><input id="talla" type="number" inputmode="decimal" min="0" step="1" placeholder="0"><span class="unit">cm</span></div></div>
+      <div class="inp"><label for="cuello">Perímetro cervical</label><div class="unitbox"><input id="cuello" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0"><span class="unit">cm</span></div></div>
+    </div>
+
+    <div class="field">
+      <h3>Sexo</h3>
+      <p class="fhint">La puntuación original asigna 2 puntos al sexo masculino.</p>
+      <div class="segmented" id="seg-sexo" role="group" aria-label="Sexo">
+        <button type="button" data-v="h" aria-pressed="false">Hombre</button>
+        <button type="button" data-v="m" aria-pressed="false">Mujer</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <h3>Ronquido</h3>
+      <p class="fhint">¿Ronca habitualmente, referido por el paciente o por su acompañante?</p>
+      <div class="segmented" id="seg-ronq" role="group" aria-label="Ronquido">
+        <button type="button" data-v="1" aria-pressed="false">Sí</button>
+        <button type="button" data-v="0" aria-pressed="false">No</button>
+      </div>
+    </div>
+
+    <details class="illus">
+      <summary><span class="chev" aria-hidden="true">›</span> Cómo medir el perímetro cervical</summary>
+      <p class="txt">Con el paciente sentado o de pie, la cabeza en posición neutra y la mirada al frente. Se rodea el cuello con una cinta métrica inextensible a la altura de la <strong>membrana cricotiroidea</strong>, en un plano perpendicular al eje del cuello, sin comprimir los tejidos blandos y con respiración normal. Lectura a 0,1 cm. La puntuación NoSAS emplea un único umbral de 40 cm, común a ambos sexos.<br><br><a href="/perimetro-cervical/" style="color:var(--primary)">Técnica de medida del perímetro cervical →</a></p>
+    </details>
+  </section>
+
+  <!-- ═══ RESULTADO ═══ -->
+  <section class="block">
+    <h2>Resultado</h2>
+    <p class="sub">Desglose de la puntuación por variable y clasificación del riesgo.</p>
+
+    <div class="results">
+      <div class="res hero"><div class="k">Índice de masa corporal</div><div class="v" id="r-imc">—</div><div class="pr-note" id="r-imc-cat" style="color:var(--muted);font-size:.82rem;margin-top:4px"></div></div>
+
+      <div class="res"><div class="k">N · Cuello &gt;40 cm</div><div class="v" id="r-p-cuello">— <small>pts</small></div></div>
+      <div class="res"><div class="k">O · Obesidad (IMC)</div><div class="v" id="r-p-imc">— <small>pts</small></div></div>
+      <div class="res"><div class="k">S · Ronquido</div><div class="v" id="r-p-ronq">— <small>pts</small></div></div>
+      <div class="res"><div class="k">A · Edad &gt;55 años</div><div class="v" id="r-p-edad">— <small>pts</small></div></div>
+      <div class="res"><div class="k">S · Sexo masculino</div><div class="v" id="r-p-sexo">— <small>pts</small></div></div>
+
+      <div class="res stage"><div class="k">Puntuación NoSAS (0–17)</div><div class="v" id="r-total">—</div><div class="pr-note" id="r-detail" style="color:var(--muted);font-size:.82rem;margin-top:4px">Completa los cinco campos para obtener la puntuación.</div></div>
+    </div>
+  </section>
+
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Imprimir / Guardar PDF</button>
+    <button class="btn btn-copy" id="btn-copy" type="button">Copiar resultados</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Limpiar</button>
+    <span class="copy-msg" id="copy-msg" role="status" aria-live="polite"></span>
+  </div>
+
+  <details class="copybox no-print" id="copybox">
+    <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Ver el texto que se va a copiar</summary>
+    <pre id="copy-preview">—</pre>
+  </details>
+
+  <!-- INFORME (solo impresión) -->
+  <div class="print-report" id="report"></div>
+</main>
+
+<!-- ═══ PIE ═══ -->
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">Herramienta de apoyo al razonamiento clínico; no sustituye el juicio profesional ni una valoración individualizada. La puntuación NoSAS es un instrumento de cribado: no diagnostica ni descarta por sí sola la apnea obstructiva del sueño, cuyo diagnóstico requiere un estudio de sueño. Los datos introducidos no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+
+    <p class="source">
+      <strong>Fuente.</strong> Marti-Soler H, Hirotsu C, Marques-Vidal P, Vollenweider P, Waeber G, Preisig M, et al. <em>The NoSAS score for screening of sleep-disordered breathing: a derivation and validation study.</em> Lancet Respir Med. 2016;4(9):742–748. <a href="https://doi.org/10.1016/S2213-2600(16)30075-3" target="_blank" rel="noopener">doi:10.1016/S2213-2600(16)30075-3</a>
+      <br><br>
+      <strong>Sobre la versión en español.</strong> El NoSAS no es un cuestionario con batería de ítems, sino un algoritmo de puntuación sobre cinco variables (cuatro de ellas medidas objetivas), por lo que no procede una validación lingüística o transcultural como la que requieren las escalas autocumplimentadas. La única variable de anamnesis es el ronquido, formulado aquí en español con redacción propia.
+      <br><br>
+      Esta calculadora es una implementación independiente del algoritmo publicado. No reproduce el texto, las tablas ni las figuras del artículo original.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+
+  /* Estado de los selectores segmentados */
+  const sel = { sexo:null, ronq:null };
+
+  function wireSegmented(groupId, key){
+    const group = $(groupId);
+    if(!group) return;
+    group.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const v = btn.dataset.v;
+      const already = sel[key] === v;
+      group.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed","false"));
+      if(already){ sel[key] = null; }
+      else { sel[key] = v; btn.setAttribute("aria-pressed","true"); }
+      recalc();
+    });
+  }
+  wireSegmented("seg-sexo","sexo");
+  wireSegmented("seg-ronq","ronq");
+
+  ["edad","peso","talla","cuello","paciente"].forEach(id => {
+    const el = $(id); if(!el) return;
+    el.addEventListener("input", recalc);
+    el.addEventListener("change", recalc);
+  });
+
+  /* Utilidades de formato (es-ES) */
+  const nf1 = n => n.toLocaleString("es-ES",{minimumFractionDigits:1,maximumFractionDigits:1});
+  const dash = "—";
+
+  // Último conjunto de datos calculado, para el texto copiable
+  let ULTIMO = null;
+  const num = id => { const v = parseFloat($(id).value); return (isFinite(v) && v > 0) ? v : null; };
+
+  /* Clasificación OMS del IMC */
+  function imcCat(imc){
+    if(imc < 18.5) return "Bajo peso";
+    if(imc < 25)   return "Normopeso";
+    if(imc < 30)   return "Sobrepeso";
+    if(imc < 35)   return "Obesidad grado I";
+    if(imc < 40)   return "Obesidad grado II";
+    return "Obesidad grado III";
+  }
+
+  /* ═══ LÓGICA DE LA ESCALA ═══
+     NoSAS (Marti-Soler et al., 2016), rango 0–17:
+       · perímetro cervical > 40 cm ................ 4 puntos
+       · IMC 25 a < 30 kg/m² ...................... 3 puntos
+       · IMC ≥ 30 kg/m² ........................... 5 puntos
+       · ronquido ................................. 2 puntos
+       · edad > 55 años ........................... 4 puntos
+       · sexo masculino ........................... 2 puntos
+     Umbral de alto riesgo: ≥ 8 puntos. */
+  function recalc(){
+    const edad   = num("edad");
+    const peso   = num("peso");
+    const talla  = num("talla");
+    const cuello = num("cuello");
+    const sexo   = sel.sexo;            // "h" | "m" | null
+    const ronq   = sel.ronq;            // "1" | "0" | null
+
+    /* IMC */
+    let imc = null;
+    if(peso && talla){
+      const m = talla / 100;
+      imc = peso / (m * m);
+      if(!isFinite(imc) || imc <= 0 || imc > 120) imc = null;
+    }
+    $("r-imc").textContent      = imc ? (nf1(imc) + " kg/m²") : dash;
+    $("r-imc-cat").textContent  = imc ? imcCat(imc) : "Introduce peso y talla.";
+
+    /* Puntos por variable */
+    const pCuello = (cuello === null) ? null : (cuello > 40 ? 4 : 0);
+    const pImc    = (imc === null)    ? null : (imc >= 30 ? 5 : (imc >= 25 ? 3 : 0));
+    const pRonq   = (ronq === null)   ? null : (ronq === "1" ? 2 : 0);
+    const pEdad   = (edad === null)   ? null : (edad > 55 ? 4 : 0);
+    const pSexo   = (sexo === null)   ? null : (sexo === "h" ? 2 : 0);
+
+    const pt = p => (p === null) ? (dash + ' <small>pts</small>') : (p + ' <small>pts</small>');
+    $("r-p-cuello").innerHTML = pt(pCuello);
+    $("r-p-imc").innerHTML    = pt(pImc);
+    $("r-p-ronq").innerHTML   = pt(pRonq);
+    $("r-p-edad").innerHTML   = pt(pEdad);
+    $("r-p-sexo").innerHTML   = pt(pSexo);
+
+    const parts = [pCuello, pImc, pRonq, pEdad, pSexo];
+    const completo = parts.every(p => p !== null);
+
+    let total = null, riesgo = null, detalle = "";
+    if(completo){
+      total = parts.reduce((a,b) => a + b, 0);
+      riesgo = (total >= 8) ? "alto" : "bajo";
+      $("r-total").innerHTML = total + " / 17 "
+        + '<span class="badge ' + (riesgo === "alto" ? "warn" : "ok") + '">Riesgo ' + riesgo + '</span>';
+      detalle = (riesgo === "alto")
+        ? "Puntuación ≥ 8: alta probabilidad de trastorno respiratorio del sueño clínicamente significativo. Se recomienda valorar un estudio de sueño."
+        : "Puntuación < 8: baja probabilidad de trastorno respiratorio del sueño clínicamente significativo (alto valor predictivo negativo).";
+    } else {
+      $("r-total").textContent = dash;
+      detalle = "Completa los cinco campos para obtener la puntuación.";
+    }
+    $("r-detail").textContent = detalle;
+
+    buildReport({edad, peso, talla, cuello, sexo, ronq, imc, pCuello, pImc, pRonq, pEdad, pSexo, total, riesgo, detalle});
+  }
+
+  function prRow(lab, val){ return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val">'+val+'</span></div>'; }
+
+  /* ═══ INFORME IMPRIMIBLE ═══ */
+  function buildReport(d){
+    ULTIMO = d;
+    const paciente = $("paciente").value.trim();
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+    const p = v => (v === null) ? dash : (v + " pts");
+
+    const datos = prRow("Edad", d.edad !== null ? (d.edad + " años") : dash)
+                + prRow("Sexo", d.sexo === "h" ? "Hombre" : (d.sexo === "m" ? "Mujer" : dash))
+                + prRow("Peso", d.peso !== null ? (nf1(d.peso) + " kg") : dash)
+                + prRow("Talla", d.talla !== null ? (nf1(d.talla) + " cm") : dash)
+                + prRow("Índice de masa corporal", d.imc ? (nf1(d.imc) + " kg/m² · " + imcCat(d.imc)) : dash)
+                + prRow("Perímetro cervical", d.cuello !== null ? (nf1(d.cuello) + " cm") : dash)
+                + prRow("Ronquido", d.ronq === "1" ? "Sí" : (d.ronq === "0" ? "No" : dash));
+
+    const puntos = prRow("N · Perímetro cervical &gt; 40 cm", p(d.pCuello))
+                 + prRow("O · Obesidad (IMC 25–30 / ≥ 30)", p(d.pImc))
+                 + prRow("S · Ronquido", p(d.pRonq))
+                 + prRow("A · Edad &gt; 55 años", p(d.pEdad))
+                 + prRow("S · Sexo masculino", p(d.pSexo))
+                 + prRow("<strong>Puntuación NoSAS total</strong>",
+                         "<strong>" + (d.total !== null ? (d.total + " / 17") : dash) + "</strong>")
+                 + prRow("<strong>Clasificación (umbral ≥ 8)</strong>",
+                         "<strong>" + (d.riesgo ? ("Riesgo " + d.riesgo) : dash) + "</strong>");
+
+    $("report").innerHTML =
+      '<div class="pr-head"><h2>Informe · Puntuación NoSAS</h2>'
+      + '<div class="pr-brand">calculadoraorl.com</div></div>'
+      + '<div class="pr-meta"><span>Paciente / Nº historia: <strong>'+(paciente||dash)+'</strong></span><span>Fecha: '+fecha+'</span></div>'
+      + '<div class="pr-sec"><h3>Datos</h3>'+datos+'</div>'
+      + '<div class="pr-sec"><h3>Puntuación</h3>'+puntos
+      + '<p class="pr-note">'+d.detalle+'</p></div>'
+      + '<div class="pr-sec"><h3>Fuente</h3>'
+      + '<p class="pr-note">Marti-Soler H, Hirotsu C, Marques-Vidal P, Vollenweider P, Waeber G, Preisig M, et al. The NoSAS score for screening of sleep-disordered breathing: a derivation and validation study. Lancet Respir Med. 2016;4(9):742–748. doi:10.1016/S2213-2600(16)30075-3</p></div>'
+      + '<div class="pr-foot">Instrumento de cribado; no diagnostica ni descarta la apnea obstructiva del sueño, cuyo diagnóstico requiere un estudio de sueño. Herramienta de apoyo; no sustituye el juicio clínico. Cálculo realizado localmente en el navegador; los datos no se almacenan ni se transmiten. Generado con calculadoraorl.com.</div>';
+  }
+
+  /* ═══════════ TEXTO PLANO PARA COPIAR ═══════════ */
+
+  // Sustituye guiones largos y puntos medios, que algunos programas no aceptan
+  const plano = t => String(t).replace(/[–—]/g,"-").replace(/·/g,",")
+                             .replace(/≥/g,">=").replace(/≤/g,"<=");
+
+  function buildText(){
+    const d = ULTIMO;
+    if(!d) return "";
+    const L = [];
+
+    const pac = $("paciente").value.trim();
+    const hayDatos = [d.edad,d.peso,d.talla,d.cuello].some(v => v !== null)
+                     || d.sexo !== null || d.ronq !== null;
+    if(!hayDatos && !pac) return "";
+
+    L.push("PUNTUACIÓN NoSAS (cribado de trastornos respiratorios del sueño)");
+    L.push("Fecha: " + new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"}));
+    if(pac) L.push("Paciente / Nº historia: " + pac);
+
+    L.push("");
+    L.push("DATOS");
+    if(d.edad !== null) L.push("- Edad: " + d.edad + " años");
+    if(d.sexo !== null) L.push("- Sexo: " + (d.sexo === "h" ? "Hombre" : "Mujer"));
+    if(d.peso !== null) L.push("- Peso: " + nf1(d.peso) + " kg");
+    if(d.talla !== null) L.push("- Talla: " + nf1(d.talla) + " cm");
+    if(d.imc) L.push("- IMC: " + nf1(d.imc) + " kg/m2 (" + imcCat(d.imc) + ")");
+    if(d.cuello !== null) L.push("- Perímetro cervical: " + nf1(d.cuello) + " cm");
+    if(d.ronq !== null) L.push("- Ronquido: " + (d.ronq === "1" ? "Sí" : "No"));
+
+    const p = v => (v === null) ? "sin registrar" : (v + " pts");
+    L.push("");
+    L.push("PUNTUACIÓN");
+    L.push("- Perímetro cervical > 40 cm: " + p(d.pCuello));
+    L.push("- Obesidad (IMC 25 a 30 = 3 pts; IMC >= 30 = 5 pts): " + p(d.pImc));
+    L.push("- Ronquido: " + p(d.pRonq));
+    L.push("- Edad > 55 años: " + p(d.pEdad));
+    L.push("- Sexo masculino: " + p(d.pSexo));
+
+    if(d.total !== null){
+      L.push("- TOTAL NoSAS: " + d.total + " / 17");
+      L.push("- CLASIFICACIÓN (umbral >= 8): riesgo " + d.riesgo);
+      L.push("");
+      L.push(plano(d.detalle));
+    } else {
+      L.push("- TOTAL NoSAS: no calculable");
+      L.push("  [Puntuación incompleta: faltan variables por registrar.]");
+    }
+
+    L.push("");
+    L.push("Instrumento de cribado; no diagnostica ni descarta la apnea obstructiva del sueño, cuyo diagnóstico requiere un estudio de sueño.");
+    L.push("Marti-Soler H et al. Lancet Respir Med. 2016;4(9):742-748.");
+
+    return L.join("\n");
+  }
+
+  function flash(msg, err){
+    const el = $("copy-msg");
+    if(!el) return;
+    el.textContent = msg;
+    el.classList.toggle("err", !!err);
+    el.classList.add("show");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(() => el.classList.remove("show"), 2600);
+  }
+
+  function refreshPreview(){
+    const pre = $("copy-preview");
+    if(pre) pre.textContent = buildText() || dash;
+  }
+
+  function copiar(){
+    const texto = buildText();
+    if(!texto.trim()){ flash("No hay nada que copiar todavía.", true); return; }
+    refreshPreview();
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(texto)
+        .then(() => flash("Resultados copiados."))
+        .catch(() => copiarAlternativa(texto));
+    } else {
+      copiarAlternativa(texto);
+    }
+  }
+
+  function copiarAlternativa(texto){
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    if(ok) flash("Resultados copiados.");
+    else { $("copybox").open = true; flash("No se pudo copiar. Selecciona el texto de abajo.", true); }
+  }
+
+  $("btn-copy").addEventListener("click", copiar);
+  $("copybox").addEventListener("toggle", function(){ if(this.open) refreshPreview(); });
+
+  /* Acciones */
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-reset").addEventListener("click", () => {
+    ["edad","peso","talla","cuello","paciente"].forEach(id => { if($(id)) $(id).value = ""; });
+    for(const k in sel) sel[k] = null;
+    document.querySelectorAll(".segmented button").forEach(b => b.setAttribute("aria-pressed","false"));
+    recalc();
+    $("copy-preview").textContent = dash;
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
