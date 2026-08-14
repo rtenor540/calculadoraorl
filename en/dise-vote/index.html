@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>VOTE Classification Worksheet (DISE) — Calculadora ORL</title>
+<meta name="description" content="Structured worksheet for recording drug-induced sleep endoscopy findings using the VOTE classification: velum, oropharyngeal lateral walls, tongue and epiglottis. Printable report and plain-text output. Everything runs in your own browser.">
+<link rel="canonical" href="https://calculadoraorl.com/en/dise-vote/">
+<link rel="alternate" hreflang="en" href="https://calculadoraorl.com/en/dise-vote/">
+<link rel="alternate" hreflang="es" href="https://calculadoraorl.com/dise-vote/">
+<link rel="alternate" hreflang="x-default" href="https://calculadoraorl.com/dise-vote/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+    --accent:#4b3f9e;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Header */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .headlinks{display:flex;align-items:center;gap:14px}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+  .langsw{font-size:.85rem;color:var(--primary);text-decoration:none;font-weight:600;border:1px solid var(--line);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .langsw:hover{border-color:var(--primary)}
+
+  /* Page head */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  /* Patient */
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  /* Blocks */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  /* Text and number inputs */
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:4px}
+  .inp label{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .inp .unitbox{position:relative}
+  .inp input{width:100%;font:inherit;font-size:1.05rem;padding:11px 44px 11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .inp input.plain{padding-right:12px;font-size:1rem}
+  .inp input:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .inp .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-family:var(--font-mono)}
+  .inp.wide{grid-column:1/-1}
+
+  /* Results */
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res.stage{grid-column:1/-1;background:color-mix(in srgb,var(--accent) 8%,white);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .res.stage .v{font-size:1.7rem;color:var(--accent);font-family:var(--font-mono);letter-spacing:.02em}
+
+  /* Fields */
+  .field{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft)}
+  .field:first-of-type{border-top:0;padding-top:0;margin-top:16px}
+  .field h3{margin:0 0 4px;font-size:1rem}
+  .field .fhint{margin:0 0 12px;font-size:.85rem;color:var(--muted)}
+
+  /* Legend */
+  .legend{margin:0 0 16px;font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 18px}
+  .legend b{color:var(--ink);font-family:var(--font-mono);font-weight:700}
+
+  /* Clinical caveat */
+  .caveat{margin:16px 0 0;font-size:.84rem;color:var(--muted);padding:11px 13px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--warn)}
+  .caveat strong{color:var(--ink)}
+  .caveat.alert{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,white)}
+  .caveat.alert strong{color:var(--accent)}
+
+  /* Collapsible illustration */
+  details.illus{margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+  details.illus>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  details.illus>summary::-webkit-details-marker{display:none}
+  details.illus>summary .chev{transition:transform .15s ease}
+  details.illus[open]>summary .chev{transform:rotate(90deg)}
+  details.illus .imgwrap{padding:0 14px 14px}
+
+  /* Collapsible section */
+  details.fold{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+  details.fold>summary{cursor:pointer;list-style:none;padding:18px 20px;display:flex;align-items:flex-start;gap:11px}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  details.fold>summary .chev{flex:0 0 auto;margin-top:3px;color:var(--muted);transition:transform .15s ease}
+  details.fold[open]>summary .chev{transform:rotate(90deg)}
+  details.fold>summary .ftitle{font-size:1.18rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+  details.fold>summary .fsub{display:block;font-size:.87rem;font-weight:400;color:var(--muted);margin-top:3px}
+  details.fold .foldbody{padding:2px 20px 22px}
+
+  /* Segmented buttons */
+  .segmented{display:flex;flex-wrap:wrap;gap:8px}
+  .segmented button{font:inherit;font-size:.95rem;font-weight:600;padding:10px 12px;min-width:58px;flex:1 1 58px;
+    border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s ease;text-align:center}
+  .segmented button:hover{border-color:var(--accent)}
+  .segmented button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .segmented button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .segmented.compact{gap:6px}
+  .segmented.compact button{min-width:0;flex:1 1 0;padding:9px 4px;font-size:.95rem}
+  .segmented.compact button.alt{font-size:.78rem;font-weight:600;flex:1.3 1 0}
+  .segmented[data-off="1"]{opacity:.4;pointer-events:none}
+
+  /* VOTE grid */
+  .sidegrid-wrap{overflow-x:auto;margin:0 -2px;padding:2px}
+  .sidegrid{display:grid;grid-template-columns:minmax(150px,.95fr) minmax(210px,1fr) minmax(210px,1fr);gap:14px 16px;align-items:center;min-width:620px}
+  .sg-head{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);padding-bottom:2px}
+  .sg-label{font-size:.93rem;font-weight:600;line-height:1.3}
+  .sg-label small{display:block;font-weight:400;font-size:.78rem;color:var(--muted);margin-top:1px}
+  .sg-label .ini{font-family:var(--font-mono);color:var(--accent);font-weight:700;margin-right:2px}
+
+  /* Pattern illustrations */
+  .patterns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+  .patterns figure{margin:0}
+  .patterns svg{width:100%;height:auto;max-width:150px}
+  .patterns figcaption{font-size:.78rem;color:var(--muted);margin-top:2px;line-height:1.35}
+  .patterns figcaption b{display:block;color:var(--ink);font-size:.84rem}
+  .illus-note{font-size:.78rem;color:var(--muted);margin:12px 0 0;line-height:1.45}
+
+  /* Actions */
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-copy{background:var(--surface);color:var(--primary);border-color:var(--primary)}
+  .btn-copy:hover{background:color-mix(in srgb,var(--primary) 7%,white)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+  .copy-msg{font-size:.85rem;color:var(--ok);align-self:center;opacity:0;transition:opacity .2s ease}
+  .copy-msg.show{opacity:1}
+  .copy-msg.err{color:var(--warn)}
+
+  /* Copy preview */
+  .copybox{margin-top:14px}
+  .copybox summary{cursor:pointer;list-style:none;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  .copybox summary::-webkit-details-marker{display:none}
+  .copybox summary .chev{transition:transform .15s ease}
+  .copybox[open] summary .chev{transform:rotate(90deg)}
+  .copybox pre{margin:10px 0 0;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    font-family:var(--font-mono);font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink);overflow-x:auto}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+  .source ol{margin:6px 0 0;padding-left:20px}
+  .source li{margin-bottom:5px}
+
+  /* Printable report */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,details.fold,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right}
+  .pr-code{font-family:var(--font-mono);font-size:13pt;font-weight:700;letter-spacing:.03em;margin:2px 0 8px}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8.5pt;color:#555}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:520px){.res .v{font-size:1.15rem}.res.stage .v{font-size:1.35rem}}
+</style>
+</head>
+<body>
+
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, home">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <div class="headlinks">
+      <a class="langsw" href="/dise-vote/" hreflang="es" lang="es">Español</a>
+      <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Home</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Sleep · DISE</p>
+    <h1>VOTE Classification</h1>
+    <p class="lede">A structured worksheet for recording drug-induced sleep endoscopy findings: degree and configuration of collapse at the velum, oropharyngeal lateral walls, tongue and epiglottis. When you are done you can print a report or copy the findings as plain text for your clinical record.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Patient / record number <span style="font-weight:400">(optional, appears only in your own report)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- ═══════════ BASELINE ═══════════ -->
+  <section class="block">
+    <h2>Baseline assessment</h2>
+    <p class="sub">Resting examination, no maneuvers. Score the degree at each structure; configuration becomes available only when the degree is 1 or 2.</p>
+
+    <details class="illus">
+      <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Show collapse configuration diagrams</summary>
+      <div class="imgwrap">
+        <div class="patterns">
+
+          <figure>
+            <svg viewBox="0 0 160 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of anteroposterior collapse: the residual lumen forms a horizontal slit">
+              <defs><marker id="ar-ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c6b78"/></marker></defs>
+              <text x="80" y="12" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" fill="#5c6b78" letter-spacing="1">ANTERIOR</text>
+              <ellipse cx="80" cy="88" rx="50" ry="40" fill="none" stroke="#c9d2d8" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <ellipse cx="80" cy="88" rx="46" ry="6" fill="#15222e"/>
+              <line x1="80" y1="34" x2="80" y2="70" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-ap)"/>
+              <line x1="80" y1="142" x2="80" y2="106" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-ap)"/>
+            </svg>
+            <figcaption><b>Anteroposterior</b>Velum · Tongue · Epiglottis</figcaption>
+          </figure>
+
+          <figure>
+            <svg viewBox="0 0 160 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of lateral collapse: the residual lumen forms a vertical slit">
+              <defs><marker id="ar-lat" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c6b78"/></marker></defs>
+              <text x="80" y="12" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" fill="#5c6b78" letter-spacing="1">ANTERIOR</text>
+              <ellipse cx="80" cy="88" rx="50" ry="40" fill="none" stroke="#c9d2d8" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <ellipse cx="80" cy="88" rx="6" ry="36" fill="#15222e"/>
+              <line x1="16" y1="88" x2="58" y2="88" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-lat)"/>
+              <line x1="144" y1="88" x2="102" y2="88" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-lat)"/>
+            </svg>
+            <figcaption><b>Lateral</b>Oropharyngeal walls · Velum · Epiglottis</figcaption>
+          </figure>
+
+          <figure>
+            <svg viewBox="0 0 160 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of concentric collapse: the residual lumen forms a central opening">
+              <defs><marker id="ar-con" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c6b78"/></marker></defs>
+              <text x="80" y="12" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" fill="#5c6b78" letter-spacing="1">ANTERIOR</text>
+              <ellipse cx="80" cy="88" rx="50" ry="40" fill="none" stroke="#c9d2d8" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <circle cx="80" cy="88" r="10" fill="#15222e"/>
+              <line x1="80" y1="34" x2="80" y2="70" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="80" y1="142" x2="80" y2="106" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="16" y1="88" x2="58" y2="88" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="144" y1="88" x2="102" y2="88" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="38" y1="52" x2="66" y2="76" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+              <line x1="122" y1="52" x2="94" y2="76" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+              <line x1="38" y1="124" x2="66" y2="100" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+              <line x1="122" y1="124" x2="94" y2="100" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+            </svg>
+            <figcaption><b>Concentric</b>Velum</figcaption>
+          </figure>
+
+        </div>
+        <p class="illus-note">Schematic axial cross-section of the pharynx as seen endoscopically, anterior uppermost. The dashed line represents the resting airway and the dark area the residual lumen during collapse. Original diagrams, not reproductions of published images.</p>
+      </div>
+    </details>
+
+    <p class="legend">
+      <span><b>0</b> no obstruction, no vibration</span>
+      <span><b>1</b> partial, with vibration</span>
+      <span><b>2</b> complete, collapse</span>
+      <span><b>X</b> not visualized</span>
+    </p>
+
+    <div class="sidegrid-wrap">
+      <div class="sidegrid">
+        <div class="sg-head">Structure</div>
+        <div class="sg-head">Degree of obstruction</div>
+        <div class="sg-head">Configuration</div>
+
+        <!-- VELUM -->
+        <div class="sg-label"><span class="ini">V</span>Velum <small>soft palate, uvula and lateral pharyngeal wall at the velopharynx</small></div>
+        <div class="segmented compact" id="seg-g-V" role="group" aria-label="Velum, degree of obstruction">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-V" role="group" aria-label="Velum, configuration" data-off="1">
+          <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+          <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+          <button type="button" class="alt" data-v="con" aria-pressed="false">Concentric</button>
+        </div>
+
+        <!-- OROPHARYNX -->
+        <div class="sg-label"><span class="ini">O</span>Oropharyngeal lateral walls <small>tonsils and lateral pharyngeal wall tissue</small></div>
+        <div class="segmented compact" id="seg-g-O" role="group" aria-label="Oropharyngeal lateral walls, degree of obstruction">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-O" role="group" aria-label="Oropharyngeal lateral walls, configuration" data-off="1">
+          <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+        </div>
+
+        <!-- TONGUE -->
+        <div class="sg-label"><span class="ini">T</span>Tongue <small>retroglossal collapse</small></div>
+        <div class="segmented compact" id="seg-g-T" role="group" aria-label="Tongue, degree of obstruction">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-T" role="group" aria-label="Tongue, configuration" data-off="1">
+          <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+        </div>
+
+        <!-- EPIGLOTTIS -->
+        <div class="sg-label"><span class="ini">E</span>Epiglottis <small>folding or posterior displacement</small></div>
+        <div class="segmented compact" id="seg-g-E" role="group" aria-label="Epiglottis, degree of obstruction">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-E" role="group" aria-label="Epiglottis, configuration" data-off="1">
+          <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+          <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <h3>Oropharyngeal lateral wall subtype <span style="font-weight:400;color:var(--muted);font-size:.85rem">(optional)</span></h3>
+      <p class="fhint">Distinguishes the tonsillar component from the lateral wall tissues. Only meaningful when the oropharynx scores 1 or 2.</p>
+      <div class="segmented" id="seg-sub-O" role="group" aria-label="Oropharyngeal lateral wall subtype">
+        <button type="button" data-v="ton" aria-pressed="false">Tonsils only</button>
+        <button type="button" data-v="par" aria-pressed="false">Lateral walls only</button>
+        <button type="button" data-v="amb" aria-pressed="false">Both</button>
+      </div>
+    </div>
+
+    <div class="results">
+      <div class="res stage"><div class="k">VOTE classification</div><div class="v" id="r-vote">—</div><div id="r-detail" style="color:var(--muted);font-size:.82rem;margin-top:6px"></div></div>
+    </div>
+
+    <p class="caveat" id="cav-ccc" style="display:none"><strong>Complete concentric collapse at the velum.</strong> This finding is used as an exclusion criterion for unilateral hypoglossal nerve stimulation. Verify it before considering that treatment.</p>
+
+    <p class="caveat"><strong>VOTE does not produce a score.</strong> The result is a description by structure, not a number: degrees are not summed and there is no cut-off. The assessment is qualitative and interrater agreement is limited, particularly at the velum.</p>
+  </section>
+
+  <!-- ═══════════ MANEUVER ═══════════ -->
+  <details class="fold" id="fold-man">
+    <summary>
+      <span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      <span class="ftitle">Reassessment during a maneuver
+        <span class="fsub">Optional. This is a <strong>separate, independent VOTE record</strong>, not a modification of the baseline: the two are never merged or subtracted.</span>
+      </span>
+    </summary>
+    <div class="foldbody">
+
+      <div class="field">
+        <h3>Maneuver or condition applied</h3>
+        <p class="fhint">Select the maneuver this second record corresponds to.</p>
+        <div class="segmented" id="seg-man" role="group" aria-label="Maneuver applied">
+          <button type="button" data-v="avance" aria-pressed="false">Jaw thrust</button>
+          <button type="button" data-v="chin" aria-pressed="false">Chin lift</button>
+          <button type="button" data-v="rot" aria-pressed="false">Head rotation</button>
+          <button type="button" data-v="lat" aria-pressed="false">Lateral position</button>
+          <button type="button" data-v="dam" aria-pressed="false">Oral appliance in situ</button>
+          <button type="button" data-v="pap" aria-pressed="false">With positive airway pressure</button>
+        </div>
+      </div>
+
+      <div class="sidegrid-wrap" style="margin-top:20px">
+        <div class="sidegrid">
+          <div class="sg-head">Structure</div>
+          <div class="sg-head">Degree of obstruction</div>
+          <div class="sg-head">Configuration</div>
+
+          <div class="sg-label"><span class="ini">V</span>Velum</div>
+          <div class="segmented compact" id="seg-mg-V" role="group" aria-label="Velum during maneuver, degree">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-V" role="group" aria-label="Velum during maneuver, configuration" data-off="1">
+            <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+            <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+            <button type="button" class="alt" data-v="con" aria-pressed="false">Concentric</button>
+          </div>
+
+          <div class="sg-label"><span class="ini">O</span>Oropharyngeal lateral walls</div>
+          <div class="segmented compact" id="seg-mg-O" role="group" aria-label="Oropharynx during maneuver, degree">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-O" role="group" aria-label="Oropharynx during maneuver, configuration" data-off="1">
+            <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+          </div>
+
+          <div class="sg-label"><span class="ini">T</span>Tongue</div>
+          <div class="segmented compact" id="seg-mg-T" role="group" aria-label="Tongue during maneuver, degree">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-T" role="group" aria-label="Tongue during maneuver, configuration" data-off="1">
+            <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+          </div>
+
+          <div class="sg-label"><span class="ini">E</span>Epiglottis</div>
+          <div class="segmented compact" id="seg-mg-E" role="group" aria-label="Epiglottis during maneuver, degree">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-E" role="group" aria-label="Epiglottis during maneuver, configuration" data-off="1">
+            <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+            <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="res"><div class="k">VOTE during maneuver</div><div class="v" id="r-vote-man" style="font-family:var(--font-mono);font-size:1.15rem">—</div></div>
+      </div>
+
+      <p class="caveat"><strong>On jaw thrust.</strong> Maximal protrusion is not advisable: it does not predict oral appliance outcome. Aim to reproduce the protrusion and vertical opening the actual appliance would provide, and if the patient has their own device, examine with it in place and remove it afterwards.</p>
+    </div>
+  </details>
+
+  <!-- ═══════════ EXAMINATION CONDITIONS ═══════════ -->
+  <details class="fold" id="fold-cond">
+    <summary>
+      <span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      <span class="ftitle">Examination conditions
+        <span class="fsub">Optional record that <strong>does not score</strong>. Covers the items the European position paper recommends stating in the report.</span>
+      </span>
+    </summary>
+    <div class="foldbody">
+
+      <div class="field">
+        <h3>Body position during the baseline record</h3>
+        <div class="segmented" id="seg-pos" role="group" aria-label="Body position">
+          <button type="button" data-v="supino" aria-pressed="false">Supine</button>
+          <button type="button" data-v="lateral" aria-pressed="false">Lateral decubitus</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <h3>Sedation and monitoring</h3>
+        <div class="inputs">
+          <div class="inp"><label for="c-farmaco">Sedative agent and delivery method</label><input id="c-farmaco" class="plain" type="text" autocomplete="off" placeholder="Propofol TCI"></div>
+          <div class="inp"><label for="c-dosis">Dose or effective site concentration</label><input id="c-dosis" class="plain" type="text" autocomplete="off" placeholder="3.2 µg/mL"></div>
+          <div class="inp"><label for="c-otros">Other drugs</label><input id="c-otros" class="plain" type="text" autocomplete="off" placeholder="None"></div>
+          <div class="inp"><label for="c-bis">Sedation level (BIS or equivalent)</label><input id="c-bis" class="plain" type="text" autocomplete="off" placeholder="60-70"></div>
+          <div class="inp"><label for="c-spo2">Lowest SpO₂</label><div class="unitbox"><input id="c-spo2" type="number" inputmode="numeric" min="0" max="100" step="1" placeholder="—"><span class="unit">%</span></div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <h3>Comments</h3>
+        <div class="inputs">
+          <div class="inp wide"><label for="c-notas">Free text</label><input id="c-notas" class="plain" type="text" autocomplete="off" placeholder="Lingual tonsil hypertrophy, laryngeal stridor…"></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════ ACTIONS ═══════════ -->
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Print / Save as PDF</button>
+    <button class="btn btn-copy" id="btn-copy" type="button">Copy findings</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Clear</button>
+    <span class="copy-msg" id="copy-msg" role="status" aria-live="polite"></span>
+  </div>
+
+  <details class="copybox no-print" id="copybox">
+    <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Show the text that will be copied</summary>
+    <pre id="copy-preview">—</pre>
+  </details>
+
+  <div class="print-report" id="report"></div>
+</main>
+
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">A tool to support clinical reasoning; it does not replace professional judgement or individual assessment. Nothing you enter is sent to any server: everything is processed in your browser and nothing is stored.</p>
+
+    <p class="source">
+      <strong>Sources.</strong> The VOTE classification is a descriptive recording system rather than a questionnaire. The wording and definitions used here are our own, written from the original sources.
+      <ol>
+        <li>Kezirian EJ, Hohenhorst W, de Vries N. Drug-induced sleep endoscopy: the VOTE classification. <i>Eur Arch Otorhinolaryngol</i>. 2011;268(8):1233-1236. <a href="https://doi.org/10.1007/s00405-011-1633-8" target="_blank" rel="noopener">doi:10.1007/s00405-011-1633-8</a></li>
+        <li>Dmowska J, Hohenhorst W, Ravesloot MJL, de Vries N, Kezirian EJ. Drug-induced sleep endoscopy in adults with sleep disordered breathing: technique and the VOTE classification system. <i>Oper Tech Otolaryngol Head Neck Surg</i>. 2026;37(2):195-207. <a href="https://doi.org/10.1016/j.otot.2026.05.013" target="_blank" rel="noopener">doi:10.1016/j.otot.2026.05.013</a></li>
+        <li>De Vito A, Carrasco Llatas M, Ravesloot MJ, Kotecha B, De Vries N, Hamans E, et al. European position paper on drug-induced sleep endoscopy: 2017 update. <i>Clin Otolaryngol</i>. 2018;43(6):1541-1552. <a href="https://doi.org/10.1111/coa.13213" target="_blank" rel="noopener">doi:10.1111/coa.13213</a></li>
+      </ol>
+      <span style="display:block;margin-top:10px">This page is also available in <a href="/dise-vote/" hreflang="es" lang="es">Spanish</a>.</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const dash = "—";
+
+  /* Configurations permitted for each structure.
+     Velum: A-P, lateral (less common) and concentric.
+     Oropharynx: lateral only. Tongue: A-P only. Epiglottis: A-P and lateral. */
+  const CONF = { ap:"anteroposterior", lat:"lateral", con:"concentric" };
+  const ABBR = { ap:"ap", lat:"l", con:"c" };
+  const GRADO = {
+    "0":"no obstruction", "1":"partial obstruction",
+    "2":"complete obstruction", "X":"not visualized"
+  };
+  const SUB = { ton:"tonsils only", par:"lateral walls only", amb:"tonsils and lateral walls" };
+  const MAN = {
+    avance:"jaw thrust", chin:"chin lift", rot:"head rotation",
+    lat:"lateral position", dam:"oral appliance in situ", pap:"with positive airway pressure"
+  };
+  const POS = { supino:"supine", lateral:"lateral decubitus" };
+  const ESTR = {
+    V:"Velum", O:"Oropharyngeal lateral walls", T:"Tongue", E:"Epiglottis"
+  };
+  const KEYS = ["V","O","T","E"];
+
+  /* State */
+  const sel = {
+    "g-V":null,"g-O":null,"g-T":null,"g-E":null,
+    "c-V":null,"c-O":null,"c-T":null,"c-E":null,
+    "mg-V":null,"mg-O":null,"mg-T":null,"mg-E":null,
+    "mc-V":null,"mc-O":null,"mc-T":null,"mc-E":null,
+    "sub-O":null, "man":null, "pos":null
+  };
+  const TEXTOS = ["c-farmaco","c-dosis","c-otros","c-bis","c-spo2","c-notas","paciente"];
+
+  function setSel(key, value){
+    sel[key] = value;
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.querySelectorAll("button").forEach(b => {
+      b.setAttribute("aria-pressed", (value !== null && b.dataset.v === value) ? "true" : "false");
+    });
+  }
+
+  function wireSegmented(key){
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const v = btn.dataset.v;
+      setSel(key, sel[key] === v ? null : v);
+      recalc();
+    });
+  }
+  Object.keys(sel).forEach(wireSegmented);
+
+  TEXTOS.forEach(id => {
+    const el = $(id); if(!el) return;
+    el.addEventListener("input", recalc);
+    el.addEventListener("change", recalc);
+  });
+
+  /* Configuration is only recorded when there is collapse (degree 1 or 2) */
+  function syncConfig(gKey, cKey){
+    const grado = sel[gKey];
+    const activo = (grado === "1" || grado === "2");
+    const group = $("seg-"+cKey);
+    if(group) group.setAttribute("data-off", activo ? "0" : "1");
+    if(!activo && sel[cKey] !== null) setSel(cKey, null);
+  }
+
+  /* Short code for one structure: V2c, O1l, T0, EX… */
+  function codigo(letra, grado, conf){
+    if(grado === null) return null;
+    if(grado === "X") return letra + "X";
+    if(grado === "0") return letra + "0";
+    return letra + grado + (conf ? ABBR[conf] : "");
+  }
+
+  function lineaLarga(letra, grado, conf){
+    if(grado === null) return ESTR[letra] + ": not recorded";
+    let t = ESTR[letra] + ": " + GRADO[grado];
+    if((grado === "1" || grado === "2")){
+      t += conf ? (", " + CONF[conf] + " configuration") : ", configuration not recorded";
+    }
+    if(letra === "O" && (grado === "1" || grado === "2") && sel["sub-O"]){
+      t += " (" + SUB[sel["sub-O"]] + ")";
+    }
+    return t;
+  }
+
+  function leerBloque(prefGrado, prefConf){
+    const out = {codigos:[], lineas:[], faltan:0, completo:true};
+    KEYS.forEach(k => {
+      const g = sel[prefGrado + "-" + k];
+      const c = sel[prefConf + "-" + k];
+      if(g === null){ out.faltan++; out.completo = false; }
+      else if((g === "1" || g === "2") && c === null){ out.completo = false; }
+      const cod = codigo(k, g, c);
+      if(cod) out.codigos.push(cod);
+      out.lineas.push(lineaLarga(k, g, c));
+    });
+    return out;
+  }
+
+  function recalc(){
+    KEYS.forEach(k => {
+      syncConfig("g-"+k, "c-"+k);
+      syncConfig("mg-"+k, "mc-"+k);
+    });
+
+    const base = leerBloque("g","c");
+    const man  = leerBloque("mg","mc");
+
+    $("r-vote").textContent = base.codigos.length ? base.codigos.join(" ") : dash;
+
+    let detalle;
+    if(base.faltan === 4) detalle = "Score the degree at each structure.";
+    else if(base.faltan > 0) detalle = "Incomplete record: " + base.faltan + (base.faltan === 1 ? " structure missing." : " structures missing.");
+    else if(!base.completo) detalle = "Configuration missing at one or more collapsing structures.";
+    else detalle = "Record complete.";
+    $("r-detail").textContent = detalle;
+
+    $("cav-ccc").style.display = (sel["g-V"] === "2" && sel["c-V"] === "con") ? "block" : "none";
+
+    $("r-vote-man").textContent = man.codigos.length ? man.codigos.join(" ") : dash;
+
+    $("copy-preview").textContent = buildText(base, man) || dash;
+    buildReport(base, man);
+  }
+
+  /* ═══ PLAIN TEXT OUTPUT ═══ */
+  function val(id){ const el = $(id); return el ? el.value.trim() : ""; }
+
+  /* Normalizes characters some clinical systems reject */
+  const plano = t => String(t).replace(/[–—]/g,"-").replace(/·/g,",")
+                              .replace(/≥/g,">=").replace(/≤/g,"<=");
+
+  const fechaCorta = () => new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+
+  function buildText(base, man){
+    const L = [];
+
+    L.push("DRUG-INDUCED SLEEP ENDOSCOPY (DISE): VOTE CLASSIFICATION");
+    L.push("Date: " + fechaCorta());
+    const pac = val("paciente");
+    if(pac) L.push("Patient / record no.: " + pac);
+    L.push("");
+
+    /* Conditions */
+    const cond = [];
+    if(sel.pos) cond.push("Position: " + POS[sel.pos]);
+    if(val("c-farmaco")) cond.push("Sedation: " + val("c-farmaco"));
+    if(val("c-dosis")) cond.push("Dose / concentration: " + val("c-dosis"));
+    if(val("c-otros")) cond.push("Other drugs: " + val("c-otros"));
+    if(val("c-bis")) cond.push("Sedation level: " + val("c-bis"));
+    if(val("c-spo2")) cond.push("Lowest SpO2: " + val("c-spo2") + " %");
+    if(cond.length){
+      L.push("EXAMINATION CONDITIONS");
+      cond.forEach(c => L.push("- " + plano(c)));
+      L.push("");
+    }
+
+    /* Baseline */
+    L.push("FINDINGS (baseline)");
+    base.lineas.forEach(l => L.push("- " + plano(l)));
+    L.push("VOTE: " + (base.codigos.length ? base.codigos.join(" ") : "not recorded"));
+    if(!base.completo) L.push("[Incomplete record]");
+
+    /* Maneuver */
+    if(man.codigos.length){
+      L.push("");
+      L.push("FINDINGS (" + (sel.man ? MAN[sel.man] : "second assessment") + ")");
+      man.lineas.forEach(l => L.push("- " + plano(l)));
+      L.push("VOTE: " + man.codigos.join(" "));
+    }
+
+    /* Key finding */
+    if(sel["g-V"] === "2" && sel["c-V"] === "con"){
+      L.push("");
+      L.push("Complete concentric collapse at the velum (exclusion criterion for hypoglossal nerve stimulation).");
+    }
+
+    if(val("c-notas")){
+      L.push("");
+      L.push("COMMENTS: " + plano(val("c-notas")));
+    }
+
+    L.push("");
+    L.push("Notation: 0 no obstruction, 1 partial, 2 complete, X not visualized; ap anteroposterior, l lateral, c concentric.");
+
+    return L.join("\n");
+  }
+
+  /* Copy to clipboard, with a fallback for older browsers */
+  function flash(msg, err){
+    const el = $("copy-msg");
+    el.textContent = msg;
+    el.classList.toggle("err", !!err);
+    el.classList.add("show");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(() => el.classList.remove("show"), 2600);
+  }
+
+  function copiar(){
+    const texto = $("copy-preview").textContent;
+    if(!texto || texto === dash){ flash("Nothing to copy yet.", true); return; }
+
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(texto)
+        .then(() => flash("Findings copied."))
+        .catch(() => copiarAlternativa(texto));
+    } else {
+      copiarAlternativa(texto);
+    }
+  }
+
+  function copiarAlternativa(texto){
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    if(ok) flash("Findings copied.");
+    else { $("copybox").open = true; flash("Could not copy. Select the text below.", true); }
+  }
+
+  /* ═══ PRINTABLE REPORT ═══ */
+  function prRow(lab, valor){ return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val">'+valor+'</span></div>'; }
+  function esc(s){ return String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+  function filasBloque(prefGrado, prefConf){
+    return KEYS.map(k => {
+      const g = sel[prefGrado + "-" + k];
+      const c = sel[prefConf + "-" + k];
+      let v;
+      if(g === null) v = dash;
+      else if(g === "X") v = "Not visualized";
+      else if(g === "0") v = "0 · none";
+      else {
+        v = g + " · " + (g === "1" ? "partial" : "complete");
+        v += c ? (" · " + CONF[c]) : (" · configuration not recorded");
+        if(k === "O" && sel["sub-O"]) v += " (" + SUB[sel["sub-O"]] + ")";
+      }
+      return prRow(ESTR[k], v);
+    }).join("");
+  }
+
+  function buildReport(base, man){
+    const paciente = val("paciente");
+    const fecha = new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
+
+    let html =
+      '<div class="pr-head"><h2>Report · DISE, VOTE classification</h2>'
+      + '<div class="pr-brand">calculadoraorl.com</div></div>'
+      + '<div class="pr-meta"><span>Patient / record no.: <strong>'+esc(paciente||dash)+'</strong></span><span>Date: '+fecha+'</span></div>';
+
+    const cond = [];
+    if(sel.pos) cond.push(prRow("Position", POS[sel.pos]));
+    if(val("c-farmaco")) cond.push(prRow("Sedation", esc(val("c-farmaco"))));
+    if(val("c-dosis")) cond.push(prRow("Dose / concentration", esc(val("c-dosis"))));
+    if(val("c-otros")) cond.push(prRow("Other drugs", esc(val("c-otros"))));
+    if(val("c-bis")) cond.push(prRow("Sedation level", esc(val("c-bis"))));
+    if(val("c-spo2")) cond.push(prRow("Lowest SpO<sub>2</sub>", esc(val("c-spo2")) + " %"));
+    if(cond.length){
+      html += '<div class="pr-sec"><h3>Examination conditions</h3>' + cond.join("") + '</div>';
+    }
+
+    html += '<div class="pr-sec"><h3>Findings · baseline</h3>'
+          + '<div class="pr-code">' + (base.codigos.length ? base.codigos.join("  ") : dash) + '</div>'
+          + filasBloque("g","c");
+    if(!base.completo) html += '<p class="pr-note">Incomplete record: degree or configuration not entered for every structure.</p>';
+    html += '</div>';
+
+    if(man.codigos.length){
+      html += '<div class="pr-sec"><h3>Findings · ' + (sel.man ? MAN[sel.man] : "second assessment") + '</h3>'
+            + '<div class="pr-code">' + man.codigos.join("  ") + '</div>'
+            + filasBloque("mg","mc")
+            + '<p class="pr-note">Recorded independently of the baseline.</p></div>';
+    }
+
+    if(sel["g-V"] === "2" && sel["c-V"] === "con"){
+      html += '<div class="pr-sec"><h3>Key finding</h3>'
+            + '<p style="margin:0;font-size:11pt">Complete concentric collapse at the velum: exclusion criterion for unilateral hypoglossal nerve stimulation.</p></div>';
+    }
+
+    if(val("c-notas")){
+      html += '<div class="pr-sec"><h3>Comments</h3><p style="margin:0;font-size:11pt">' + esc(val("c-notas")) + '</p></div>';
+    }
+
+    html += '<div class="pr-sec"><h3>Notation</h3>'
+          + '<p style="margin:0;font-size:10pt">Degree of obstruction: 0 no obstruction (no vibration) · 1 partial (vibration) · 2 complete (collapse) · X not visualized. '
+          + 'Configuration: ap anteroposterior · l lateral · c concentric. The VOTE classification is descriptive and does not produce a score.</p></div>';
+
+    html += '<div class="pr-foot">VOTE classification: Kezirian EJ, Hohenhorst W, de Vries N. Eur Arch Otorhinolaryngol. 2011;268(8):1233-1236. '
+          + 'A tool to support clinical reasoning; it does not replace clinical judgement. Processed locally in the browser; no data is stored or transmitted. Generated with calculadoraorl.com.</div>';
+
+    $("report").innerHTML = html;
+  }
+
+  /* Actions */
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-copy").addEventListener("click", copiar);
+  $("btn-reset").addEventListener("click", () => {
+    TEXTOS.forEach(id => { if($(id)) $(id).value = ""; });
+    for(const k in sel) sel[k] = null;
+    document.querySelectorAll(".segmented button").forEach(b => b.setAttribute("aria-pressed","false"));
+    recalc();
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
