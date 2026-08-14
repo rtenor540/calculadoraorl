@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Clasificación VOTE (DISE) — Calculadora ORL</title>
+<meta name="description" content="Registro estructurado de los hallazgos de la endoscopia de sueño inducido según la clasificación VOTE: velo, paredes laterales orofaríngeas, lengua y epiglotis. Informe imprimible y texto para copiar. Todo se procesa en tu propio equipo.">
+<link rel="canonical" href="https://calculadoraorl.com/dise-vote/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+    --accent:#4b3f9e;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Cabecera */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  /* Encabezado de página */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  /* Paciente */
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  /* Bloques */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  /* Entradas numéricas y de texto */
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:4px}
+  .inp label{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .inp .unitbox{position:relative}
+  .inp input{width:100%;font:inherit;font-size:1.05rem;padding:11px 44px 11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .inp input.plain{padding-right:12px;font-size:1rem}
+  .inp input:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .inp .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-family:var(--font-mono)}
+  .inp.wide{grid-column:1/-1}
+
+  /* Resultados */
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res .v small{font-weight:500;font-size:.82rem;color:var(--muted)}
+  .res.stage{grid-column:1/-1;background:color-mix(in srgb,var(--accent) 8%,white);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .res.stage .v{font-size:1.7rem;color:var(--accent);font-family:var(--font-mono);letter-spacing:.02em}
+
+  /* Campos */
+  .field{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft)}
+  .field:first-of-type{border-top:0;padding-top:0;margin-top:16px}
+  .field h3{margin:0 0 4px;font-size:1rem}
+  .field .fhint{margin:0 0 12px;font-size:.85rem;color:var(--muted)}
+
+  /* Leyenda */
+  .legend{margin:0 0 16px;font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 18px}
+  .legend b{color:var(--ink);font-family:var(--font-mono);font-weight:700}
+
+  /* Aviso clínico */
+  .caveat{margin:16px 0 0;font-size:.84rem;color:var(--muted);padding:11px 13px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--warn)}
+  .caveat strong{color:var(--ink)}
+  .caveat.alert{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,white)}
+  .caveat.alert strong{color:var(--accent)}
+
+  /* Ilustración plegable */
+  details.illus{margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+  details.illus>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  details.illus>summary::-webkit-details-marker{display:none}
+  details.illus>summary .chev{transition:transform .15s ease}
+  details.illus[open]>summary .chev{transform:rotate(90deg)}
+  details.illus .imgwrap{padding:0 14px 14px}
+
+  /* Sección plegable */
+  details.fold{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+  details.fold>summary{cursor:pointer;list-style:none;padding:18px 20px;display:flex;align-items:flex-start;gap:11px}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  details.fold>summary .chev{flex:0 0 auto;margin-top:3px;color:var(--muted);transition:transform .15s ease}
+  details.fold[open]>summary .chev{transform:rotate(90deg)}
+  details.fold>summary .ftitle{font-size:1.18rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+  details.fold>summary .fsub{display:block;font-size:.87rem;font-weight:400;color:var(--muted);margin-top:3px}
+  details.fold .foldbody{padding:2px 20px 22px}
+
+  /* Botonera segmentada */
+  .segmented{display:flex;flex-wrap:wrap;gap:8px}
+  .segmented button{font:inherit;font-size:.95rem;font-weight:600;padding:10px 12px;min-width:58px;flex:1 1 58px;
+    border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s ease;text-align:center}
+  .segmented button:hover{border-color:var(--accent)}
+  .segmented button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .segmented button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .segmented.compact{gap:6px}
+  .segmented.compact button{min-width:0;flex:1 1 0;padding:9px 4px;font-size:.95rem}
+  .segmented.compact button.alt{font-size:.78rem;font-weight:600;flex:1.3 1 0}
+  .segmented[data-off="1"]{opacity:.4;pointer-events:none}
+
+  /* Rejilla VOTE */
+  .sidegrid-wrap{overflow-x:auto;margin:0 -2px;padding:2px}
+  .sidegrid{display:grid;grid-template-columns:minmax(150px,.95fr) minmax(210px,1fr) minmax(210px,1fr);gap:14px 16px;align-items:center;min-width:620px}
+  .sg-head{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);padding-bottom:2px}
+  .sg-label{font-size:.93rem;font-weight:600;line-height:1.3}
+  .sg-label small{display:block;font-weight:400;font-size:.78rem;color:var(--muted);margin-top:1px}
+  .sg-label .ini{font-family:var(--font-mono);color:var(--accent);font-weight:700;margin-right:2px}
+
+  /* Casilla */
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:.92rem;cursor:pointer}
+  .check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:0 0 auto}
+
+  /* Ilustración de patrones */
+  .patterns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+  .patterns figure{margin:0}
+  .patterns svg{width:100%;height:auto;max-width:150px}
+  .patterns figcaption{font-size:.78rem;color:var(--muted);margin-top:2px;line-height:1.35}
+  .patterns figcaption b{display:block;color:var(--ink);font-size:.84rem}
+  .illus-note{font-size:.78rem;color:var(--muted);margin:12px 0 0;line-height:1.45}
+
+  /* Acciones */
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-copy{background:var(--surface);color:var(--primary);border-color:var(--primary)}
+  .btn-copy:hover{background:color-mix(in srgb,var(--primary) 7%,white)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+  .copy-msg{font-size:.85rem;color:var(--ok);align-self:center;opacity:0;transition:opacity .2s ease}
+  .copy-msg.show{opacity:1}
+  .copy-msg.err{color:var(--warn)}
+
+  /* Vista previa del texto copiable */
+  .copybox{margin-top:14px}
+  .copybox summary{cursor:pointer;list-style:none;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  .copybox summary::-webkit-details-marker{display:none}
+  .copybox summary .chev{transition:transform .15s ease}
+  .copybox[open] summary .chev{transform:rotate(90deg)}
+  .copybox pre{margin:10px 0 0;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    font-family:var(--font-mono);font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink);overflow-x:auto}
+
+  /* Pie */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+  .source ol{margin:6px 0 0;padding-left:20px}
+  .source li{margin-bottom:5px}
+
+  /* Informe para impresión */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,details.fold,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right}
+  .pr-code{font-family:var(--font-mono);font-size:13pt;font-weight:700;letter-spacing:.03em;margin:2px 0 8px}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8.5pt;color:#555}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:520px){.res .v{font-size:1.15rem}.res.stage .v{font-size:1.35rem}}
+</style>
+</head>
+<body>
+
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Sueño · DISE</p>
+    <h1>Clasificación VOTE</h1>
+    <p class="lede">Registro estructurado de los hallazgos de la endoscopia de sueño inducido: grado y configuración del colapso en velo, paredes laterales orofaríngeas, lengua y epiglotis. Al terminar puedes imprimir un informe o copiar el resultado como texto para pegarlo en tu historia clínica.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Paciente / Nº de historia <span style="font-weight:400">(opcional, solo aparece en tu informe)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- ═══════════ REGISTRO BASAL ═══════════ -->
+  <section class="block">
+    <h2>Registro basal</h2>
+    <p class="sub">Exploración en reposo, sin maniobras. Marca el grado en cada estructura; la configuración se habilita solo cuando el grado es 1 o 2.</p>
+
+    <details class="illus">
+      <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Ver esquema de las configuraciones de colapso</summary>
+      <div class="imgwrap">
+        <div class="patterns">
+
+          <figure>
+            <svg viewBox="0 0 160 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Esquema de colapso anteroposterior: la luz residual queda como una hendidura horizontal">
+              <defs><marker id="ar-ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c6b78"/></marker></defs>
+              <text x="80" y="12" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" fill="#5c6b78" letter-spacing="1">ANTERIOR</text>
+              <ellipse cx="80" cy="88" rx="50" ry="40" fill="none" stroke="#c9d2d8" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <ellipse cx="80" cy="88" rx="46" ry="6" fill="#15222e"/>
+              <line x1="80" y1="34" x2="80" y2="70" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-ap)"/>
+              <line x1="80" y1="142" x2="80" y2="106" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-ap)"/>
+            </svg>
+            <figcaption><b>Anteroposterior</b>Velo · Lengua · Epiglotis</figcaption>
+          </figure>
+
+          <figure>
+            <svg viewBox="0 0 160 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Esquema de colapso lateral: la luz residual queda como una hendidura vertical">
+              <defs><marker id="ar-lat" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c6b78"/></marker></defs>
+              <text x="80" y="12" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" fill="#5c6b78" letter-spacing="1">ANTERIOR</text>
+              <ellipse cx="80" cy="88" rx="50" ry="40" fill="none" stroke="#c9d2d8" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <ellipse cx="80" cy="88" rx="6" ry="36" fill="#15222e"/>
+              <line x1="16" y1="88" x2="58" y2="88" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-lat)"/>
+              <line x1="144" y1="88" x2="102" y2="88" stroke="#5c6b78" stroke-width="2.2" marker-end="url(#ar-lat)"/>
+            </svg>
+            <figcaption><b>Lateral</b>Paredes laterales · Velo · Epiglotis</figcaption>
+          </figure>
+
+          <figure>
+            <svg viewBox="0 0 160 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Esquema de colapso concéntrico: la luz residual queda como un orificio central">
+              <defs><marker id="ar-con" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5c6b78"/></marker></defs>
+              <text x="80" y="12" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" fill="#5c6b78" letter-spacing="1">ANTERIOR</text>
+              <ellipse cx="80" cy="88" rx="50" ry="40" fill="none" stroke="#c9d2d8" stroke-width="1.6" stroke-dasharray="4 4"/>
+              <circle cx="80" cy="88" r="10" fill="#15222e"/>
+              <line x1="80" y1="34" x2="80" y2="70" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="80" y1="142" x2="80" y2="106" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="16" y1="88" x2="58" y2="88" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="144" y1="88" x2="102" y2="88" stroke="#5c6b78" stroke-width="2" marker-end="url(#ar-con)"/>
+              <line x1="38" y1="52" x2="66" y2="76" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+              <line x1="122" y1="52" x2="94" y2="76" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+              <line x1="38" y1="124" x2="66" y2="100" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+              <line x1="122" y1="124" x2="94" y2="100" stroke="#5c6b78" stroke-width="1.7" marker-end="url(#ar-con)"/>
+            </svg>
+            <figcaption><b>Concéntrica</b>Velo</figcaption>
+          </figure>
+
+        </div>
+        <p class="illus-note">Corte axial esquemático de la faringe en visión endoscópica: anterior arriba. La línea discontinua representa el calibre en reposo y la zona oscura, la luz residual durante el colapso. Esquemas originales, no reproducciones de imágenes publicadas.</p>
+      </div>
+    </details>
+
+    <p class="legend">
+      <span><b>0</b> sin obstrucción, sin vibración</span>
+      <span><b>1</b> parcial, con vibración</span>
+      <span><b>2</b> completa, colapso</span>
+      <span><b>X</b> no visualizado</span>
+    </p>
+
+    <div class="sidegrid-wrap">
+      <div class="sidegrid">
+        <div class="sg-head">Estructura</div>
+        <div class="sg-head">Grado de obstrucción</div>
+        <div class="sg-head">Configuración</div>
+
+        <!-- VELO -->
+        <div class="sg-label"><span class="ini">V</span>Velo <small>paladar blando, úvula y pared lateral velofaríngea</small></div>
+        <div class="segmented compact" id="seg-g-V" role="group" aria-label="Velo, grado de obstrucción">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-V" role="group" aria-label="Velo, configuración" data-off="1">
+          <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+          <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+          <button type="button" class="alt" data-v="con" aria-pressed="false">Concéntrica</button>
+        </div>
+
+        <!-- OROFARINGE -->
+        <div class="sg-label"><span class="ini">O</span>Paredes laterales orofaríngeas <small>amígdalas y tejido faríngeo lateral</small></div>
+        <div class="segmented compact" id="seg-g-O" role="group" aria-label="Paredes laterales orofaríngeas, grado de obstrucción">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-O" role="group" aria-label="Paredes laterales orofaríngeas, configuración" data-off="1">
+          <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+        </div>
+
+        <!-- LENGUA -->
+        <div class="sg-label"><span class="ini">T</span>Lengua <small>del inglés <i>tongue</i>; colapso retrogloso</small></div>
+        <div class="segmented compact" id="seg-g-T" role="group" aria-label="Lengua, grado de obstrucción">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-T" role="group" aria-label="Lengua, configuración" data-off="1">
+          <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+        </div>
+
+        <!-- EPIGLOTIS -->
+        <div class="sg-label"><span class="ini">E</span>Epiglotis <small>plegamiento o desplazamiento posterior</small></div>
+        <div class="segmented compact" id="seg-g-E" role="group" aria-label="Epiglotis, grado de obstrucción">
+          <button type="button" data-v="0" aria-pressed="false">0</button>
+          <button type="button" data-v="1" aria-pressed="false">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="X" aria-pressed="false">X</button>
+        </div>
+        <div class="segmented compact" id="seg-c-E" role="group" aria-label="Epiglotis, configuración" data-off="1">
+          <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+          <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <h3>Subtipo del colapso lateral orofaríngeo <span style="font-weight:400;color:var(--muted);font-size:.85rem">(opcional)</span></h3>
+      <p class="fhint">Distinción entre el componente amigdalino y el de las paredes laterales. Solo tiene sentido si la orofaringe puntúa 1 o 2.</p>
+      <div class="segmented" id="seg-sub-O" role="group" aria-label="Subtipo del colapso lateral orofaríngeo">
+        <button type="button" data-v="ton" aria-pressed="false">Solo amígdalas</button>
+        <button type="button" data-v="par" aria-pressed="false">Solo paredes laterales</button>
+        <button type="button" data-v="amb" aria-pressed="false">Ambos</button>
+      </div>
+    </div>
+
+    <div class="results">
+      <div class="res stage"><div class="k">Clasificación VOTE</div><div class="v" id="r-vote">—</div><div id="r-detail" style="color:var(--muted);font-size:.82rem;margin-top:6px"></div></div>
+    </div>
+
+    <p class="caveat" id="cav-ccc" style="display:none"><strong>Colapso concéntrico completo del velo.</strong> Este hallazgo se emplea como criterio de exclusión para la estimulación unilateral del nervio hipogloso. Compruébalo antes de plantear esa indicación.</p>
+
+    <p class="caveat"><strong>VOTE no genera una puntuación.</strong> El resultado es una descripción por estructuras, no un número: no se suman los grados ni existe un punto de corte. La valoración es cualitativa y la concordancia entre observadores es limitada, especialmente en el velo.</p>
+  </section>
+
+  <!-- ═══════════ REEVALUACIÓN TRAS MANIOBRA ═══════════ -->
+  <details class="fold" id="fold-man">
+    <summary>
+      <span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      <span class="ftitle">Reevaluación tras maniobra
+        <span class="fsub">Registro opcional. Es un <strong>segundo VOTE independiente</strong>, no una modificación del basal: no se combinan ni se restan.</span>
+      </span>
+    </summary>
+    <div class="foldbody">
+
+      <div class="field">
+        <h3>Maniobra o condición aplicada</h3>
+        <p class="fhint">Selecciona la maniobra que corresponde a este segundo registro.</p>
+        <div class="segmented" id="seg-man" role="group" aria-label="Maniobra aplicada">
+          <button type="button" data-v="avance" aria-pressed="false">Avance mandibular</button>
+          <button type="button" data-v="chin" aria-pressed="false">Cierre bucal</button>
+          <button type="button" data-v="rot" aria-pressed="false">Rotación cefálica</button>
+          <button type="button" data-v="lat" aria-pressed="false">Decúbito lateral</button>
+          <button type="button" data-v="dam" aria-pressed="false">DAM colocado</button>
+          <button type="button" data-v="pap" aria-pressed="false">Con presión positiva</button>
+        </div>
+      </div>
+
+      <div class="sidegrid-wrap" style="margin-top:20px">
+        <div class="sidegrid">
+          <div class="sg-head">Estructura</div>
+          <div class="sg-head">Grado de obstrucción</div>
+          <div class="sg-head">Configuración</div>
+
+          <div class="sg-label"><span class="ini">V</span>Velo</div>
+          <div class="segmented compact" id="seg-mg-V" role="group" aria-label="Velo tras maniobra, grado">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-V" role="group" aria-label="Velo tras maniobra, configuración" data-off="1">
+            <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+            <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+            <button type="button" class="alt" data-v="con" aria-pressed="false">Concéntrica</button>
+          </div>
+
+          <div class="sg-label"><span class="ini">O</span>Paredes laterales orofaríngeas</div>
+          <div class="segmented compact" id="seg-mg-O" role="group" aria-label="Orofaringe tras maniobra, grado">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-O" role="group" aria-label="Orofaringe tras maniobra, configuración" data-off="1">
+            <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+          </div>
+
+          <div class="sg-label"><span class="ini">T</span>Lengua</div>
+          <div class="segmented compact" id="seg-mg-T" role="group" aria-label="Lengua tras maniobra, grado">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-T" role="group" aria-label="Lengua tras maniobra, configuración" data-off="1">
+            <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+          </div>
+
+          <div class="sg-label"><span class="ini">E</span>Epiglotis</div>
+          <div class="segmented compact" id="seg-mg-E" role="group" aria-label="Epiglotis tras maniobra, grado">
+            <button type="button" data-v="0" aria-pressed="false">0</button>
+            <button type="button" data-v="1" aria-pressed="false">1</button>
+            <button type="button" data-v="2" aria-pressed="false">2</button>
+            <button type="button" data-v="X" aria-pressed="false">X</button>
+          </div>
+          <div class="segmented compact" id="seg-mc-E" role="group" aria-label="Epiglotis tras maniobra, configuración" data-off="1">
+            <button type="button" class="alt" data-v="ap" aria-pressed="false">A-P</button>
+            <button type="button" class="alt" data-v="lat" aria-pressed="false">Lateral</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="res"><div class="k">VOTE tras maniobra</div><div class="v" id="r-vote-man" style="font-family:var(--font-mono);font-size:1.15rem">—</div></div>
+      </div>
+
+      <p class="caveat"><strong>Sobre el avance mandibular.</strong> No se recomienda una protrusión máxima: no predice el resultado del dispositivo de avance. Conviene reproducir la protrusión y la apertura vertical que tendría el dispositivo real, y si el paciente dispone del suyo, explorarlo con él colocado y retirarlo después.</p>
+    </div>
+  </details>
+
+  <!-- ═══════════ CONDICIONES DE LA EXPLORACIÓN ═══════════ -->
+  <details class="fold" id="fold-cond">
+    <summary>
+      <span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      <span class="ftitle">Condiciones de la exploración
+        <span class="fsub">Registro opcional que <strong>no puntúa</strong>. Recoge los datos que el documento europeo recomienda hacer constar en el informe.</span>
+      </span>
+    </summary>
+    <div class="foldbody">
+
+      <div class="field">
+        <h3>Posición durante el registro basal</h3>
+        <div class="segmented" id="seg-pos" role="group" aria-label="Posición del paciente">
+          <button type="button" data-v="supino" aria-pressed="false">Decúbito supino</button>
+          <button type="button" data-v="lateral" aria-pressed="false">Decúbito lateral</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <h3>Sedación y monitorización</h3>
+        <div class="inputs">
+          <div class="inp"><label for="c-farmaco">Fármaco y modo de administración</label><input id="c-farmaco" class="plain" type="text" autocomplete="off" placeholder="Propofol TCI"></div>
+          <div class="inp"><label for="c-dosis">Dosis o concentración alcanzada</label><input id="c-dosis" class="plain" type="text" autocomplete="off" placeholder="3,2 µg/ml"></div>
+          <div class="inp"><label for="c-otros">Otros fármacos</label><input id="c-otros" class="plain" type="text" autocomplete="off" placeholder="Ninguno"></div>
+          <div class="inp"><label for="c-bis">Nivel de sedación (BIS o equivalente)</label><input id="c-bis" class="plain" type="text" autocomplete="off" placeholder="60-70"></div>
+          <div class="inp"><label for="c-spo2">SpO₂ mínima</label><div class="unitbox"><input id="c-spo2" type="number" inputmode="numeric" min="0" max="100" step="1" placeholder="—"><span class="unit">%</span></div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <h3>Observaciones</h3>
+        <div class="inputs">
+          <div class="inp wide"><label for="c-notas">Notas libres</label><input id="c-notas" class="plain" type="text" autocomplete="off" placeholder="Hipertrofia amigdalar lingual, estridor laríngeo…"></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════ ACCIONES ═══════════ -->
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Imprimir / Guardar PDF</button>
+    <button class="btn btn-copy" id="btn-copy" type="button">Copiar resultados</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Limpiar</button>
+    <span class="copy-msg" id="copy-msg" role="status" aria-live="polite"></span>
+  </div>
+
+  <details class="copybox no-print" id="copybox">
+    <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Ver el texto que se va a copiar</summary>
+    <pre id="copy-preview">—</pre>
+  </details>
+
+  <div class="print-report" id="report"></div>
+</main>
+
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">Herramienta de apoyo al razonamiento clínico; no sustituye el juicio profesional ni una valoración individualizada. Los datos introducidos no se envían a ningún servidor: todo se procesa en tu navegador y nada se almacena.</p>
+
+    <p class="source">
+      <strong>Fuente.</strong> La clasificación VOTE es un sistema de registro descriptivo, no un cuestionario: no procede por tanto una validación transcultural al español. Las denominaciones y definiciones empleadas aquí son redacción propia a partir de las fuentes originales, siguiendo la terminología del documento de la SEORL-CCC.
+      <ol>
+        <li>Kezirian EJ, Hohenhorst W, de Vries N. Drug-induced sleep endoscopy: the VOTE classification. <i>Eur Arch Otorhinolaryngol</i>. 2011;268(8):1233-1236. <a href="https://doi.org/10.1007/s00405-011-1633-8" target="_blank" rel="noopener">doi:10.1007/s00405-011-1633-8</a></li>
+        <li>Dmowska J, Hohenhorst W, Ravesloot MJL, de Vries N, Kezirian EJ. Drug-induced sleep endoscopy in adults with sleep disordered breathing: technique and the VOTE classification system. <i>Oper Tech Otolaryngol Head Neck Surg</i>. 2026;37(2):195-207. <a href="https://doi.org/10.1016/j.otot.2026.05.013" target="_blank" rel="noopener">doi:10.1016/j.otot.2026.05.013</a></li>
+        <li>De Vito A, Carrasco Llatas M, Ravesloot MJ, Kotecha B, De Vries N, Hamans E, et al. European position paper on drug-induced sleep endoscopy: 2017 update. <i>Clin Otolaryngol</i>. 2018;43(6):1541-1552. <a href="https://doi.org/10.1111/coa.13213" target="_blank" rel="noopener">doi:10.1111/coa.13213</a></li>
+        <li>Carrasco Llatas M, Martínez Ruiz de Apodaca P, Baptista Jardín P, O'Connor Reina C, Plaza Mayor G, Méndez-Benegassi Silva I, et al. La endoscopia del sueño inducido. <i>Acta Otorrinolaringol Esp</i>. 2020;71(5):316-320. <a href="https://doi.org/10.1016/j.otorri.2019.02.007" target="_blank" rel="noopener">doi:10.1016/j.otorri.2019.02.007</a></li>
+      </ol>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const dash = "—";
+
+  /* Configuraciones admitidas por estructura.
+     Velo: A-P, lateral (menos frecuente) y concéntrica.
+     Orofaringe: solo lateral. Lengua: solo A-P. Epiglotis: A-P y lateral. */
+  const CONF = { ap:"anteroposterior", lat:"lateral", con:"concéntrica" };
+  const ABBR = { ap:"ap", lat:"l", con:"c" };
+  const GRADO = {
+    "0":"sin obstrucción", "1":"obstrucción parcial",
+    "2":"obstrucción completa", "X":"no visualizado"
+  };
+  const SUB = { ton:"solo amígdalas", par:"solo paredes laterales", amb:"amígdalas y paredes laterales" };
+  const MAN = {
+    avance:"avance mandibular", chin:"cierre bucal", rot:"rotación cefálica",
+    lat:"decúbito lateral", dam:"DAM colocado", pap:"con presión positiva"
+  };
+  const POS = { supino:"decúbito supino", lateral:"decúbito lateral" };
+  const ESTR = {
+    V:"Velo", O:"Paredes laterales orofaríngeas", T:"Lengua", E:"Epiglotis"
+  };
+  const KEYS = ["V","O","T","E"];
+
+  /* Estado */
+  const sel = {
+    "g-V":null,"g-O":null,"g-T":null,"g-E":null,
+    "c-V":null,"c-O":null,"c-T":null,"c-E":null,
+    "mg-V":null,"mg-O":null,"mg-T":null,"mg-E":null,
+    "mc-V":null,"mc-O":null,"mc-T":null,"mc-E":null,
+    "sub-O":null, "man":null, "pos":null
+  };
+  const TEXTOS = ["c-farmaco","c-dosis","c-otros","c-bis","c-spo2","c-notas","paciente"];
+
+  function setSel(key, value){
+    sel[key] = value;
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.querySelectorAll("button").forEach(b => {
+      b.setAttribute("aria-pressed", (value !== null && b.dataset.v === value) ? "true" : "false");
+    });
+  }
+
+  function wireSegmented(key){
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const v = btn.dataset.v;
+      setSel(key, sel[key] === v ? null : v);
+      recalc();
+    });
+  }
+  Object.keys(sel).forEach(wireSegmented);
+
+  TEXTOS.forEach(id => {
+    const el = $(id); if(!el) return;
+    el.addEventListener("input", recalc);
+    el.addEventListener("change", recalc);
+  });
+
+  /* Habilita o deshabilita la configuración según el grado.
+     Solo procede registrar configuración cuando hay colapso (grado 1 o 2). */
+  function syncConfig(gKey, cKey){
+    const grado = sel[gKey];
+    const activo = (grado === "1" || grado === "2");
+    const group = $("seg-"+cKey);
+    if(group) group.setAttribute("data-off", activo ? "0" : "1");
+    if(!activo && sel[cKey] !== null) setSel(cKey, null);
+  }
+
+  /* Código abreviado de una estructura: V2c, O1l, T0, EX… */
+  function codigo(letra, grado, conf){
+    if(grado === null) return null;
+    if(grado === "X") return letra + "X";
+    if(grado === "0") return letra + "0";
+    return letra + grado + (conf ? ABBR[conf] : "");
+  }
+
+  function lineaLarga(letra, grado, conf){
+    if(grado === null) return ESTR[letra] + ": sin registrar";
+    let t = ESTR[letra] + ": " + GRADO[grado];
+    if((grado === "1" || grado === "2")){
+      t += conf ? (", configuración " + CONF[conf]) : ", configuración sin registrar";
+    }
+    if(letra === "O" && (grado === "1" || grado === "2") && sel["sub-O"]){
+      t += " (" + SUB[sel["sub-O"]] + ")";
+    }
+    return t;
+  }
+
+  function leerBloque(prefGrado, prefConf){
+    const out = {codigos:[], lineas:[], faltan:0, completo:true};
+    KEYS.forEach(k => {
+      const g = sel[prefGrado + "-" + k];
+      const c = sel[prefConf + "-" + k];
+      if(g === null){ out.faltan++; out.completo = false; }
+      else if((g === "1" || g === "2") && c === null){ out.completo = false; }
+      const cod = codigo(k, g, c);
+      if(cod) out.codigos.push(cod);
+      out.lineas.push(lineaLarga(k, g, c));
+    });
+    return out;
+  }
+
+  function recalc(){
+    KEYS.forEach(k => {
+      syncConfig("g-"+k, "c-"+k);
+      syncConfig("mg-"+k, "mc-"+k);
+    });
+
+    const base = leerBloque("g","c");
+    const man  = leerBloque("mg","mc");
+
+    /* Resultado basal en pantalla */
+    $("r-vote").textContent = base.codigos.length ? base.codigos.join(" ") : dash;
+
+    let detalle;
+    if(base.faltan === 4) detalle = "Marca el grado en cada estructura.";
+    else if(base.faltan > 0) detalle = "Registro incompleto: faltan " + base.faltan + (base.faltan === 1 ? " estructura." : " estructuras.");
+    else if(!base.completo) detalle = "Falta la configuración en alguna estructura con colapso.";
+    else detalle = "Registro completo.";
+    $("r-detail").textContent = detalle;
+
+    /* Aviso de colapso concéntrico completo del velo */
+    $("cav-ccc").style.display = (sel["g-V"] === "2" && sel["c-V"] === "con") ? "block" : "none";
+
+    /* Resultado tras maniobra */
+    $("r-vote-man").textContent = man.codigos.length ? man.codigos.join(" ") : dash;
+
+    const texto = buildText(base, man);
+    $("copy-preview").textContent = texto;
+    buildReport(base, man);
+  }
+
+  /* ═══ TEXTO PLANO PARA COPIAR ═══ */
+  function val(id){ const el = $(id); return el ? el.value.trim() : ""; }
+
+  function buildText(base, man){
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"});
+    const L = [];
+
+    L.push("ENDOSCOPIA DE SUEÑO INDUCIDO (DISE) — CLASIFICACIÓN VOTE");
+    L.push("Fecha: " + fecha);
+    const pac = val("paciente");
+    if(pac) L.push("Paciente / Nº historia: " + pac);
+    L.push("");
+
+    /* Condiciones */
+    const cond = [];
+    if(sel.pos) cond.push("Posición: " + POS[sel.pos]);
+    if(val("c-farmaco")) cond.push("Sedación: " + val("c-farmaco"));
+    if(val("c-dosis")) cond.push("Dosis / concentración: " + val("c-dosis"));
+    if(val("c-otros")) cond.push("Otros fármacos: " + val("c-otros"));
+    if(val("c-bis")) cond.push("Nivel de sedación: " + val("c-bis"));
+    if(val("c-spo2")) cond.push("SpO2 mínima: " + val("c-spo2") + " %");
+    if(cond.length){
+      L.push("CONDICIONES DE LA EXPLORACIÓN");
+      cond.forEach(c => L.push("- " + c));
+      L.push("");
+    }
+
+    /* Basal */
+    L.push("HALLAZGOS (registro basal)");
+    base.lineas.forEach(l => L.push("- " + l));
+    L.push("VOTE: " + (base.codigos.length ? base.codigos.join(" ") : "sin registrar"));
+    if(!base.completo) L.push("[Registro incompleto]");
+
+    /* Maniobra */
+    if(man.codigos.length){
+      L.push("");
+      L.push("HALLAZGOS (" + (sel.man ? MAN[sel.man] : "segunda exploración") + ")");
+      man.lineas.forEach(l => L.push("- " + l));
+      L.push("VOTE: " + man.codigos.join(" "));
+    }
+
+    /* Aviso relevante */
+    if(sel["g-V"] === "2" && sel["c-V"] === "con"){
+      L.push("");
+      L.push("Colapso concéntrico completo del velo (criterio de exclusión para estimulación del nervio hipogloso).");
+    }
+
+    if(val("c-notas")){
+      L.push("");
+      L.push("OBSERVACIONES: " + val("c-notas"));
+    }
+
+    L.push("");
+    L.push("Notación: 0 sin obstrucción · 1 parcial · 2 completa · X no visualizado; ap anteroposterior, l lateral, c concéntrica.");
+
+    return L.join("\n");
+  }
+
+  /* Copiado al portapapeles, con alternativa para navegadores antiguos */
+  function flash(msg, err){
+    const el = $("copy-msg");
+    el.textContent = msg;
+    el.classList.toggle("err", !!err);
+    el.classList.add("show");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(() => el.classList.remove("show"), 2600);
+  }
+
+  function copiar(){
+    const texto = $("copy-preview").textContent;
+    if(!texto || texto === dash){ flash("No hay nada que copiar todavía.", true); return; }
+
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(texto)
+        .then(() => flash("Resultados copiados."))
+        .catch(() => copiarAlternativa(texto));
+    } else {
+      copiarAlternativa(texto);
+    }
+  }
+
+  function copiarAlternativa(texto){
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    if(ok) flash("Resultados copiados.");
+    else { $("copybox").open = true; flash("No se pudo copiar. Selecciona el texto de abajo.", true); }
+  }
+
+  /* ═══ INFORME IMPRIMIBLE ═══ */
+  function prRow(lab, valor){ return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val">'+valor+'</span></div>'; }
+  function esc(s){ return String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+  function filasBloque(prefGrado, prefConf){
+    return KEYS.map(k => {
+      const g = sel[prefGrado + "-" + k];
+      const c = sel[prefConf + "-" + k];
+      let v;
+      if(g === null) v = dash;
+      else if(g === "X") v = "No visualizado";
+      else if(g === "0") v = "0 · sin obstrucción";
+      else {
+        v = g + " · " + (g === "1" ? "parcial" : "completa");
+        v += c ? (" · " + CONF[c]) : (" · configuración sin registrar");
+        if(k === "O" && sel["sub-O"]) v += " (" + SUB[sel["sub-O"]] + ")";
+      }
+      return prRow(ESTR[k], v);
+    }).join("");
+  }
+
+  function buildReport(base, man){
+    const paciente = val("paciente");
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+
+    let html =
+      '<div class="pr-head"><h2>Informe · DISE, clasificación VOTE</h2>'
+      + '<div class="pr-brand">calculadoraorl.com</div></div>'
+      + '<div class="pr-meta"><span>Paciente / Nº historia: <strong>'+esc(paciente||dash)+'</strong></span><span>Fecha: '+fecha+'</span></div>';
+
+    /* Condiciones */
+    const cond = [];
+    if(sel.pos) cond.push(prRow("Posición", POS[sel.pos]));
+    if(val("c-farmaco")) cond.push(prRow("Sedación", esc(val("c-farmaco"))));
+    if(val("c-dosis")) cond.push(prRow("Dosis / concentración", esc(val("c-dosis"))));
+    if(val("c-otros")) cond.push(prRow("Otros fármacos", esc(val("c-otros"))));
+    if(val("c-bis")) cond.push(prRow("Nivel de sedación", esc(val("c-bis"))));
+    if(val("c-spo2")) cond.push(prRow("SpO<sub>2</sub> mínima", esc(val("c-spo2")) + " %"));
+    if(cond.length){
+      html += '<div class="pr-sec"><h3>Condiciones de la exploración</h3>' + cond.join("") + '</div>';
+    }
+
+    /* Basal */
+    html += '<div class="pr-sec"><h3>Hallazgos · registro basal</h3>'
+          + '<div class="pr-code">' + (base.codigos.length ? base.codigos.join("  ") : dash) + '</div>'
+          + filasBloque("g","c");
+    if(!base.completo) html += '<p class="pr-note">Registro incompleto: no se ha consignado el grado o la configuración en todas las estructuras.</p>';
+    html += '</div>';
+
+    /* Maniobra */
+    if(man.codigos.length){
+      html += '<div class="pr-sec"><h3>Hallazgos · ' + (sel.man ? MAN[sel.man] : "segunda exploración") + '</h3>'
+            + '<div class="pr-code">' + man.codigos.join("  ") + '</div>'
+            + filasBloque("mg","mc")
+            + '<p class="pr-note">Registro independiente del basal.</p></div>';
+    }
+
+    /* Aviso */
+    if(sel["g-V"] === "2" && sel["c-V"] === "con"){
+      html += '<div class="pr-sec"><h3>Observación destacada</h3>'
+            + '<p style="margin:0;font-size:11pt">Colapso concéntrico completo del velo: criterio de exclusión para la estimulación unilateral del nervio hipogloso.</p></div>';
+    }
+
+    if(val("c-notas")){
+      html += '<div class="pr-sec"><h3>Observaciones</h3><p style="margin:0;font-size:11pt">' + esc(val("c-notas")) + '</p></div>';
+    }
+
+    html += '<div class="pr-sec"><h3>Notación</h3>'
+          + '<p style="margin:0;font-size:10pt">Grado de obstrucción: 0 sin obstrucción (sin vibración) · 1 parcial (vibración) · 2 completa (colapso) · X no visualizado. '
+          + 'Configuración: ap anteroposterior · l lateral · c concéntrica. La clasificación VOTE es descriptiva y no genera puntuación.</p></div>';
+
+    html += '<div class="pr-foot">Clasificación VOTE: Kezirian EJ, Hohenhorst W, de Vries N. Eur Arch Otorhinolaryngol. 2011;268(8):1233-1236. '
+          + 'Herramienta de apoyo; no sustituye el juicio clínico. Procesado localmente en el navegador; los datos no se almacenan ni se transmiten. Generado con calculadoraorl.com.</div>';
+
+    $("report").innerHTML = html;
+  }
+
+  /* Acciones */
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-copy").addEventListener("click", copiar);
+  $("btn-reset").addEventListener("click", () => {
+    TEXTOS.forEach(id => { if($(id)) $(id).value = ""; });
+    for(const k in sel) sel[k] = null;
+    document.querySelectorAll(".segmented button").forEach(b => b.setAttribute("aria-pressed","false"));
+    recalc();
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
