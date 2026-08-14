@@ -242,6 +242,7 @@
       <a href="/nosas/">Escala NoSAS</a> ·
       <a href="/lund-mackay/">Escala de Lund-Mackay</a> ·
       <a href="/perimetro-cervical/">Perímetro cervical</a>
+      <a href="/dise-vote/">Clasificación VOTE</a>
     </nav>
     <div class="foot-meta">
       <span>© <span id="year"></span> Calculadora ORL</span>
@@ -261,34 +262,40 @@
     { id:"general",   label:"General",   accent:"var(--c-general)" },
   ];
 
-  const CALCULATORS = [
+const CALCULATORS = [
+
     { cat:"sueno",    title:"IMC, estadio Friedman y perímetro cervical", tag:"Antropometría",
       desc:"Índice de masa corporal (OMS), estadio de Friedman y perímetro del cuello.",
       url:"/antropometria/", status:"activa" },
-
-    { cat:"audicion", title:"Calculadora audiométrica", tag:"Audiología",
-      desc:"Umbral medio (PTA) y grado de pérdida a partir de los umbrales por frecuencia.",
-      url:"/audiometria/", status:"activa" },
-
-    { cat:"sueno",    title:"STOP-BANG", tag:"Cribado AOS",
-      desc:"Estimación del riesgo de apnea obstructiva del sueño.",
-      url:"/stopbang/", status:"proxima" },
-
-    { cat:"sueno",    title:"Escala NoSAS", tag:"Cribado AOS",
-      desc:"Riesgo de AOS a partir de perímetro cervical, IMC, ronquido, edad y sexo.",
-      url:"/nosas/", status:"activa" },
 
     { cat:"sueno",    title:"Cuestionario de Berlin", tag:"Cribado AOS",
       desc:"Cribado de AOS diseñado para atención primaria; valora ronquido, somnolencia diurna e hipertensión/IMC.",
       url:"/berlin/", status:"activa" },
 
-    { cat:"nariz",    title:"Escala de Lund-Mackay", tag:"Rinosinusitis crónica",       
-     desc:"Estadificación radiológica en TC por grupo sinusal y complejo ostiomeatal (0-24).",       
-     url:"/lund-mackay/", status:"activa" },     
-    
+    { cat:"sueno",    title:"Escala NoSAS", tag:"Cribado AOS",
+      desc:"Riesgo de AOS a partir de perímetro cervical, IMC, ronquido, edad y sexo.",
+      url:"/nosas/", status:"activa" },
+
+    { cat:"sueno",    title:"Clasificación VOTE", tag:"DISE",
+      desc:"Registro de los hallazgos de la endoscopia de sueño inducido: grado y configuración del colapso por estructura.",
+      url:"/dise-vote/", status:"activa" },
+
+    { cat:"sueno",    title:"STOP-BANG", tag:"Cribado AOS",
+      desc:"Estimación del riesgo de apnea obstructiva del sueño.",
+      url:"/stopbang/", status:"proxima" },
+
+    { cat:"audicion", title:"Calculadora audiométrica", tag:"Audiología",
+      desc:"Umbral medio (PTA) y grado de pérdida a partir de los umbrales por frecuencia.",
+      url:"/audiometria/", status:"activa" },
+
+    { cat:"nariz",    title:"Escala de Lund-Mackay", tag:"Rinosinusitis crónica",
+      desc:"Estadificación radiológica en TC por grupo sinusal y complejo ostiomeatal (0-24).",
+      url:"/lund-mackay/", status:"activa" },
+
     { cat:"nariz",    title:"NOSE", tag:"Obstrucción nasal",
       desc:"Escala de obstrucción nasal y su repercusión.",
       url:"/nose/", status:"proxima" },
+
   ];
 
   const catsEl = document.getElementById("cats");
