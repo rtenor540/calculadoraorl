@@ -424,7 +424,8 @@
   function val(id){ const el = $(id); return el ? String(el.value).trim() : ""; }
 
   // Sustituye guiones largos y puntos medios, que algunos programas no aceptan
-  const plano = s => String(s).replace(/[–—]/g,"-").replace(/·/g,",");
+  const plano = s => String(s).replace(/[–—]/g,"-").replace(/·/g,",")
+                              .replace(/≥/g,">=").replace(/≤/g,"<=");
 
   function buildText(){
     const d = ULTIMO;
