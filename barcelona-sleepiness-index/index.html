@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Barcelona Sleepiness Index (BSI) · calculadoraorl.com
+     Versión española original (Guaita et al., J Clin Sleep Med 2015, Tabla 5),
+     reproducida con autorización de los autores. Escala heteroadministrada:
+     no se ofrece hoja en blanco. -->
+
+<title>Barcelona Sleepiness Index (BSI) — Calculadora ORL</title>
+<meta name="description" content="Barcelona Sleepiness Index: dos preguntas para valorar la somnolencia diurna excesiva en los trastornos respiratorios del sueño. Versión española original. Cálculo en tu propio equipo, sin envío de datos.">
+<link rel="canonical" href="https://calculadoraorl.com/barcelona-sleepiness-index/">
+<meta name="robots" content="index,follow">
+
+<style>
+  :root{
+    --bg:#f5f7f8; --surface:#ffffff; --ink:#15222e; --muted:#5c6b78;
+    --line:#e3e8ec; --line-soft:#eef2f4;
+    --primary:#0d5c63; --primary-strong:#083f44;
+    --accent:#4b3f9e;
+    --ok:#3f7d5a; --warn:#a8672a;
+
+    --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --radius:12px; --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:var(--font-sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* Cabecera */
+  .site-head{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site-head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600}
+  .brand .mark{color:var(--primary)}
+  .brand .name{letter-spacing:-.01em;font-size:1.02rem}
+  .brand .name b{font-weight:700}
+  .back{font-size:.9rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .back:hover{color:var(--ink)}
+
+  /* Encabezado de página */
+  .page-head{padding:30px 0 6px}
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{margin:0 0 10px;font-size:clamp(1.5rem,3.6vw,2rem);line-height:1.15;letter-spacing:-.02em}
+  .lede{margin:0;color:var(--muted);max-width:60ch}
+
+  main{padding-bottom:50px}
+
+  /* Paciente */
+  .patient{margin:22px 0 4px}
+  .patient label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .patient input{width:100%;max-width:360px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+
+  /* Bloques */
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;margin-top:18px}
+  .block h2{margin:0 0 4px;font-size:1.18rem;letter-spacing:-.01em}
+  .block .sub{margin:0 0 16px;font-size:.9rem;color:var(--muted)}
+
+  /* Entradas numéricas */
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:4px}
+  .inp label{display:block;font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .inp .unitbox{position:relative}
+  .inp input{width:100%;font:inherit;font-size:1.05rem;padding:11px 44px 11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .inp input:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+  .inp .unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;font-family:var(--font-mono)}
+
+  /* Resultados */
+  .results{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .res{background:var(--bg);border:1px solid var(--line-soft);border-radius:11px;padding:13px 14px}
+  .res .k{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px}
+  .res .v{font-size:1.28rem;font-weight:700;letter-spacing:-.01em}
+  .res .v small{font-weight:500;font-size:.82rem;color:var(--muted)}
+  .res.hero{grid-column:1/-1;background:color-mix(in srgb,var(--primary) 7%,white);border-color:color-mix(in srgb,var(--primary) 22%,transparent)}
+  .res.hero .v{font-size:1.7rem;color:var(--primary-strong)}
+  .res.stage{grid-column:1/-1;background:color-mix(in srgb,var(--accent) 8%,white);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .res.stage .v{font-size:1.7rem;color:var(--accent)}
+  .badge{display:inline-block;font-size:.9rem;font-weight:600;padding:2px 10px;border-radius:999px;margin-left:2px}
+  .badge.ok{background:color-mix(in srgb,var(--ok) 15%,white);color:var(--ok)}
+  .badge.warn{background:color-mix(in srgb,var(--warn) 16%,white);color:var(--warn)}
+
+  /* Campos de graduación / preguntas */
+  .field{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft)}
+  .field:first-of-type{border-top:0;padding-top:0;margin-top:16px}
+  .field h3{margin:0 0 4px;font-size:1rem}
+  .field .fhint{margin:0 0 12px;font-size:.85rem;color:var(--muted)}
+
+  /* Leyenda de códigos numéricos (p. ej. 0 = ausente, 1 = leve…) */
+  .legend{margin:0 0 16px;font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 18px}
+  .legend b{color:var(--ink);font-family:var(--font-mono);font-weight:700}
+
+  /* Aviso o matiz clínico destacado. */
+  .caveat{margin:16px 0 0;font-size:.84rem;color:var(--muted);padding:11px 13px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--warn)}
+  .caveat strong{color:var(--ink)}
+
+  /* Ilustración de referencia (plegable) */
+  details.illus{margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+  details.illus>summary{cursor:pointer;list-style:none;padding:10px 14px;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  details.illus>summary::-webkit-details-marker{display:none}
+  details.illus>summary .chev{transition:transform .15s ease}
+  details.illus[open]>summary .chev{transform:rotate(90deg)}
+  details.illus .imgwrap{padding:0 14px 14px;text-align:center}
+  details.illus img{max-width:100%;width:auto;max-height:440px;border-radius:8px}
+
+  /* Sección entera plegable, del mismo aspecto que un .block. */
+  details.fold{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:18px;overflow:hidden}
+  details.fold>summary{cursor:pointer;list-style:none;padding:18px 20px;display:flex;align-items:flex-start;gap:11px}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  details.fold>summary .chev{flex:0 0 auto;margin-top:3px;color:var(--muted);transition:transform .15s ease}
+  details.fold[open]>summary .chev{transform:rotate(90deg)}
+  details.fold>summary .ftitle{font-size:1.18rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+  details.fold>summary .fsub{display:block;font-size:.87rem;font-weight:400;color:var(--muted);margin-top:3px}
+  details.fold .foldbody{padding:2px 20px 22px}
+
+  /* Botonera segmentada (respuestas / graduaciones) */
+  .segmented{display:flex;flex-wrap:wrap;gap:8px}
+  .segmented button{font:inherit;font-size:.95rem;font-weight:600;padding:10px 12px;min-width:58px;flex:1 1 58px;
+    border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;transition:all .12s ease;text-align:center}
+  .segmented button:hover{border-color:var(--accent)}
+  .segmented button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .segmented button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .segmented.compact{gap:6px}
+  .segmented.compact button{min-width:0;flex:1 1 0;padding:9px 4px;font-size:.95rem}
+  .segmented.compact button.alt{font-size:.78rem;font-weight:600;flex:1.3 1 0}
+
+  /* Rejilla de dos columnas por lado */
+  .sidegrid-wrap{overflow-x:auto;margin:0 -2px;padding:2px}
+  .sidegrid{display:grid;grid-template-columns:minmax(150px,.95fr) minmax(210px,1fr) minmax(210px,1fr);gap:14px 16px;align-items:center;min-width:620px}
+  .sg-head{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);padding-bottom:2px}
+  .sg-label{font-size:.93rem;font-weight:600;line-height:1.3}
+  .sg-label small{display:block;font-weight:400;font-size:.78rem;color:var(--muted);margin-top:1px}
+
+  /* Casilla de verificación */
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:.92rem;cursor:pointer}
+  .check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:0 0 auto}
+
+  /* Acciones */
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .btn{font:inherit;font-size:.95rem;font-weight:600;padding:12px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .btn-print{background:var(--primary);color:#fff}
+  .btn-print:hover{background:var(--primary-strong)}
+  .btn-reset{background:var(--surface);color:var(--muted);border-color:var(--line)}
+  .btn-reset:hover{color:var(--ink);border-color:var(--muted)}
+
+  /* Copiar resultados (común, no editar) */
+  .btn-copy{background:var(--surface);color:var(--primary);border-color:var(--primary)}
+  .btn-copy:hover{background:color-mix(in srgb,var(--primary) 7%,white)}
+  .copy-msg{font-size:.85rem;color:var(--ok);align-self:center;opacity:0;transition:opacity .2s ease}
+  .copy-msg.show{opacity:1}
+  .copy-msg.err{color:var(--warn)}
+  .copybox{margin-top:14px}
+  .copybox summary{cursor:pointer;list-style:none;font-size:.85rem;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:8px}
+  .copybox summary::-webkit-details-marker{display:none}
+  .copybox summary .chev{transition:transform .15s ease}
+  .copybox[open] summary .chev{transform:rotate(90deg)}
+  .copybox pre{margin:10px 0 0;padding:13px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    font-family:var(--font-mono);font-size:.8rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink);overflow-x:auto}
+  .btn-link{background:var(--surface);color:var(--primary);border-color:var(--line);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .btn-link:hover{border-color:var(--primary)}
+
+  /* Pie */
+  footer{border-top:1px solid var(--line);background:var(--surface);margin-top:8px}
+  footer .wrap{padding:22px 20px 40px}
+  .disclaimer{font-size:.84rem;color:var(--muted);max-width:66ch;margin:0;padding:12px 14px;background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;border-left:3px solid var(--primary)}
+  .source{font-size:.8rem;color:var(--muted);max-width:66ch;margin:16px 0 0;line-height:1.5}
+  .source strong{color:var(--ink);font-weight:600}
+  .source a{color:var(--primary);text-decoration:none}
+  .source a:hover{text-decoration:underline}
+
+  /* ───────── Informe para impresión / PDF ───────── */
+  .print-report{display:none}
+  @media print{
+    @page{margin:16mm}
+    body{background:#fff}
+    .site-head,footer,.actions,.page-head,.patient,.block,details.fold,.no-print{display:none !important}
+    .print-report{display:block !important}
+  }
+  .print-report{color:#000;font-size:12pt}
+  .pr-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:4px}
+  .pr-head h2{margin:0;font-size:15pt}
+  .pr-head .pr-brand{font-size:9pt;color:#333;text-align:right}
+  .pr-meta{display:flex;justify-content:space-between;font-size:10pt;color:#222;margin:8px 0 14px}
+  .pr-sec{margin-bottom:14px;break-inside:avoid}
+  .pr-sec h3{margin:0 0 6px;font-size:11.5pt;border-bottom:1px solid #999;padding-bottom:3px}
+  .pr-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11pt}
+  .pr-row .lab{color:#333}
+  .pr-row .val{font-weight:700;text-align:right}
+  .pr-note{font-size:9pt;color:#555;margin-top:4px}
+  .pr-foot{margin-top:18px;padding-top:8px;border-top:1px solid #999;font-size:8.5pt;color:#555}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:520px){.res .v{font-size:1.15rem}}
+</style>
+</head>
+<body>
+
+<!-- ═══ CABECERA (común) ═══ -->
+<header class="site-head no-print">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Calculadora ORL, inicio">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-6 4 12 3-9 2 3h6"/></svg></span>
+      <span class="name">calculadora<b>ORL</b></span>
+    </a>
+    <a class="back" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Inicio</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <p class="eyebrow">Sueño · BSI</p>
+    <h1>Barcelona Sleepiness Index (BSI)</h1>
+    <p class="lede">Dos preguntas, formuladas por el clínico, para valorar la somnolencia diurna excesiva en pacientes con trastornos respiratorios del sueño. Versión española original. El resultado se calcula al momento en tu propio equipo y al terminar puedes generar un informe imprimible o en PDF.</p>
+  </div>
+
+  <div class="patient">
+    <label for="paciente">Paciente / Nº de historia <span style="font-weight:400">(opcional, solo aparece en tu informe)</span></label>
+    <input id="paciente" type="text" autocomplete="off" placeholder="—">
+  </div>
+
+  <!-- ═══ ESCALA ═══ -->
+  <section class="block">
+    <h2>¿Presenta somnolencia o se duerme…?</h2>
+    <p class="sub"><strong style="color:var(--ink)">Instrucción al clínico.</strong> 1) Estas preguntas se refieren a la somnolencia del paciente <strong style="color:var(--ink)">durante las últimas semanas</strong>. 2) En caso que el paciente refiera inicialmente no experimentar estas situaciones, ayudarlo poniendo ejemplos.</p>
+
+    <p class="legend">
+      <span><b>0</b> No</span>
+      <span><b>1</b> Sí, tengo sueño PERO no me duermo</span>
+      <span><b>2</b> Sí, tengo sueño Y me duermo</span>
+      <span><b>3</b> Sí, me duermo sin darme cuenta</span>
+    </p>
+
+    <div class="field">
+      <h3>1. Por la mañana, cuando se relaja</h3>
+      <div class="segmented" id="seg-i1" role="group" aria-label="Ítem 1: por la mañana, cuando se relaja">
+        <button type="button" data-v="0" aria-pressed="false" title="No">0</button>
+        <button type="button" data-v="1" aria-pressed="false" title="Sí, tengo sueño PERO no me duermo">1</button>
+        <button type="button" data-v="2" aria-pressed="false" title="Sí, tengo sueño Y me duermo">2</button>
+        <button type="button" data-v="3" aria-pressed="false" title="Sí, me duermo sin darme cuenta">3</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <h3>2. Por la tarde, de pie inactivo, en un lugar público</h3>
+      <p class="fhint">(haciendo cola, esperando a un amigo, el autobús, el metro…)</p>
+      <div class="segmented" id="seg-i2" role="group" aria-label="Ítem 2: por la tarde, de pie inactivo, en un lugar público">
+        <button type="button" data-v="0" aria-pressed="false" title="No">0</button>
+        <button type="button" data-v="1" aria-pressed="false" title="Sí, tengo sueño PERO no me duermo">1</button>
+        <button type="button" data-v="2" aria-pressed="false" title="Sí, tengo sueño Y me duermo">2</button>
+        <button type="button" data-v="3" aria-pressed="false" title="Sí, me duermo sin darme cuenta">3</button>
+      </div>
+    </div>
+
+    <div class="results">
+      <div class="res hero"><div class="k">Puntuación total (ítem 1 + ítem 2)</div><div class="v" id="r-total">—</div></div>
+      <div class="res stage"><div class="k">Interpretación</div><div class="v" id="r-result">—</div><div id="r-detail" style="color:var(--muted);font-size:.82rem;margin-top:4px">Responde a los dos ítems.</div></div>
+    </div>
+
+    <p class="caveat" id="r-alta" hidden><strong>Puntuación alta.</strong> En la cohorte original las puntuaciones no pasaron de 3. Los autores apuntan que valores más altos, sobre todo en el ítem de pie, serían esperables en somnolencia extrema o narcolepsia.</p>
+
+    <p class="caveat"><strong>Cribado, no diagnóstico.</strong> Una puntuación total ≥ 2 indica somnolencia diurna excesiva. Ese punto de corte se estableció frente a somnolencia objetiva (latencia media en el MWT &lt; 20 min), con sensibilidad del 64,9 % y especificidad del 72,1 %: un resultado negativo no la descarta. La escala no define grados de gravedad.</p>
+  </section>
+
+  <!-- ═══ VALIDACIÓN Y LIMITACIONES (no puntúa) ═══ -->
+  <details class="fold" id="fold-val">
+    <summary>
+      <span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+      <span class="ftitle">Validación y limitaciones
+        <span class="fsub">Cómo se construyó la escala, qué rendimiento tuvo y qué no se ha estudiado. Informativo: <strong>no</strong> modifica la puntuación.</span>
+      </span>
+    </summary>
+    <div class="foldbody">
+      <p class="sub"><strong style="color:var(--ink)">Desarrollo.</strong> Los ítems proceden de grupos focales con pacientes con trastornos respiratorios del sueño y sus parejas, en la Unidad Multidisciplinar de Trastornos del Sueño del Hospital Clínic de Barcelona. De 138 situaciones se pasó a una lista de 16, y por regresión se eligió la combinación de dos ítems que mejor predecía la latencia del test de mantenimiento de la vigilia (MWT).</p>
+      <p class="sub"><strong style="color:var(--ink)">Muestra.</strong> 89 adultos con sospecha de trastorno respiratorio del sueño, con PSG, MWT, MSLT y SART. Se excluyeron menores de 18 años, enfermedad médica o psiquiátrica grave, fármacos que alteran el sueño o la vigilia, trabajo a turnos y horarios de sueño irregulares. Los resultados pueden no ser extrapolables a esos grupos.</p>
+      <p class="sub"><strong style="color:var(--ink)">Rendimiento.</strong> Correlación con la latencia del MWT r = −0,50 (Epworth −0,41; diferencia no significativa). A diferencia del Epworth, se correlacionó con la saturación de oxígeno: nadir de SpO2 r = −0,28 y CT85 r = 0,23. Área bajo la curva para MWT &lt; 20 min de 0,72 (IC 95 %: 0,61 a 0,82), frente a 0,68 del Epworth, sin diferencia significativa.</p>
+      <p class="sub"><strong style="color:var(--ink)">Sensibilidad al cambio.</strong> En 29 pacientes tratados con CPAP, la puntuación media bajó de 1,5 a 0,7 (p = 0,002).</p>
+      <p class="sub"><strong style="color:var(--ink)">Forma de puntuar.</strong> Se puntúa solo la intensidad de la somnolencia en cada situación. Ponderarla por la frecuencia o por la latencia de sueño empeoró las correlaciones, así que no debe hacerse.</p>
+      <p class="caveat" style="margin-top:4px"><strong>Sin estudio de fiabilidad test-retest.</strong> Los propios autores señalan que hace falta antes de recomendar la escala de forma definitiva. El rango observado en la cohorte fue de 0 a 3, sobre un máximo de 6.</p>
+    </div>
+  </details>
+
+  <div class="actions no-print">
+    <button class="btn btn-print" id="btn-print" type="button">Imprimir / Guardar PDF</button>
+    <button class="btn btn-copy" id="btn-copy" type="button">Copiar resultados</button>
+    <button class="btn btn-reset" id="btn-reset" type="button">Limpiar</button>
+    <span class="copy-msg" id="copy-msg" role="status" aria-live="polite"></span>
+  </div>
+
+  <details class="copybox no-print" id="copybox">
+    <summary><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span> Ver el texto que se va a copiar</summary>
+    <pre id="copy-preview">—</pre>
+  </details>
+
+  <div class="print-report" id="report"></div>
+</main>
+
+<footer class="no-print">
+  <div class="wrap">
+    <p class="disclaimer">Herramienta de apoyo al razonamiento clínico; no sustituye el juicio profesional ni una valoración individualizada. Los datos introducidos no se envían a ningún servidor: todo el cálculo se realiza en tu navegador y nada se almacena.</p>
+
+    <p class="source">
+      <strong>Fuente.</strong> Guaita M, Salamero M, Vilaseca I, Iranzo A, Montserrat JM, Gaig C, Embid C, Romero M, Serradell M, León C, de Pablo J, Santamaria J. The Barcelona Sleepiness Index: a new instrument to assess excessive daytime sleepiness in sleep disordered breathing. <em>J Clin Sleep Med</em>. 2015;11(11):1289-1298. <a href="https://doi.org/10.5664/jcsm.5188" target="_blank" rel="noopener">doi:10.5664/jcsm.5188</a>.<br>
+      La escala se desarrolló y validó en español; se reproduce la versión española original (tabla 5 del artículo) con autorización de los autores.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+
+  /* Respuestas, en el orden de la escala original */
+  const ANCLAS = [
+    "No",
+    "Sí, tengo sueño PERO no me duermo",
+    "Sí, tengo sueño Y me duermo",
+    "Sí, me duermo sin darme cuenta"
+  ];
+  const ITEMS = {
+    i1: "1. Por la mañana, cuando se relaja",
+    i2: "2. Por la tarde, de pie inactivo, en un lugar público"
+  };
+
+  /* ═══ ESTADO DE LOS SELECTORES SEGMENTADOS ═══ */
+  const sel = { i1:null, i2:null };
+
+  function setSel(key, value){
+    sel[key] = value;
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.querySelectorAll("button").forEach(b => {
+      b.setAttribute("aria-pressed", (value !== null && b.dataset.v === value) ? "true" : "false");
+    });
+  }
+
+  function wireSegmented(key){
+    const group = $("seg-"+key);
+    if(!group) return;
+    group.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if(!btn) return;
+      const v = btn.dataset.v;
+      setSel(key, sel[key] === v ? null : v);
+      recalc();
+    });
+  }
+  Object.keys(sel).forEach(wireSegmented);
+
+  ["paciente"].forEach(id => {
+    const el = $(id); if(!el) return;
+    el.addEventListener("input", recalc);
+    el.addEventListener("change", recalc);
+  });
+
+  const dash = "—";
+  let ULTIMO = null;
+
+  /* ═══ LÓGICA DE LA ESCALA ═══ */
+  function recalc(){
+    const a = sel.i1 !== null ? parseInt(sel.i1,10) : null;
+    const b = sel.i2 !== null ? parseInt(sel.i2,10) : null;
+    const n = (a !== null) + (b !== null);
+    const completo = n === 2;
+    const total = (a || 0) + (b || 0);
+    const positivo = completo && total >= 2;
+    const alta = completo && (total > 3 || b >= 2);
+
+    let interp = null, detalle;
+    if(completo){
+      interp = positivo ? "Indicativo de somnolencia diurna excesiva"
+                        : "No indicativo de somnolencia diurna excesiva";
+      detalle = positivo
+        ? "Puntuación ≥ 2 (sensibilidad 64,9 %, especificidad 72,1 % frente a MWT < 20 min)."
+        : "Puntuación < 2. Un resultado negativo no descarta somnolencia: sensibilidad del 64,9 %.";
+    } else {
+      detalle = n === 1 ? "Falta uno de los dos ítems." : "Responde a los dos ítems.";
+    }
+
+    $("r-total").innerHTML = completo
+      ? total + ' <small>/ 6</small>'
+      : (n ? total + ' <small>/ 6 · incompleto</small>' : dash);
+    $("r-result").textContent = interp || dash;
+    $("r-detail").textContent = detalle;
+    $("r-alta").hidden = !alta;
+
+    buildReport({a, b, n, completo, total, positivo, alta, interp});
+  }
+
+  function prRow(lab, val){ return '<div class="pr-row"><span class="lab">'+lab+'</span><span class="val">'+val+'</span></div>'; }
+  function esc(t){ return String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+  function respuesta(v){ return v === null ? dash : (v + " · " + ANCLAS[v]); }
+
+  /* ═══ INFORME IMPRIMIBLE ═══ */
+  function buildReport(d){
+    ULTIMO = d;
+    const paciente = $("paciente").value.trim();
+    const fecha = new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+
+    const respuestas = prRow(ITEMS.i1, respuesta(d.a))
+                     + prRow(ITEMS.i2, respuesta(d.b))
+                     + '<div class="pr-note">Somnolencia referida durante las últimas semanas. Escala administrada por el clínico.</div>';
+
+    let resultado;
+    if(d.completo){
+      resultado = prRow("<strong>Puntuación total</strong>", "<strong>"+d.total+" / 6</strong>")
+                + prRow("<strong>Interpretación</strong>", "<strong>"+d.interp+"</strong>")
+                + '<div class="pr-note">Punto de corte ≥ 2 (sensibilidad 64,9 %, especificidad 72,1 % frente a MWT &lt; 20 min). Cribado, no diagnóstico; la escala no define grados de gravedad.</div>';
+      if(d.alta) resultado += '<div class="pr-note">Puntuación por encima del rango observado en la cohorte original o somnolencia en el ítem de pie (≥ 2): los autores apuntan que sería esperable en somnolencia extrema o narcolepsia.</div>';
+    } else {
+      resultado = prRow("<strong>Puntuación total</strong>", "<strong>No calculable</strong>")
+                + '<div class="pr-note"><strong>Registro incompleto:</strong> '+(d.n === 1 ? "falta uno de los dos ítems." : "no hay respuestas.")+'</div>';
+    }
+
+    $("report").innerHTML =
+      '<div class="pr-head"><h2>Informe · Barcelona Sleepiness Index (BSI)</h2>'
+      + '<div class="pr-brand">calculadoraorl.com</div></div>'
+      + '<div class="pr-meta"><span>Paciente / Nº historia: <strong>'+(esc(paciente)||dash)+'</strong></span><span>Fecha: '+fecha+'</span></div>'
+      + '<div class="pr-sec"><h3>Respuestas</h3>'+respuestas+'</div>'
+      + '<div class="pr-sec"><h3>Resultado</h3>'+resultado+'</div>'
+      + '<div class="pr-foot">Guaita M, Salamero M, Vilaseca I, et al. The Barcelona Sleepiness Index: a new instrument to assess excessive daytime sleepiness in sleep disordered breathing. J Clin Sleep Med. 2015;11(11):1289-1298. doi:10.5664/jcsm.5188. Versión española original, reproducida con autorización de los autores.<br>'
+      + 'Herramienta de apoyo; no sustituye el juicio clínico. Cálculo realizado localmente en el navegador; los datos no se almacenan ni se transmiten. Generado con calculadoraorl.com.</div>';
+  }
+
+  /* ═══ TEXTO PLANO PARA LA HISTORIA CLÍNICA ═══ */
+  const plano = t => String(t).replace(/[–—]/g,"-").replace(/·/g,",")
+                              .replace(/≥/g,">=").replace(/≤/g,"<=");
+
+  function val(id){ const el = $(id); return el ? String(el.value).trim() : ""; }
+
+  function buildText(){
+    const d = ULTIMO;
+    if(!d) return "";
+    const L = [];
+
+    const pac = val("paciente");
+    if(d.n === 0 && !pac) return "";
+
+    L.push("BARCELONA SLEEPINESS INDEX (BSI)");
+    L.push("Fecha: " + new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric"}));
+    if(pac) L.push("Paciente / Nº historia: " + pac);
+
+    if(d.n > 0){
+      L.push("");
+      L.push("RESPUESTAS (últimas semanas)");
+      if(d.a !== null) L.push("- Por la mañana, cuando se relaja: " + d.a + " (" + ANCLAS[d.a] + ")");
+      if(d.b !== null) L.push("- Por la tarde, de pie inactivo, en un lugar público: " + d.b + " (" + ANCLAS[d.b] + ")");
+    }
+
+    L.push("");
+    L.push("RESULTADO");
+    if(d.completo){
+      L.push("- PUNTUACIÓN BSI: " + d.total + "/6");
+      L.push("- INTERPRETACIÓN: " + plano(d.interp).toLowerCase() + " (punto de corte >= 2)");
+      if(d.alta) L.push("- Nota: puntuación alta o somnolencia en el ítem de pie; según los autores, esperable en somnolencia extrema o narcolepsia.");
+    } else {
+      L.push("- PUNTUACIÓN BSI: no calculable");
+      L.push("  [Registro incompleto: " + (d.n === 1 ? "falta uno de los dos ítems." : "no hay respuestas.") + "]");
+    }
+
+    L.push("");
+    L.push("Guaita M, et al. J Clin Sleep Med 2015;11(11):1289-1298.");
+
+    return L.map(plano).join("\n");
+  }
+
+  /* ═══ COPIADO (común, no editar) ═══ */
+  function flash(msg, err){
+    const el = $("copy-msg");
+    if(!el) return;
+    el.textContent = msg;
+    el.classList.toggle("err", !!err);
+    el.classList.add("show");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(() => el.classList.remove("show"), 2600);
+  }
+
+  function refreshPreview(){
+    const pre = $("copy-preview");
+    if(pre) pre.textContent = buildText() || dash;
+  }
+
+  function copiar(){
+    const texto = buildText();
+    if(!texto.trim()){ flash("No hay nada que copiar todavía.", true); return; }
+    refreshPreview();
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(texto)
+        .then(() => flash("Resultados copiados."))
+        .catch(() => copiarAlternativa(texto));
+    } else {
+      copiarAlternativa(texto);
+    }
+  }
+
+  function copiarAlternativa(texto){
+    const ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    if(ok) flash("Resultados copiados.");
+    else { $("copybox").open = true; flash("No se pudo copiar. Selecciona el texto de abajo.", true); }
+  }
+
+  $("btn-copy").addEventListener("click", copiar);
+  $("copybox").addEventListener("toggle", function(){ if(this.open) refreshPreview(); });
+
+  $("btn-print").addEventListener("click", () => window.print());
+  $("btn-reset").addEventListener("click", () => {
+    $("paciente").value = "";
+    for(const k in sel) setSel(k, null);
+    recalc();
+    $("copy-preview").textContent = dash;
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
